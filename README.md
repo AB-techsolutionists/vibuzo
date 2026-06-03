@@ -17,17 +17,24 @@ This separation forces intentionality. Every line of code is planned before it's
 
 ## Install
 
-### Global (available in ALL projects)
+### macOS / Linux (bash)
 
 ```bash
+# Global (all projects)
 curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --global
+
+# Per-project
+cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
 ```
 
-### Per-project
+### Windows (PowerShell)
 
-```bash
-cd your-project
-curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
+```powershell
+# Global (all projects)
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Global"
+
+# Per-project
+cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
 ```
 
 ## What Gets Installed
