@@ -33,6 +33,7 @@ if ($Global) {
 }
 
 $AgentsDir = "$OpenCodeDir\agent\core"
+$CommandsDir = "$OpenCodeDir\commands"
 
 # ─── Help ────────────────────────────────────────────────────────────────────
 
@@ -55,12 +56,21 @@ Options:
 
 Write-Host "🔧 Installing Vibuzo ($InstallTarget)..."
 New-Item -ItemType Directory -Path $AgentsDir -Force | Out-Null
+New-Item -ItemType Directory -Path $CommandsDir -Force | Out-Null
 
 Write-Host "   → orchestrator.md"
 Invoke-WebRequest -Uri "$RawUrl/agents/orchestrator.md" -OutFile "$AgentsDir\orchestrator.md"
 
 Write-Host "   → vibuzo.md"
 Invoke-WebRequest -Uri "$RawUrl/agents/vibuzo.md" -OutFile "$AgentsDir\vibuzo.md"
+
+# Download command files
+Write-Host "   → commands/"
+Invoke-WebRequest -Uri "$RawUrl/commands/spec.md" -OutFile "$CommandsDir\spec.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/plan.md" -OutFile "$CommandsDir\plan.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/tasks.md" -OutFile "$CommandsDir\tasks.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/implement.md" -OutFile "$CommandsDir\implement.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/review.md" -OutFile "$CommandsDir\review.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if (-not $Global) {

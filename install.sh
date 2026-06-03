@@ -27,7 +27,7 @@ else
 fi
 
 AGENTS_DIR="$OPENCODE_DIR/agent/core"
-COMMANDS_DIR="$OPENCODE_DIR/command"
+COMMANDS_DIR="$OPENCODE_DIR/commands"
 
 # ─── Help ────────────────────────────────────────────────────────────────────
 
@@ -47,6 +47,14 @@ curl -fsSL "$RAW_URL/agents/orchestrator.md" -o "$AGENTS_DIR/orchestrator.md"
 
 echo "   → vibuzo.md"
 curl -fsSL "$RAW_URL/agents/vibuzo.md" -o "$AGENTS_DIR/vibuzo.md"
+
+# Download command files
+echo "   → commands/"
+curl -fsSL "$RAW_URL/commands/spec.md" -o "$COMMANDS_DIR/spec.md"
+curl -fsSL "$RAW_URL/commands/plan.md" -o "$COMMANDS_DIR/plan.md"
+curl -fsSL "$RAW_URL/commands/tasks.md" -o "$COMMANDS_DIR/tasks.md"
+curl -fsSL "$RAW_URL/commands/implement.md" -o "$COMMANDS_DIR/implement.md"
+curl -fsSL "$RAW_URL/commands/review.md" -o "$COMMANDS_DIR/review.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if [ "$INSTALL_TARGET" = "local (.opencode/)" ]; then
