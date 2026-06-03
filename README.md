@@ -34,7 +34,8 @@ cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutioni
 pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Global"
 
 # Per-project
-cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
+cd your-project
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
 ```
 
 ## What Gets Installed
