@@ -41,7 +41,10 @@ your-project/
         └── vibuzo.md              ← Execute-mode agent definition
 ```
 
+The installer creates `AGENTS.md` in your project root and places the agent definitions in `.opencode/agent/core/`.
+
 Global install places agents in `~/.config/opencode/agent/core/` so they're available across all your projects.
+
 
 ## How It Works
 
