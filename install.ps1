@@ -71,6 +71,12 @@ Invoke-WebRequest -Uri "$RawUrl/commands/plan.md" -OutFile "$CommandsDir\plan.md
 Invoke-WebRequest -Uri "$RawUrl/commands/tasks.md" -OutFile "$CommandsDir\tasks.md"
 Invoke-WebRequest -Uri "$RawUrl/commands/implement.md" -OutFile "$CommandsDir\implement.md"
 Invoke-WebRequest -Uri "$RawUrl/commands/review.md" -OutFile "$CommandsDir\review.md"
+Write-Host "   → commands/context.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/context.md" -OutFile "$CommandsDir\context.md"
+Write-Host "   → commands/add-context.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/add-context.md" -OutFile "$CommandsDir\add-context.md"
+Write-Host "   → commands/session.md"
+Invoke-WebRequest -Uri "$RawUrl/commands/session.md" -OutFile "$CommandsDir\session.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if (-not $Global) {

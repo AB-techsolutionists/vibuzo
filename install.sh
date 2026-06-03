@@ -55,6 +55,12 @@ curl -fsSL "$RAW_URL/commands/plan.md" -o "$COMMANDS_DIR/plan.md"
 curl -fsSL "$RAW_URL/commands/tasks.md" -o "$COMMANDS_DIR/tasks.md"
 curl -fsSL "$RAW_URL/commands/implement.md" -o "$COMMANDS_DIR/implement.md"
 curl -fsSL "$RAW_URL/commands/review.md" -o "$COMMANDS_DIR/review.md"
+echo "   → commands/context.md"
+curl -fsSL "$RAW_URL/commands/context.md" -o "$COMMANDS_DIR/context.md"
+echo "   → commands/add-context.md"
+curl -fsSL "$RAW_URL/commands/add-context.md" -o "$COMMANDS_DIR/add-context.md"
+echo "   → commands/session.md"
+curl -fsSL "$RAW_URL/commands/session.md" -o "$COMMANDS_DIR/session.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if [ "$INSTALL_TARGET" = "local (.opencode/)" ]; then

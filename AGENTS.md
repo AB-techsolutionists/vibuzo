@@ -9,6 +9,12 @@ You are part of a **two-agent system**:
 
 ---
 
+## Context Auto-Load
+
+At the start of every new session, read `context/index.md` to discover project conventions, patterns, and architecture. If the file exists, load it immediately. If it doesn't exist, proceed normally.
+
+---
+
 ## Two-Agent Workflow
 
 ### Default Mode: Orchestrator (Plan)
