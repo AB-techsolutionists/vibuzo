@@ -93,21 +93,25 @@ if (Get-Command "claude" -ErrorAction SilentlyContinue) {
 
 # ─── Done ────────────────────────────────────────────────────────────────────
 
+$Sep = "────────────────────────────────────────────"
 Write-Host ""
-Write-Host "✅ Vibuzo installed successfully!"
-Write-Host ""
-Write-Host "   Location: $InstallTarget"
-Write-Host "   Agents:   $AgentsDir"
-Write-Host ""
-
+Write-Host "  ╭$Sep╮"
+Write-Host "  │"
+Write-Host "  │  ✅ Vibuzo installed successfully!"
+Write-Host "  │"
+Write-Host "  │  Location: $InstallTarget"
+Write-Host "  │  Agents:   $AgentsDir"
+Write-Host "  │"
 if (-not $Global) {
-  Write-Host "   AGENTS.md is in your project root. Commit it to share with your team."
-  Write-Host "   .opencode/ is auto-detected by opencode."
+  Write-Host "  │  AGENTS.md is in your project root."
+  Write-Host "  │  Commit it to share with your team."
 } else {
-  Write-Host "   Vibuzo is now available in ALL your projects."
-  Write-Host "   Each project still needs its own AGENTS.md (run install without -Global per project)."
+  Write-Host "  │  Vibuzo is now available in ALL your projects."
+  Write-Host "  │  Run install without -Global per project for AGENTS.md."
 }
-
+Write-Host "  │"
+Write-Host "  │  Next: opencode will pick up Orchestrator"
+Write-Host "  │  as your primary agent."
+Write-Host "  │"
+Write-Host "  ╰$Sep╯"
 Write-Host ""
-Write-Host "   Next: opencode will pick up Orchestrator as your primary agent."
-Write-Host "         Start a conversation and it will guide you."

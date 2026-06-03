@@ -84,21 +84,25 @@ fi
 
 # ─── Done ────────────────────────────────────────────────────────────────────
 
+SEP="────────────────────────────────────────────"
 echo ""
-echo "✅ Vibuzo installed successfully!"
-echo ""
-echo "   Location: $INSTALL_TARGET"
-echo "   Agents:   $AGENTS_DIR/"
-echo ""
-
+echo "  ╭$SEP╮"
+echo "  │"
+echo "  │  ✅ Vibuzo installed successfully!"
+echo "  │"
+echo "  │  Location: $INSTALL_TARGET"
+echo "  │  Agents:   $AGENTS_DIR/"
+echo "  │"
 if [ "$INSTALL_TARGET" = "local (.opencode/)" ]; then
-    echo "   AGENTS.md is in your project root. Commit it to share with your team."
-    echo "   .opencode/ is auto-detected by opencode."
+    echo "  │  AGENTS.md is in your project root."
+    echo "  │  Commit it to share with your team."
 else
-    echo "   Vibuzo is now available in ALL your projects."
-    echo "   Each project still needs its own AGENTS.md (run install without --global per project)."
+    echo "  │  Vibuzo is now available in ALL your projects."
+    echo "  │  Run install without --global per project for AGENTS.md."
 fi
-
+echo "  │"
+echo "  │  Next: opencode will pick up Orchestrator"
+echo "  │  as your primary agent."
+echo "  │"
+echo "  ╰$SEP╯"
 echo ""
-echo "   Next: opencode will pick up Orchestrator as your primary agent."
-echo "         Start a conversation and it will guide you."
