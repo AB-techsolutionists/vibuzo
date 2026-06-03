@@ -1,6 +1,6 @@
 # Vibuzo — Agentic Framework
 
-**Orchestrator plans. Vibuzo executes. Together they build better software.**
+**Vibuzo plans AND executes. Deepveloper handles only `/implement`.**
 
 A minimal, universal agentic framework that works with ANY AI coding tool (opencode, Claude Code, Cursor, Codex, Gemini CLI, Copilot, Windsurf, and 20+ more).
 
@@ -8,10 +8,10 @@ A minimal, universal agentic framework that works with ANY AI coding tool (openc
 
 Most AI coding mistakes come from one root cause: **planning and executing at the same time.**
 
-Vibuzo separates the two:
+Vibuzo separates the two with a clear role split:
 
-- **Orchestrator** (plan mode) — thinks, analyzes, plans, delegates, reviews. Never touches code.
-- **Vibuzo** (execute mode) — implements precisely what it's told. Never plans or adds scope.
+- **Vibuzo** (main agent) — plans, analyzes, delegates, reviews, AND executes everyday tasks. The single entry point for everything.
+- **Deepveloper** (subtask agent) — execution specialist. Triggered only by `/implement`. Never plans.
 
 This separation forces intentionality. Every line of code is planned before it's written. Every change is verified before it's complete.
 
@@ -45,8 +45,8 @@ your-project/
 ├── AGENTS.md                     ← Universal rules (read by 25+ tools)
 └── .opencode/
     └── agent/core/
-        ├── orchestrator.md        ← Plan-mode agent definition
-        └── vibuzo.md              ← Execute-mode agent definition
+        ├── vibuzo.md              ← Main agent (plans + executes)
+        └── deepveloper.md         ← Execution specialist (/implement only)
 ```
 
 The installer creates `AGENTS.md` in your project root and places the agent definitions in `.opencode/agent/core/`.
@@ -59,33 +59,28 @@ Global install places agents in `~/.config/opencode/agent/core/` so they're avai
 ```
 You: "Add a dark mode toggle"
 
-Orchestrator:
+Vibuzo:
   → Analyzes: "I see Tailwind + React. Option A: dark: prefix. Option B: CSS vars."
   → Proposes plan, gets your approval
-  ──────────────────────────────────────────
-  ▶ SWITCH TO VIBUZO
-  ──────────────────────────────────────────
+  → Implements the toggle component directly
+  → Verifies it works
+  → "Done. Component created at src/DarkModeToggle.tsx"
+
+For complex features, Vibuzo delegates:
+You: "Implement user authentication"
 
 Vibuzo:
-  → Reads current code for patterns
-  → Creates the toggle component
-  → Verifies it works
-  ──────────────────────────────────────────
-  ▶ SWITCH TO ORCHESTRATOR
-  ──────────────────────────────────────────
-
-  → "Component created at src/DarkModeToggle.tsx"
-
-Orchestrator:
-  → Reviews, summarizes
-  → "Done. Uses Tailwind dark: prefix. 3 files changed."
+  → Breaks down into tasks
+  → Runs `/implement auth`
+  → Deepveloper implements exactly per the spec
+  → Vibuzo reviews, summarizes, reports to you
 ```
 
 ## Supported Tools
 
 | Tool | How it reads Vibuzo |
 |------|---------------------|
-| **opencode** | Native agents (orchestrator.md + vibuzo.md) |
+| **opencode** | Native agents (vibuzo.md + deepveloper.md) |
 | **Claude Code** | AGENTS.md + .claude/agents/ (auto-created by installer) |
 | **Codex CLI** | AGENTS.md — uses built-in `/plan` + `/implement` modes |
 | **Cursor** | AGENTS.md (project rules) |
@@ -103,30 +98,16 @@ Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" se
 - Your error handling patterns
 - Your testing requirements
 
-## Handoff Protocol
+## Handoff Protocol ⚠️ DEPRECATED
 
-The text-based switch protocol works in ANY tool:
-
-──────────────────────────────────────────
-   ▶ SWITCH TO VIBUZO
-──────────────────────────────────────────
-
-```
-Task: Create a user profile card component
-Files: src/components/ProfileCard.tsx
-Steps:
-  1. Create component with avatar, name, email props
-  2. Style with Tailwind classes
-  3. Export default
-Acceptance:
-  ✅ Component renders with all props
-  ✅ TypeScript compiles without errors
-```
+The handoff protocol was used in the legacy two-agent system. 
+Vibuzo now handles everything directly. Deepveloper is triggered automatically by `/implement`.
+No manual handoff needed.
 
 ## Roadmap
 
-- **v0.1** — Two agents + AGENTS.md + installer ← current
-- **v0.2** — Commands (`/plan`, `/execute`, `/review`)
+- **v0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer ← current
+- **v0.2** — Commands (`/plan`, `/implement`, `/review`)
 - **v0.3** — Context patterns (reusable rules)
 - **v0.4** — Skills (reusable workflows)
 - **v0.5** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)

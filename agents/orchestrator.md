@@ -1,3 +1,7 @@
+> ⚠️ **DEPRECATED** — Vibuzo now handles all planning and execution. This file is kept for reference only. See `agents/vibuzo.md` for the current main agent definition.
+
+---
+
 ---
 name: Orchestrator
 description: "Plan-mode agent — analyzes, plans, delegates, reviews. Never executes tasks directly."
