@@ -62,13 +62,19 @@ You: "Add a dark mode toggle"
 Orchestrator:
   → Analyzes: "I see Tailwind + React. Option A: dark: prefix. Option B: CSS vars."
   → Proposes plan, gets your approval
-  → Delegates: [SWITCH TO VIBUZO]
+  ──────────────────────────────────────────
+  ▶ SWITCH TO VIBUZO
+  ──────────────────────────────────────────
 
 Vibuzo:
   → Reads current code for patterns
   → Creates the toggle component
   → Verifies it works
-  → Reports: [DONE] Component created at src/DarkModeToggle.tsx
+  ──────────────────────────────────────────
+  ▶ SWITCH TO ORCHESTRATOR
+  ──────────────────────────────────────────
+
+  → "Component created at src/DarkModeToggle.tsx"
 
 Orchestrator:
   → Reviews, summarizes
