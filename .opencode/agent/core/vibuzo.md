@@ -1,7 +1,7 @@
 ---
 name: Vibuzo
 description: "Execute-mode agent — implements tasks from Orchestrator. Reads, writes, edits, runs commands. Never plans."
-mode: subagent
+mode: primary
 temperature: 0
 permission:
   bash:
