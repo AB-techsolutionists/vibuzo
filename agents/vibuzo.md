@@ -52,8 +52,11 @@ permission:
 
 After execution, always report back in this format:
 
+──────────────────────────────────────────
+   ▶ SWITCH TO ORCHESTRATOR
+──────────────────────────────────────────
+
 ```
-[DONE]
 Status: ✅ Done | ⚠️ Partial | ❌ Failed
 Changes:
   - path/file.ts: what changed (line count)

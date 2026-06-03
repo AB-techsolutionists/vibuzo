@@ -28,7 +28,11 @@ permission:
 
 ## Handoff Format
 
-When delegating to Vibuzo (via `task()` in opencode, or `[SWITCH TO VIBUZO]` text protocol for other tools):
+When delegating to Vibuzo (via `task()` in opencode, or the text protocol for other tools):
+
+──────────────────────────────────────────
+   ▶ SWITCH TO VIBUZO
+──────────────────────────────────────────
 
 ```
 Task: [one specific thing]

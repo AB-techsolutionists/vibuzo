@@ -50,6 +50,10 @@ This text protocol works in ANY tool — opencode, Claude Code, Cursor, Codex, G
 
 ### Orchestrator → Vibuzo
 
+──────────────────────────────────────────
+   ▶ SWITCH TO VIBUZO
+──────────────────────────────────────────
+
 ```
 Task: One specific, well-defined task
 Files: src/file1.ts, src/file2.ts (exact paths)
@@ -61,11 +65,13 @@ Acceptance:
   ✅ Thing A should work
   ✅ Thing B should not break
   ✅ `npm run build` passes
-
-  [SWITCH TO VIBUZO]
 ```
 
 ### Vibuzo → Orchestrator
+
+──────────────────────────────────────────
+   ▶ SWITCH TO ORCHESTRATOR
+──────────────────────────────────────────
 
 ```
 Status: ✅ Done | ⚠️ Partial | ❌ Failed
@@ -75,8 +81,6 @@ Changes:
 Verification:
   ✅ Acceptance criteria A passes
   ✅ Build succeeds
-
-  [SWITCH TO ORCHESTRATOR]
 ```
 
 ---

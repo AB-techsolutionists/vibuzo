@@ -99,10 +99,13 @@ Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" se
 
 ## Handoff Protocol
 
-The text-based `[SWITCH TO VIBUZO]` / `[SWITCH TO ORCHESTRATOR]` protocol works in ANY tool:
+The text-based switch protocol works in ANY tool:
+
+──────────────────────────────────────────
+   ▶ SWITCH TO VIBUZO
+──────────────────────────────────────────
 
 ```
-[SWITCH TO VIBUZO]
 Task: Create a user profile card component
 Files: src/components/ProfileCard.tsx
 Steps:
