@@ -19,6 +19,7 @@ This directory contains project-level context files that are automatically loade
 
 ## Files
 
+- `architecture/agent-restructure.md` — Agent architecture decision: Vibuzo as main, Deepveloper for /implement, Orchestrator deprecated
 - `patterns/add-context.md` — Specification for the `/add-context` command (types, usage, behavior)
 - `standards/naming.md` — Use camelCase for variables, functions, and methods
 
