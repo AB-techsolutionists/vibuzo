@@ -2,7 +2,7 @@
 #
 # install.sh — Vibuzo Agentic Framework Installer
 #
-# Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and commands.
+# Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and active commands.
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
@@ -50,8 +50,7 @@ curl -fsSL "$RAW_URL/agents/vibuzo.md" -o "$AGENTS_DIR/vibuzo.md"
 echo "   → deepveloper.md (execution specialist)"
 curl -fsSL "$RAW_URL/agents/deepveloper.md" -o "$AGENTS_DIR/deepveloper.md"
 
-echo "   → orchestrator.md (deprecated — kept for reference)"
-curl -fsSL "$RAW_URL/agents/orchestrator.md" -o "$AGENTS_DIR/orchestrator.md"
+# orchestrator.md intentionally omitted — deprecated, kept in repo for reference only
 
 # Download command files
 echo "   → spec.md (feature pipeline)"
@@ -78,10 +77,10 @@ if [ "$INSTALL_TARGET" != "local (.opencode/)" ]; then
     # Rewrite .opencode/ references to the actual global path
     # Works on macOS (sed -i '') and Linux/Windows (sed -i)
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/orchestrator.md" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
+        sed -i '' "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
         sed -i '' "s|\.opencode/|$OPENCODE_DIR/|g" "$OPENCODE_DIR/AGENTS.md"
     else
-        sed -i "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/orchestrator.md" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
+        sed -i "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
         sed -i "s|\.opencode/|$OPENCODE_DIR/|g" "$OPENCODE_DIR/AGENTS.md"
     fi
 fi

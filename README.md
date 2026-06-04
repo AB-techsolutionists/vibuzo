@@ -46,19 +46,28 @@ your-project/
 └── .opencode/
     ├── agent/core/
     │   ├── vibuzo.md              ← Main agent (plans + executes)
-    │   ├── deepveloper.md         ← Execution specialist (/implement)
-    │   └── orchestrator.md        ← ⚠️ Deprecated (kept for reference)
+    │   └── deepveloper.md         ← Execution specialist (/implement)
     └── commands/
         ├── spec.md               ← Full feature pipeline (/spec)
         ├── context.md             ← Context management (/context)
         ├── add-context.md         ← Save context (/add-context)
-        └── session.md             ← Session logging (/session)
+        └── session.md             ← Session checkpoints (/session)
 ```
 
-The installer creates `AGENTS.md` in your project root and places the agent definitions in `.opencode/agent/core/`.
+The installer creates `AGENTS.md` in your project root and places agent definitions in `.opencode/agent/core/`. Global install places agents in `~/.config/opencode/agent/core/` so they're available across all your projects.
 
-Global install places agents in `~/.config/opencode/agent/core/` so they're available across all your projects.
+## Commands
 
+| Command | What it does |
+|---------|-------------|
+| `/spec <feature>` | 5-phase pipeline: spec → plan → tasks → implement → review |
+| `/session` | Scaffold a compaction file (/compact output goes in the body) |
+| `/session view <ref>` | Browse past session compactions |
+| `/session timeline` | Show master timeline of all compactions |
+| `/context init` | Scaffold the context directory structure |
+| `/context find <topic>` | Search project context for information |
+| `/context harvest` | Mine sessions for patterns worth promoting to permanent context |
+| `/add-context <statement>` | Save a rule, pattern, or decision to permanent context |
 
 ## How It Works
 
@@ -84,6 +93,51 @@ Vibuzo:
   → Done. All artifacts in specs/user-authentication/
 ```
 
+## Context System
+
+Context gives every new session instant access to project conventions, patterns, and architecture.
+
+```
+context/
+├── index.md                     ← Table of contents (auto-updated)
+├── architecture/                ← Architecture Decision Records
+├── standards/                   ← Naming, style, conventions
+├── patterns/                    ← Reusable patterns and idioms
+└── sessions/                    ← Auto-generated compaction archive
+```
+
+- **Save knowledge:** `/add-context <statement>` — agent infers type and name
+- **Search:** `/context find <topic>` — exact match first, then broader keyword search
+- **Harvest:** `/context harvest` — reads all sessions, presents promotion candidates
+- **Auto-load:** agents read `context/index.md` at session start
+
+## Session Management
+
+Use `/session` at natural breakpoints to checkpoint your work:
+
+```
+/session       → creates context/sessions/YYYY-MM-DD-<title>.md skeleton
+/compact       → opencode's built-in compaction → paste output into the file
+/session view  → browse past compactions
+/session timeline → view all compactions chronologically
+```
+
+Each session file uses descriptive title-based names (`session-redesign`, `session-polish`) with automatic collision handling.
+
+## Approval Gates
+
+Vibuzo supports configurable approval gates (levels 0-3) that control which actions require your confirmation:
+
+| Level | Name | Behavior |
+|-------|------|----------|
+| 0 | Trusted | No gates. Execute freely. |
+| 1 | Safe | File writes/edits/deletes and destructive commands require approval. |
+| 2 | Cautious | All file operations, all commands, and `/implement` delegation require approval. |
+| 3 | Full Control | Every action requires approval, including planning and large file reads. |
+
+**Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`). Default is 0.
+**Override inline:** Add "at gate level X" to any request for a one-time change.
+
 ## Supported Tools
 
 | Tool | How it reads Vibuzo |
@@ -106,28 +160,6 @@ Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" se
 - Your error handling patterns
 - Your testing requirements
 
-## Approval Gates
-
-Vibuzo supports configurable approval gates (levels 0-3) that control which actions require your confirmation:
-
-| Level | Name | Behavior |
-|-------|------|----------|
-| 0 | Trusted | No gates. Execute freely. |
-| 1 | Safe | File writes/edits/deletes and destructive commands require approval. |
-| 2 | Cautious | All file operations, all commands, and `/implement` delegation require approval. |
-| 3 | Full Control | Every action requires approval, including planning and large file reads. |
-
-**Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`). Default is 0.
-**Override inline:** Add "at gate level X" to any request for a one-time change.
-
----
-
-## Handoff Protocol ⚠️ DEPRECATED
-
-The handoff protocol was used in the legacy two-agent system. 
-Vibuzo now handles everything directly. Deepveloper is triggered automatically by `/implement`.
-No manual handoff needed.
-
 ## Roadmap
 
 - **v0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer
@@ -135,9 +167,11 @@ No manual handoff needed.
 - **v0.3** — Context system (`/context`, `/session`, `/add-context`)
 - **v0.4** — Single-agent restructure (Vibuzo main, Orchestrator deprecated)
 - **v0.5** — Approval gates (configurable levels 0-3)
-- **v0.6** — `/spec` command (consolidated pipeline) ← current
-- **v0.7** — Skills (reusable workflows)
-- **v0.8** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)
+- **v0.6** — `/spec` command (consolidated pipeline)
+- **v0.7** — Session compaction system (title-based, paste workflow)
+- **v0.8** — Context harvest + imperative command pattern ← current
+- **v0.9** — Skills (reusable workflows)
+- **v0.10** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)
 
 ## License
 

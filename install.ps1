@@ -2,7 +2,7 @@
 .SYNOPSIS
     Vibuzo Agentic Framework Installer (Windows)
 .DESCRIPTION
-    Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and commands to .opencode/ or ~/.config/opencode/
+    Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and active commands to .opencode/ or ~/.config/opencode/
 .PARAMETER Global
     Install to ~/.config/opencode/ (available in ALL projects)
 .PARAMETER Help
@@ -64,8 +64,7 @@ Invoke-WebRequest -Uri "$RawUrl/agents/vibuzo.md" -OutFile "$AgentsDir\vibuzo.md
 Write-Host "   → deepveloper.md (execution specialist)"
 Invoke-WebRequest -Uri "$RawUrl/agents/deepveloper.md" -OutFile "$AgentsDir\deepveloper.md"
 
-Write-Host "   → orchestrator.md (deprecated — kept for reference)"
-Invoke-WebRequest -Uri "$RawUrl/agents/orchestrator.md" -OutFile "$AgentsDir\orchestrator.md"
+# orchestrator.md intentionally omitted — deprecated, kept in repo for reference only
 
 # Download command files
 Write-Host "   → spec.md (feature pipeline)"
@@ -92,7 +91,6 @@ if ($Global) {
   Write-Host "   → Rewriting paths for global install"
   (Get-Content "$AgentsDir\vibuzo.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\vibuzo.md"
   (Get-Content "$AgentsDir\deepveloper.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepveloper.md"
-  (Get-Content "$AgentsDir\orchestrator.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\orchestrator.md"
   (Get-Content "$OpenCodeDir\AGENTS.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$OpenCodeDir\AGENTS.md"
 }
 

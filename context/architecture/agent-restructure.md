@@ -39,7 +39,7 @@ User → Vibuzo (main — plans + executes)
 - **Role**: Pure execution specialist, triggered only by `/implement`
 - **Permissions**: bash(allow), edit(allow), write(allow), **NO task permission** (cannot spawn sub-agents)
 - **Temperature**: 0
-- **Mode**: subtask
+- **Mode**: subagent
 - **Tagline**: "I execute. I don't plan. I implement exactly what I'm told."
 
 ### Orchestrator (Deprecated)
@@ -54,7 +54,7 @@ Agent definitions live in `agents/` (source) and are mirrored in `.opencode/agen
 | Source | Registry Copy |
 |--------|---------------|
 | `agents/vibuzo.md` | `.opencode/agent/core/vibuzo.md` |
-| `agents/deepveloper.md` (`mode: subtask`) | `.opencode/agent/core/deepveloper.md` (`mode: subagent`) — intentional divergence, see Key Principle #6 |
+| `agents/deepveloper.md` (`mode: subagent`) | `.opencode/agent/core/deepveloper.md` (`mode: subagent`) |
 | `agents/orchestrator.md` (deprecated) | `.opencode/agent/core/orchestrator.md` (deprecated) |
 
 The `/implement` command template routes to Deepveloper via `agent: Deepveloper` and `subtask: true` in its YAML frontmatter (both `commands/implement.md` and `.opencode/commands/implement.md`).
@@ -66,4 +66,4 @@ The `/implement` command template routes to Deepveloper via `agent: Deepveloper`
 3. **Planning discipline** — Orchestrator's "plan first" rules are embedded in Vibuzo's definition.
 4. **Backward compatibility** — Orchestrator files preserved (deprecated) so existing references don't break.
 5. **Source + registry mirror** — Every agent definition exists in both `agents/` and `.opencode/agent/core/`.
-6. **Intentional mirror exception** — Deepveloper's `mode` field differs between source and registry copies. `agents/deepveloper.md` uses `mode: subtask` (conceptual role description), while `.opencode/agent/core/deepveloper.md` uses `mode: subagent` (opencode's required value for subtask agents). The source documents the concept; the registry must use the value opencode parses correctly. All other fields remain identical.
+6. **Unified mode** — Both source (`agents/deepveloper.md`) and registry copy (`.opencode/agent/core/deepveloper.md`) use `mode: subagent`. The `mode: subagent` value is required by opencode for runtime compatibility.

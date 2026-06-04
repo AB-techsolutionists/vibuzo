@@ -7,7 +7,7 @@
   Depends on: --
   Description: Create the Deepveloper execution specialist agent. This is a pure execution agent triggered only as a subtask by `/implement`. It must have full bash/edit/write permissions but no `task` permission (cannot spawn sub-agents). Its personality is strict execution-only: "I execute. I don't plan." No planning rules, no questioning Orchestrator's approach. Mirror the same content in both `agents/deepveloper.md` (source) and `.opencode/agent/core/deepveloper.md` (opencode registry).
   Acceptance:
-    - agents/deepveloper.md exists with YAML frontmatter (name: Deepveloper, mode: subtask, temperature: 0)
+    - agents/deepveloper.md exists with YAML frontmatter (name: Deepveloper, mode: subagent, temperature: 0)
     - .opencode/agent/core/deepveloper.md exists with identical content
     - Permissions: bash(allow), edit(allow), write(allow) -- with sensitive file denials (env, key, pem, secret*)
     - Permissions explicitly do NOT include `task` -- Deepveloper cannot spawn sub-agents

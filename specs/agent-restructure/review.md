@@ -5,7 +5,7 @@
 | Requirement | Status | Evidence |
 |-------------|--------|----------|
 | Vibuzo as primary agent with full permissions | ✅ Pass | `mode: primary`, temp 0.1, all 4 perms (bash/edit/write/task) |
-| Deepveloper as subtask-only, no task permission | ✅ Pass | `mode: subtask`, temp 0, NO `task` in YAML; rule: "You CANNOT spawn sub-agents" |
+| Deepveloper as subtask-only, no task permission | ✅ Pass | `mode: subagent`, temp 0, NO `task` in YAML; rule: "You CANNOT spawn sub-agents" |
 | `/implement` routes to Deepveloper | ✅ Pass | `agent: Deepveloper`, `subtask: true` in both copies |
 | Orchestrator deprecated with banner | ✅ Pass | DEPRECATED banner at top of both copies |
 | AGENTS.md updated | ✅ Pass | Vibuzo main, Deepveloper subtask; Handoff Protocol deprecated |
@@ -21,7 +21,7 @@ All 7 acceptance criteria from the spec **pass**.
 ### Phase 1 — Foundation (parallel)
 | Task | Status | Verification |
 |------|--------|-------------|
-| **1. Create Deepveloper** | ✅ Done | Both `agents/deepveloper.md` + `.opencode/agent/core/deepveloper.md` exist, identical content, `mode: subtask`, no `task` permission |
+| **1. Create Deepveloper** | ✅ Done | Both `agents/deepveloper.md` + `.opencode/agent/core/deepveloper.md` exist, identical content, `mode: subagent`, no `task` permission |
 | **2. Rewrite Vibuzo** | ✅ Done | Both copies merged planning + execution rules, all permissions granted, temp 0.1 |
 | **3. Deprecate Orchestrator** | ✅ Done | DEPRECATED banner preserved, all original content untouched |
 
@@ -84,7 +84,7 @@ Two minor inconsistencies were identified and **fixed** earlier in this session:
 | Original Gap | Fix Applied | Status |
 |--------------|-------------|--------|
 | Deepveloper Rule 1 said "read the task from **Orchestrator**" | Changed to "read the task from **Vibuzo**" | ✅ Fixed |
-| `.opencode/agent/core/deepveloper.md` had `mode: subagent` (vs. `mode: subtask` in source) | Unified to `mode: subtask` | ✅ Fixed |
+| `.opencode/agent/core/deepveloper.md` had `mode: subagent` (vs. `mode: subtask` in source) | Unified to `mode: subagent` (user preference) | ✅ Fixed |
 
 No further gaps found.
 

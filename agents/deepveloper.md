@@ -1,7 +1,7 @@
 ---
 name: Deepveloper
 description: "Execution specialist — triggered only by /implement subtask. Pure execute, no planning."
-mode: subtask
+mode: subagent
 temperature: 0
 permission:
   bash:
