@@ -1,3 +1,7 @@
+⚠️ **DEPRECATED** — Use `/spec <description>` instead. This file is kept for reference.
+
+---
+
 ---
 description: Break a plan into actionable tasks
 ---

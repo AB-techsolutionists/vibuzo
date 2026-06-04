@@ -1,3 +1,7 @@
+⚠️ **DEPRECATED** — Use `/spec <description>` instead. This file is kept for reference.
+
+---
+
 ---
 description: Execute implementation tasks for a feature
 agent: Deepveloper

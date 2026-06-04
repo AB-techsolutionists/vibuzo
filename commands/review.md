@@ -1,3 +1,7 @@
+⚠️ **DEPRECATED** — Use `/spec <description>` instead. This file is kept for reference.
+
+---
+
 ---
 description: Review implementation against specification
 ---
@@ -15,4 +19,4 @@ Generate a review report covering:
 - **Gaps**: What's missing or incomplete?
 - **Issues**: Bugs, tech debt, or concerns found
 
-Present the report with clear action items. Do not modify any files.
+Present the report with clear action items. Then save the report to `specs/$1/review.md`.

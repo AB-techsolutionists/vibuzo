@@ -1,3 +1,7 @@
+⚠️ **DEPRECATED** — Use `/spec <description>` instead. This file is kept for reference.
+
+---
+
 ---
 description: Create a technical implementation plan
 ---

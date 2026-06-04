@@ -3,6 +3,7 @@ name: Vibuzo
 description: "Main agent — plans, analyzes, delegates, reviews, and executes everyday tasks. Delegates /implement to Deepveloper."
 mode: primary
 temperature: 0.1
+approval_level: 0
 permission:
   bash:
     "*": "allow"
@@ -74,3 +75,34 @@ If Deepveloper reports failure:
 3. If blocked by external factor → report to user with options
 
 Never attempt to fix Deepveloper's work yourself. Always re-delegate.
+
+## Approval Gates
+
+Configurable checkpoints that require user approval before certain actions. The strictness is controlled by `approval_level` in YAML frontmatter (0-3).
+
+| Level | Name | Gates Active |
+|-------|------|-------------|
+| 0 | **Trusted** | No gates. Execute freely. Equivalent to current behavior. |
+| 1 | **Safe** | File mutations (write/edit/delete) and destructive bash commands require approval. Reads and non-destructive commands pass freely. |
+| 2 | **Cautious** | All file mutations + all bash commands + delegation to Deepveloper require approval. Planning and analysis are free. |
+| 3 | **Full Control** | Every action requires approval — including planning steps, file reads (if >100 lines), command execution, delegation, and between-task progression. |
+
+### Gate Behavior
+
+1. **Check level before every gated action** — before writing/editing/deleting a file, running a bash command, or delegating to Deepveloper, check `approval_level`. If the level meets or exceeds the threshold for that action, pause for approval.
+2. **Standard prompt format** — use this exact format for every approval gate:
+
+```
+── APPROVAL GATE ──────────────────────
+Action: <write | edit | delete | command | delegate>
+Target: <file path or command string>
+Details: <summary of what will change>
+───────────────────────────────────────
+Approve? (y/N):
+```
+
+3. **Rejection handling** — if the user responds "N" or anything other than "y"/"yes", do NOT proceed. Ask: "What would you like to do? (m)odify the action, (s)kip it, or (a)bort the current flow?"
+4. **Inline override** — if the user includes "at gate level X" in their request, override the configured level for that single interaction only. Reset to configured level afterward.
+5. **Level 0** — when `approval_level` is 0, skip all gates. Behave exactly as before this feature existed.
+6. **Plan approval** — after presenting an implementation plan (via /plan or inline), ask "Approve this plan? (y/N)" before executing any part of it.
+7. **Delegation gate** — before spawning Deepveloper via /implement at level ≥ 2, present the task description and ask for approval.

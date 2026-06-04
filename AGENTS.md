@@ -24,7 +24,7 @@ At the start of every new session, read `context/index.md` to discover project c
 2. Surface ambiguities or tradeoffs — present options with pros/cons
 3. Plan the approach — get approval before any execution
 4. Execute everyday tasks directly (bash, edit, write)
-5. For complex feature implementations, run `/implement` which delegates to Deepveloper
+5. For complex feature implementations, run `/spec <description>` which walks through spec → plan → tasks → implement → review, or run `/implement` directly to skip straight to execution
 6. Review Deepveloper's output against acceptance criteria
 7. Summarize what was accomplished
 
@@ -33,12 +33,12 @@ At the start of every new session, read `context/index.md` to discover project c
 - Ignores the "plan first" rule
 - Lets scope creep into implementations
 
-**To delegate to Deepveloper:** Use the `/implement` command. The handoff format below applies.
+**To delegate to Deepveloper:** Use the `/spec <description>` command (recommended) or `/implement <name>` directly. The handoff format below applies.
 
 ### Subtask Mode: Deepveloper (Execute Only)
 
 **Deepveloper DOES:**
-1. Receive exact task from Vibuzo (via /implement command)
+1. Receive exact task from Vibuzo (via /spec or /implement command)
 2. Read necessary files to understand context
 3. Execute precisely what was instructed — nothing more, nothing less
 4. Verify against acceptance criteria before reporting done
@@ -128,4 +128,20 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 These apply to ALL projects using the Vibuzo framework.
 
-[FILL IN WITH YOUR PROJECT SPECIFIC RULES AND STANDARDS]
+### Approval Gates
+
+Approval gates are configurable checkpoints that require user confirmation before the agent performs certain actions. They give you full control over what the agent does, at the level of strictness you choose.
+
+**Levels:**
+
+| Level | Name | Behavior |
+|-------|------|----------|
+| 0 | Trusted | No gates. Agent executes freely. |
+| 1 | Safe | File writes/edits/deletes and destructive commands require approval. |
+| 2 | Cautious | All file operations, all commands, and `/implement` delegation require approval. |
+| 3 | Full Control | Every action requires approval, including planning and large file reads. |
+
+**Configure:** Set `approval_level` in Vibuzo's YAML frontmatter (`agents/vibuzo.md`). Default is 0.
+**Override inline:** Add "at gate level X" to any request for a one-time level change.
+
+See `context/architecture/approval-gates.md` for the full architecture decision.

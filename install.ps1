@@ -2,7 +2,7 @@
 .SYNOPSIS
     Vibuzo Agentic Framework Installer (Windows)
 .DESCRIPTION
-    Installs Vibuzo agents (Orchestrator + Vibuzo) to .opencode/ or ~/.config/opencode/
+    Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and commands to .opencode/ or ~/.config/opencode/
 .PARAMETER Global
     Install to ~/.config/opencode/ (available in ALL projects)
 .PARAMETER Help
@@ -58,24 +58,23 @@ Write-Host "🔧 Installing Vibuzo ($InstallTarget)..."
 New-Item -ItemType Directory -Path $AgentsDir -Force | Out-Null
 New-Item -ItemType Directory -Path $CommandsDir -Force | Out-Null
 
-Write-Host "   → orchestrator.md"
-Invoke-WebRequest -Uri "$RawUrl/agents/orchestrator.md" -OutFile "$AgentsDir\orchestrator.md"
-
-Write-Host "   → vibuzo.md"
+Write-Host "   → vibuzo.md (main agent)"
 Invoke-WebRequest -Uri "$RawUrl/agents/vibuzo.md" -OutFile "$AgentsDir\vibuzo.md"
 
+Write-Host "   → deepveloper.md (execution specialist)"
+Invoke-WebRequest -Uri "$RawUrl/agents/deepveloper.md" -OutFile "$AgentsDir\deepveloper.md"
+
+Write-Host "   → orchestrator.md (deprecated — kept for reference)"
+Invoke-WebRequest -Uri "$RawUrl/agents/orchestrator.md" -OutFile "$AgentsDir\orchestrator.md"
+
 # Download command files
-Write-Host "   → commands/"
+Write-Host "   → spec.md (feature pipeline)"
 Invoke-WebRequest -Uri "$RawUrl/commands/spec.md" -OutFile "$CommandsDir\spec.md"
-Invoke-WebRequest -Uri "$RawUrl/commands/plan.md" -OutFile "$CommandsDir\plan.md"
-Invoke-WebRequest -Uri "$RawUrl/commands/tasks.md" -OutFile "$CommandsDir\tasks.md"
-Invoke-WebRequest -Uri "$RawUrl/commands/implement.md" -OutFile "$CommandsDir\implement.md"
-Invoke-WebRequest -Uri "$RawUrl/commands/review.md" -OutFile "$CommandsDir\review.md"
-Write-Host "   → commands/context.md"
+Write-Host "   → context.md"
 Invoke-WebRequest -Uri "$RawUrl/commands/context.md" -OutFile "$CommandsDir\context.md"
-Write-Host "   → commands/add-context.md"
+Write-Host "   → add-context.md"
 Invoke-WebRequest -Uri "$RawUrl/commands/add-context.md" -OutFile "$CommandsDir\add-context.md"
-Write-Host "   → commands/session.md"
+Write-Host "   → session.md"
 Invoke-WebRequest -Uri "$RawUrl/commands/session.md" -OutFile "$CommandsDir\session.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
@@ -91,8 +90,9 @@ if (-not $Global) {
 
 if ($Global) {
   Write-Host "   → Rewriting paths for global install"
-  (Get-Content "$AgentsDir\orchestrator.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\orchestrator.md"
   (Get-Content "$AgentsDir\vibuzo.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\vibuzo.md"
+  (Get-Content "$AgentsDir\deepveloper.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepveloper.md"
+  (Get-Content "$AgentsDir\orchestrator.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\orchestrator.md"
   (Get-Content "$OpenCodeDir\AGENTS.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$OpenCodeDir\AGENTS.md"
 }
 
@@ -102,8 +102,8 @@ if ($Global) {
 if (Get-Command "claude" -ErrorAction SilentlyContinue) {
   Write-Host "   📋 Detected Claude Code — creating .claude/agents/"
   New-Item -ItemType Directory -Path ".claude\agents" -Force | Out-Null
-  Copy-Item "$AgentsDir\orchestrator.md" ".claude\agents\orchestrator.md"
   Copy-Item "$AgentsDir\vibuzo.md" ".claude\agents\vibuzo.md"
+  Copy-Item "$AgentsDir\deepveloper.md" ".claude\agents\deepveloper.md"
   Write-Host "   ✓ .claude/agents/ created"
 }
 
@@ -126,8 +126,8 @@ if (-not $Global) {
   Write-Host "  │  Run install without -Global per project for AGENTS.md."
 }
 Write-Host "  │"
-Write-Host "  │  Next: opencode will pick up Orchestrator"
-Write-Host "  │  as your primary agent."
+Write-Host "  │  Next: opencode will pick up Vibuzo"
+Write-Host "  │  as your primary agent. Use /spec to start a feature pipeline."
 Write-Host "  │"
 Write-Host "  ╰$Sep╯"
 Write-Host ""

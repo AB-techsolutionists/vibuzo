@@ -2,6 +2,8 @@
 #
 # install.sh — Vibuzo Agentic Framework Installer
 #
+# Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and commands.
+#
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --global
@@ -42,24 +44,23 @@ echo "🔧 Installing Vibuzo ($INSTALL_TARGET)..."
 mkdir -p "$AGENTS_DIR" "$COMMANDS_DIR"
 
 # Download agent files
-echo "   → orchestrator.md"
-curl -fsSL "$RAW_URL/agents/orchestrator.md" -o "$AGENTS_DIR/orchestrator.md"
-
-echo "   → vibuzo.md"
+echo "   → vibuzo.md (main agent)"
 curl -fsSL "$RAW_URL/agents/vibuzo.md" -o "$AGENTS_DIR/vibuzo.md"
 
+echo "   → deepveloper.md (execution specialist)"
+curl -fsSL "$RAW_URL/agents/deepveloper.md" -o "$AGENTS_DIR/deepveloper.md"
+
+echo "   → orchestrator.md (deprecated — kept for reference)"
+curl -fsSL "$RAW_URL/agents/orchestrator.md" -o "$AGENTS_DIR/orchestrator.md"
+
 # Download command files
-echo "   → commands/"
+echo "   → spec.md (feature pipeline)"
 curl -fsSL "$RAW_URL/commands/spec.md" -o "$COMMANDS_DIR/spec.md"
-curl -fsSL "$RAW_URL/commands/plan.md" -o "$COMMANDS_DIR/plan.md"
-curl -fsSL "$RAW_URL/commands/tasks.md" -o "$COMMANDS_DIR/tasks.md"
-curl -fsSL "$RAW_URL/commands/implement.md" -o "$COMMANDS_DIR/implement.md"
-curl -fsSL "$RAW_URL/commands/review.md" -o "$COMMANDS_DIR/review.md"
-echo "   → commands/context.md"
+echo "   → context.md"
 curl -fsSL "$RAW_URL/commands/context.md" -o "$COMMANDS_DIR/context.md"
-echo "   → commands/add-context.md"
+echo "   → add-context.md"
 curl -fsSL "$RAW_URL/commands/add-context.md" -o "$COMMANDS_DIR/add-context.md"
-echo "   → commands/session.md"
+echo "   → session.md"
 curl -fsSL "$RAW_URL/commands/session.md" -o "$COMMANDS_DIR/session.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
@@ -77,10 +78,10 @@ if [ "$INSTALL_TARGET" != "local (.opencode/)" ]; then
     # Rewrite .opencode/ references to the actual global path
     # Works on macOS (sed -i '') and Linux/Windows (sed -i)
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/orchestrator.md" "$AGENTS_DIR/vibuzo.md"
+        sed -i '' "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/orchestrator.md" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
         sed -i '' "s|\.opencode/|$OPENCODE_DIR/|g" "$OPENCODE_DIR/AGENTS.md"
     else
-        sed -i "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/orchestrator.md" "$AGENTS_DIR/vibuzo.md"
+        sed -i "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/orchestrator.md" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
         sed -i "s|\.opencode/|$OPENCODE_DIR/|g" "$OPENCODE_DIR/AGENTS.md"
     fi
 fi
@@ -91,8 +92,8 @@ fi
 if command -v claude &>/dev/null; then
     echo "   📋 Detected Claude Code — creating .claude/agents/"
     mkdir -p .claude/agents
-    cp "$AGENTS_DIR/orchestrator.md" .claude/agents/orchestrator.md
     cp "$AGENTS_DIR/vibuzo.md" .claude/agents/vibuzo.md
+    cp "$AGENTS_DIR/deepveloper.md" .claude/agents/deepveloper.md
     echo "   ✓ .claude/agents/ created"
 fi
 
@@ -115,8 +116,8 @@ else
     echo "  │  Run install without --global per project for AGENTS.md."
 fi
 echo "  │"
-echo "  │  Next: opencode will pick up Orchestrator"
-echo "  │  as your primary agent."
+echo "  │  Next: opencode will pick up Vibuzo"
+echo "  │  as your primary agent. Use /spec to start a feature pipeline."
 echo "  │"
 echo "  ╰$SEP╯"
 echo ""

@@ -1,6 +1,6 @@
 # Vibuzo — Agentic Framework
 
-**Vibuzo plans AND executes. Deepveloper handles only `/implement`.**
+**Vibuzo plans AND executes. Deepveloper handles `/implement` subtasks. Run `/spec` for the full spec-to-implement pipeline.**
 
 A minimal, universal agentic framework that works with ANY AI coding tool (opencode, Claude Code, Cursor, Codex, Gemini CLI, Copilot, Windsurf, and 20+ more).
 
@@ -44,9 +44,15 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
 your-project/
 ├── AGENTS.md                     ← Universal rules (read by 25+ tools)
 └── .opencode/
-    └── agent/core/
-        ├── vibuzo.md              ← Main agent (plans + executes)
-        └── deepveloper.md         ← Execution specialist (/implement only)
+    ├── agent/core/
+    │   ├── vibuzo.md              ← Main agent (plans + executes)
+    │   ├── deepveloper.md         ← Execution specialist (/implement)
+    │   └── orchestrator.md        ← ⚠️ Deprecated (kept for reference)
+    └── commands/
+        ├── spec.md               ← Full feature pipeline (/spec)
+        ├── context.md             ← Context management (/context)
+        ├── add-context.md         ← Save context (/add-context)
+        └── session.md             ← Session logging (/session)
 ```
 
 The installer creates `AGENTS.md` in your project root and places the agent definitions in `.opencode/agent/core/`.
@@ -66,14 +72,16 @@ Vibuzo:
   → Verifies it works
   → "Done. Component created at src/DarkModeToggle.tsx"
 
-For complex features, Vibuzo delegates:
-You: "Implement user authentication"
+For complex features, use `/spec`:
+You: `/spec "user authentication"`
 
 Vibuzo:
-  → Breaks down into tasks
-  → Runs `/implement auth`
-  → Deepveloper implements exactly per the spec
-  → Vibuzo reviews, summarizes, reports to you
+  → Phase 1: Creates spec.md (approve?)
+  → Phase 2: Creates plan.md (approve?)
+  → Phase 3: Creates tasks.md (approve?)
+  → Phase 4: Delegates to Deepveloper (approve between tasks)
+  → Phase 5: Saves review.md (approve?)
+  → Done. All artifacts in specs/user-authentication/
 ```
 
 ## Supported Tools
@@ -98,6 +106,22 @@ Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" se
 - Your error handling patterns
 - Your testing requirements
 
+## Approval Gates
+
+Vibuzo supports configurable approval gates (levels 0-3) that control which actions require your confirmation:
+
+| Level | Name | Behavior |
+|-------|------|----------|
+| 0 | Trusted | No gates. Execute freely. |
+| 1 | Safe | File writes/edits/deletes and destructive commands require approval. |
+| 2 | Cautious | All file operations, all commands, and `/implement` delegation require approval. |
+| 3 | Full Control | Every action requires approval, including planning and large file reads. |
+
+**Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`). Default is 0.
+**Override inline:** Add "at gate level X" to any request for a one-time change.
+
+---
+
 ## Handoff Protocol ⚠️ DEPRECATED
 
 The handoff protocol was used in the legacy two-agent system. 
@@ -106,11 +130,14 @@ No manual handoff needed.
 
 ## Roadmap
 
-- **v0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer ← current
-- **v0.2** — Commands (`/plan`, `/implement`, `/review`)
-- **v0.3** — Context patterns (reusable rules)
-- **v0.4** — Skills (reusable workflows)
-- **v0.5** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)
+- **v0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer
+- **v0.2** — Commands (`/spec`, `/plan`, `/tasks`, `/implement`, `/review`)
+- **v0.3** — Context system (`/context`, `/session`, `/add-context`)
+- **v0.4** — Single-agent restructure (Vibuzo main, Orchestrator deprecated)
+- **v0.5** — Approval gates (configurable levels 0-3)
+- **v0.6** — `/spec` command (consolidated pipeline) ← current
+- **v0.7** — Skills (reusable workflows)
+- **v0.8** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)
 
 ## License
 
