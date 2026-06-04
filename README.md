@@ -162,16 +162,16 @@ Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" se
 
 ## Roadmap
 
-- **v0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer
-- **v0.2** — Commands (`/spec`, `/plan`, `/tasks`, `/implement`, `/review`)
-- **v0.3** — Context system (`/context`, `/session`, `/add-context`)
-- **v0.4** — Single-agent restructure (Vibuzo main, Orchestrator deprecated)
-- **v0.5** — Approval gates (configurable levels 0-3)
-- **v0.6** — `/spec` command (consolidated pipeline)
-- **v0.7** — Session compaction system (title-based, paste workflow)
-- **v0.8** — Context harvest + imperative command pattern ← current
-- **v0.9** — Skills (reusable workflows)
-- **v0.10** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)
+- **v0.0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer
+- **v0.0.2** — Commands (`/spec`, `/plan`, `/tasks`, `/implement`, `/review`)
+- **v0.0.3** — Context system (`/context`, `/session`, `/add-context`)
+- **v0.0.4** — Single-agent restructure (Vibuzo main, Orchestrator deprecated)
+- **v0.0.5** — Approval gates (configurable levels 0-3)
+- **v0.0.6** — `/spec` command (consolidated pipeline)
+- **v0.0.7** — Session compaction system (title-based, paste workflow)
+- **v0.0.8** — Context harvest + imperative command pattern ← current
+- **v0.0.9** — Skills (reusable workflows)
+- **v0.1.0** — Multi-tool auto-detection (Cursor, Windsurf, Codex, Gemini)
 
 ## License
 
