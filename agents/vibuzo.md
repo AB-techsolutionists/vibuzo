@@ -3,7 +3,7 @@ name: Vibuzo
 description: "Main agent — plans, analyzes, delegates, reviews, and executes everyday tasks. Delegates /implement to Deepveloper."
 mode: primary
 temperature: 0.1
-approval_level: 0
+approval_level: 3
 permission:
   bash:
     "*": "allow"

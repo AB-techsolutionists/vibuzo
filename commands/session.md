@@ -1,15 +1,15 @@
 ---
-description: Compact conversation into rich anchored session summary
+description: Scaffold a session compaction file, then instruct user to paste /compact output
 agent: Vibuzo
 ---
 
 Manage session compactions: $ARGUMENTS
 
 Route by $ARGUMENTS:
-- Empty → run compaction now (analyze conversation, save, update timeline)
+- Empty → scaffold compaction file (title + skeleton + timeline, no body)
 - Starts with "view" → run `/session view`
 - Starts with "timeline" → run `/session timeline`
-- Anything else → run compaction now with that as additional context
+- Anything else → scaffold compaction with that as additional context
 
 ---
 
@@ -18,46 +18,28 @@ Route by $ARGUMENTS:
 Do these steps NOW:
 
 1. **Analyze this conversation** — read the last 10+ messages and extract:
-   - What was accomplished (features built, decisions made, bugs fixed)
-   - What constraints were at play
-   - Key decisions made
-   - What's still in progress or blocked
-   - Files created or modified
+   - What was the overall objective of this session
+   - What files were created or modified
+   - A one-line summary (2-3 words for the timeline)
 
 2. **Generate a title** — extract 2-4 key words from the analysis, convert to kebab-case. Check `context/sessions/` for existing files with the same title today. If collision, append `-2`, `-3`.
 
-3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` with this exact template:
+3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` with this skeleton template:
 
    ```
    # <title> — <brief headline>
 
-   ## Goal
-   - <what was the objective>
-
-   ## Constraints & Preferences
-   - <what constraints applied>
-
-   ## Progress
-   ### Done
-   - <what was accomplished>
-
-   ### In Progress
-   - <what's still being worked on>
-
-   ### Blocked
-   - <what's blocked>
-
-   ## Key Decisions
-   - <decisions made during this session>
-
-   ## Next Steps
-   - <what should happen next>
-
-   ## Critical Context
-   - <important notes for future sessions>
+   *Paste opencode /compact output below this line*
+   ────────────────────────────────────────
+   (paste here)
+   ────────────────────────────────────────
+   *Paste opencode /compact output above this line*
 
    ## Relevant Files
    - <file path>: <description>
+
+   ## Timeline
+   | YYYY-MM-DD | HH:MM | `<title>` | <one-line summary> |
    ```
 
 4. **Update the timeline** at `context/sessions/index.md` — if it doesn't exist, create it with:
@@ -78,8 +60,12 @@ Do these steps NOW:
    ```
    ── SESSION ─────────────────────────────
    Saved:  context/sessions/YYYY-MM-DD-<title>.md
-   Summary: <one-line headline>
+   Body:   empty — needs /compact paste
    Timeline: updated (N total compactions)
+
+   Next step: Run opencode's `/compact`, then paste the output
+   into the body of context/sessions/YYYY-MM-DD-<title>.md
+   between the marker lines.
    ────────────────────────────────────────
    ```
 
