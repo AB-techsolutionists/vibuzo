@@ -20,7 +20,7 @@
 
 ## Rationale
 
-Opopencode's template engine substitutes `$ARGUMENTS` with the user's actual input **everywhere** in the file before the agent reads it. When `$ARGUMENTS` appears in a non-matching section's body, the substitution creates text like `extract everything after "find " from append` which can confuse the agent into executing that section.
+Opencode's template engine substitutes `$ARGUMENTS` with the user's actual input **everywhere** in the file before the agent reads it. When `$ARGUMENTS` appears in a non-matching section's body, the substitution creates text like `extract everything after "find " from append` which can confuse the agent into executing that section.
 
 ## Enforcement
 

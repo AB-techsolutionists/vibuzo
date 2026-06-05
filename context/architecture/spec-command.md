@@ -7,7 +7,7 @@
 The original spec framework required 5 separate commands (`/spec` → `/plan` → `/tasks` → `/implement` → `/review`) to develop a feature. Users had to remember the correct order and manually invoke each command. This created friction and context-switching overhead.
 
 ## Decision
-Consolidate the 5-command spec framework into a single `/spec` command that runs the full pipeline (spec → plan → tasks → implement → review) sequentially, with phase gates for user approval at each step. The old commands are deprecated (not deleted) for backward compatibility.
+Consolidate the 5-command spec framework into a single `/spec` command that runs the full pipeline (spec → plan → tasks → implement → review) sequentially, with phase gates for user approval at each step. The old commands have been removed.
 
 ## Architecture
 
@@ -54,30 +54,18 @@ The `/spec` command reads `approval_level` from Vibuzo's YAML frontmatter:
 
 ### Deprecation
 
-| Command | Status | Replacement |
-|---------|--------|-------------|
-| `/spec` (old) | Replaced | `/spec <description>` (new pipeline) |
-| `/plan` | Deprecated | `/spec <description>` |
-| `/tasks` | Deprecated | `/spec <description>` |
-| `/implement` | Deprecated | `/spec <description>` |
-| `/review` | Deprecated | `/spec <description>` |
-| `/context` | Unchanged | — |
-| `/session` | Unchanged | — |
-| `/add-context` | Unchanged | — |
+The original 5-command spec framework (`/plan`, `/tasks`, `/implement`, `/review`) has been fully consolidated into `/spec`. The individual command files have been removed. `/spec` is the single entry point for all feature development.
 
 ### File Structure
 
 | File | Change |
 |------|--------|
-| `commands/spec.md` | Replaced — old deprecated content replaced with 5-phase pipeline definition |
-| `.opencode/commands/spec.md` | Replaced — mirror copy |
-| `commands/{plan,tasks,implement,review}.md` | Deprecated — banner added, content preserved |
-| `.opencode/commands/{plan,tasks,implement,review}.md` | Deprecated — banner added, content preserved |
+| `commands/spec.md` | 5-phase pipeline definition |
+| `.opencode/commands/spec.md` | Mirror copy |
 
 ### Key Principles
 
 1. **Single entry point** — One command replaces five. The pipeline is guided, not manual.
 2. **Gate-driven progression** — Each phase completes before the next begins. User approves or redirects.
-3. **Backward compatibility** — Old deprecated commands still work. Preserved, not deleted.
-4. **Approval gate integration** — Respects Vibuzo's approval_level setting. Level 0 = uninterrupted flow.
-5. **Zero runtime deps** — All behavior is command instructions in Markdown/YAML. No code.
+3. **Approval gate integration** — Respects Vibuzo's approval_level setting. Level 0 = uninterrupted flow.
+4. **Zero runtime deps** — All behavior is command instructions in Markdown/YAML. No code.

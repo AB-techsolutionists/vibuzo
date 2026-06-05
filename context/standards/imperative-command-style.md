@@ -18,9 +18,7 @@ Imperative commands instruct the agent to **execute immediately** rather than de
 
 ## Conventions
 
-- Use `## RUN: /commandname Subcommand` headers for each subcommand section
 - Start execution sections with `Do these steps NOW:`
 - Use numbered steps for sequential operations
-- Route `$ARGUMENTS` at the top of the file before any execution sections
-- Use `---` horizontal rules to separate subcommands
 - Include `agent: Vibuzo` in YAML frontmatter
+- `subtask: true` only for commands needing isolated execution (`/spec`, `/add-context`)

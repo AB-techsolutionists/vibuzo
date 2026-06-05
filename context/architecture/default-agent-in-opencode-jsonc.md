@@ -1,3 +1,5 @@
+> 🗑️ **DEPRECATED** — `opencode.jsonc` has been removed from the repo (it was a local-only config, not distributed by installers). Setting `default_agent` in opencode.jsonc hid the agent selector dropdown in the TUI, preventing users from switching agents. Users now select Vibuzo from the agent dropdown instead. See `architecture/split-file-command-pattern.md` for the current command pattern documentation.
+
 # Default Agent in opencode.jsonc
 
 ## Date

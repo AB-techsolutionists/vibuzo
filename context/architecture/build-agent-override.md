@@ -1,4 +1,4 @@
-> ⚠️ **CORRECTED** — The `agent.build` override described below does NOT make `/new` default to Vibuzo. It only changes the Build agent's prompt/permissions. See `default-agent-in-opencode-jsonc.md` for the correct approach using `"default_agent": "vibuzo"`.
+> 🗑️ **DEPRECATED** — `opencode.jsonc` has been removed from the repo (it was a local-only config, not distributed by installers). Neither the `agent.build` override nor `default_agent` are used anymore. Users select Vibuzo from the agent dropdown in the TUI.
 
 # Build Agent Override — Architecture Decision
 

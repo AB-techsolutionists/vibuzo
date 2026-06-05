@@ -1,65 +1,27 @@
-# Route-Based Argument Handling
+# Route-Based Argument Handling — ⚠️ FAILED PATTERN
 
-## Pattern
+> **This pattern does NOT work.** It is kept as a record of what was tried and why it failed.
 
-Parse `$ARGUMENTS` at the top of the command file with a clear switch/route block, then section each subcommand under a `## RUN:` header.
+## The Attempt
 
-## Structure
+The original command design used a single file with a routing block at the top, followed by multiple `## RUN:` sections — one per subcommand. The routing block would parse `$ARGUMENTS` and the agent was supposed to execute only the matching section.
 
-```markdown
----
-description: <what the command does>
-agent: Vibuzo
----
+## Why It Failed
 
-<command description>: $ARGUMENTS
+Opencode substitutes `$ARGUMENTS` into **every** `Do these steps NOW:` section in the file before the agent reads it. The agent then executes **all** sections sequentially, regardless of routing instructions, critical warnings, or guard clauses. The agent processes the file linearly and never "jumps over" non-matching sections.
 
-Route by $ARGUMENTS:
-- Empty → <default action>
-- Starts with "subcommand1" → run `<command> subcommand1`
-- Starts with "subcommand2" → run `<command> subcommand2`
-- Natural language match → infer intent from keywords
-- Anything else → <fallback action>
+Attempted (and failed) mitigations:
+- Adding `⚠️ CRITICAL: execute only one section` routing instruction
+- Adding per-section guard clauses (`⚠️ SKIP if...`)
+- Using `$ARGUMENTS` inside guard text for template substitution
+- Guard clauses referencing "the user's arguments"
 
----
+None worked.
 
-## RUN: `/command` Default Action
+## The Fix
 
-Do these steps NOW:
+Every command gets its own file with exactly one `Do these steps NOW:` section. No routing, no multiple sections. See `architecture/split-file-command-pattern.md` for the correct pattern.
 
-1. <step 1>
-2. <step 2>
+## Historical Note
 
----
-
-## RUN: `/command subcommand1`
-
-Do these steps NOW:
-
-1. <step 1>
-2. <step 2>
-
----
-
-## RUN: `/command subcommand2`
-
-...
-
----
-```
-
-## Examples
-
-> ⚠️ **Note:** Routing-only main files (`commands/<command>.md`) have been removed — they don't work because the agent reads them as plain text with no imperative instructions. See `architecture/split-file-command-pattern.md` for details. Sub-files with `subtask: true` should be invoked directly.
-
-## Rules
-
-1. Route block must be the FIRST thing after YAML frontmatter
-2. Each subcommand gets its own `## RUN:` section
-3. Execution sections start with `Do these steps NOW:`
-4. Use `---` horizontal rules to separate subcommand sections
-5. Add a `## Backward Compatibility` section at the end for legacy behaviors
-
-## Rationale
-
-Single-file commands with routing are simpler than multi-file command systems. The route block at the top gives immediate visibility into all supported subcommands without reading the entire file.
+Routing-only main files (`commands/<command>.md` with zero `Do these steps NOW:` sections that were meant to dispatch to sub-files) also failed — the agent reads them as plain text and does nothing.

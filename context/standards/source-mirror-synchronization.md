@@ -24,10 +24,17 @@ Every command file and agent definition MUST exist in **two locations**:
 
 | Source | Mirror |
 |--------|--------|
-| `commands/add-context.md` | `.opencode/commands/add-context.md` |
-| `commands/spec.md` | `.opencode/commands/spec.md` |
 | `agents/vibuzo.md` | `.opencode/agent/core/vibuzo.md` |
 | `agents/deepveloper.md` | `.opencode/agent/core/deepveloper.md` |
+| `commands/spec.md` | `.opencode/commands/spec.md` |
+| `commands/add-context.md` | `.opencode/commands/add-context.md` |
+| `commands/context-init.md` | `.opencode/commands/context-init.md` |
+| `commands/context-find.md` | `.opencode/commands/context-find.md` |
+| `commands/context-harvest.md` | `.opencode/commands/context-harvest.md` |
+| `commands/context-append.md` | `.opencode/commands/context-append.md` |
+| `commands/session-compaction.md` | `.opencode/commands/session-compaction.md` |
+| `commands/session-view.md` | `.opencode/commands/session-view.md` |
+| `commands/session-timeline.md` | `.opencode/commands/session-timeline.md` |
 
 ## Rationale
 
