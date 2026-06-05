@@ -28,6 +28,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `architecture/split-file-command-pattern.md` — Architecture decision: each command gets one file with one `Do these steps NOW:` section. No routing-only files. Two execution modes: main session vs subtask.
 - `architecture/build-agent-override.md` — 🗑️ DEPRECATED — Referenced opencode.jsonc (removed)
 - `architecture/default-agent-in-opencode-jsonc.md` — 🗑️ DEPRECATED — Referenced opencode.jsonc (removed)
+- `architecture/installer-update-mechanism.md` — Architecture decision for the `--update` flag: version marker file, GitHub API comparison, interactive confirmation, best-effort failure handling
 
 ### Patterns
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
@@ -38,6 +39,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/naming.md` — Use camelCase for variables, functions, and methods
 - `standards/arguments-usage-in-command-templates.md` — $ARGUMENTS must only appear in first description line, never in section bodies
 - `standards/source-mirror-synchronization.md` — Every active source file in commands/ and agents/ must have an identical mirror in .opencode/
+- `standards/command-parameter-notation.md` — All command parameters use `[descriptive prompts]` in square brackets; consistent across all surfaces
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 
 ### Sessions
