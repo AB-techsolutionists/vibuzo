@@ -25,6 +25,9 @@ curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/ins
 
 # Per-project
 cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
+
+# Update existing installation (shows version info + confirmation)
+cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --update
 ```
 
 ### Windows (PowerShell)
@@ -36,6 +39,9 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
 # Per-project
 cd your-project
 pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
+
+# Update existing installation (shows version info + confirmation)
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Update"
 ```
 
 ## What Gets Installed

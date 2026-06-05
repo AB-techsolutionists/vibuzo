@@ -29,6 +29,8 @@ Do these steps NOW:
     *Session compaction — YYYY-MM-DD at HH:MM*
     <br>*Total messages: <N> | Files touched: <N> | Commands run: <N>*
 
+    > **Timestamp rule:** Every HH:MM in this file MUST be the actual system time when the event occurred. Use `Get-Date -Format "HH:mm"` (PowerShell) or `date +%H:%M` (bash) to capture each timestamp. Never use `~` approximate times — if you don't know the exact time, use a tool to find out.
+
     ## Goal
 
     <A single natural language paragraph that tells the complete story of this session. What was the user trying to do? What happened step by step? What was built, changed, decided, or left undone? This should be 4-10 sentences that anyone can read to fully understand the session without reading the rest of the file. Write it like a changelog narrative — specific, factual, no fluff.>
@@ -38,6 +40,8 @@ Do these steps NOW:
     <Every distinct user request → action sequence, ordered by time. Use this format for each entry:>
 
     ### <HH:MM> — <short event label>
+
+    HH:MM must be the actual system time of this interaction. Run `Get-Date -Format "HH:mm"` (PowerShell) or `date +%H:%M` (bash) to get it for each entry.
 
     - **Request:** <what the user asked, quoted or closely paraphrased>
     - **Actions:**

@@ -5,16 +5,21 @@
     Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and active commands to .opencode/ or ~/.config/opencode/
 .PARAMETER Global
     Install to ~/.config/opencode/ (available in ALL projects)
+.PARAMETER Update
+    Update existing installation. Shows version info and prompts for confirmation before overwriting.
 .PARAMETER Help
     Show this help message
 .EXAMPLE
     pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
 .EXAMPLE
     pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Global
+.EXAMPLE
+    pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Update
 #>
 
 param(
   [switch]$Global,
+  [switch]$Update,
   [switch]$Help
 )
 
@@ -34,6 +39,7 @@ if ($Global) {
 
 $AgentsDir = "$OpenCodeDir\agent\core"
 $CommandsDir = "$OpenCodeDir\commands"
+$VersionFile = "$OpenCodeDir\.vibuzo-version"
 
 # ─── Help ────────────────────────────────────────────────────────────────────
 
@@ -43,18 +49,75 @@ install.ps1 — Vibuzo Agentic Framework Installer
 
 Usage:
   pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
-  pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Global"
+  pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Global
+  pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Update
 
 Options:
   -Global     Install to ~/.config/opencode/ (available in ALL projects)
+  -Update     Update existing installation (shows version info, prompts confirmation before overwriting)
   -Help       Show this help message
 "@
   exit 0
 }
 
-# ─── Install ─────────────────────────────────────────────────────────────────
+# ─── Update Mode ─────────────────────────────────────────────────────────────
 
-Write-Host "🔧 Installing Vibuzo ($InstallTarget)..."
+if ($Update) {
+  if (-not (Test-Path $VersionFile)) {
+    Write-Host "❌ No existing Vibuzo installation found at $OpenCodeDir"
+    Write-Host "   Run without -Update to install fresh."
+    exit 1
+  }
+
+  $CurrentVersion = Get-Content $VersionFile
+  $Parts = $CurrentVersion -split ' '
+  $InstalledDate = $Parts[0]
+  $InstalledTime = $Parts[1]
+  $InstalledCommit = $Parts[2]
+  $InstalledMode = $Parts[3]
+
+  Write-Host "🔍 Checking for updates..."
+  Write-Host ""
+  Write-Host "  Current install:"
+  Write-Host "    Date:   $InstalledDate at $InstalledTime"
+  Write-Host "    Commit: $InstalledCommit"
+  Write-Host "    Mode:   $InstalledMode"
+  Write-Host "    Path:   $OpenCodeDir"
+  Write-Host ""
+
+  # Try to fetch latest commit SHA from GitHub API (best-effort)
+  try {
+    $LatestCommit = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
+    Write-Host "  Latest on origin/$Branch: $LatestCommit"
+    if ($LatestCommit -eq $InstalledCommit) {
+      Write-Host "  ✅ Already up to date!"
+    } else {
+      Write-Host "  ⬆️  Update available!"
+    }
+  } catch {
+    Write-Host "  (Could not check remote — network issue or API limit)"
+  }
+  Write-Host ""
+
+  # Interactive confirmation (skip if piped or non-interactive)
+  $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
+  if ($Interactive) {
+    $Response = Read-Host "Proceed with update? (y/N)"
+    if ($Response -notin @('y', 'Y', 'yes', 'YES')) {
+      Write-Host "Update cancelled."
+      exit 0
+    }
+  } else {
+    Write-Host "(non-interactive shell — proceeding automatically)"
+  }
+
+  Write-Host "⬆️  Updating Vibuzo ($InstallTarget)..."
+} else {
+  Write-Host "🔧 Installing Vibuzo ($InstallTarget)..."
+}
+
+# ─── Install / Update ────────────────────────────────────────────────────────
+
 New-Item -ItemType Directory -Path $AgentsDir -Force | Out-Null
 New-Item -ItemType Directory -Path $CommandsDir -Force | Out-Null
 
@@ -102,6 +165,18 @@ if ($Global) {
   (Get-Content "$OpenCodeDir\AGENTS.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$OpenCodeDir\AGENTS.md"
 }
 
+# ─── Write Version File ──────────────────────────────────────────────────────
+
+$Now = Get-Date -Format "yyyy-MM-dd HH:mm"
+$Mode = if ($Global) { "global" } else { "local" }
+# Try to get the latest commit SHA (best-effort)
+try {
+  $Sha = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
+} catch {
+  $Sha = "unknown"
+}
+"$Now $Sha $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
+
 # ─── Tool Detection ──────────────────────────────────────────────────────────
 
 # Claude Code
@@ -115,11 +190,12 @@ if (Get-Command "claude" -ErrorAction SilentlyContinue) {
 
 # ─── Done ────────────────────────────────────────────────────────────────────
 
+$Action = if ($Update) { "updated" } else { "installed" }
 $Sep = "────────────────────────────────────────────"
 Write-Host ""
 Write-Host "  ╭$Sep╮"
 Write-Host "  │"
-Write-Host "  │  ✅ Vibuzo installed successfully!"
+Write-Host "  │  ✅ Vibuzo $Action successfully!"
 Write-Host "  │"
 Write-Host "  │  Location: $InstallTarget"
 Write-Host "  │  Agents:   $AgentsDir"
