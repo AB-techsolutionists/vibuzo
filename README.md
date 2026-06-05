@@ -89,17 +89,17 @@ your-project/
 
 ## Commands
 
-| Command | What it does |
-|---------|-------------|
-| `/spec [enter complete feature specification]` | 5-phase feature pipeline with approval gates |
-| `/context init` | Scaffold context directory structure |
-| `/context find [type your search..]` | Search saved project knowledge |
-| `/context harvest` | Mine session archive for patterns to promote |
-| `/context append` | Scan current conversation for knowledge to save |
-| `/add-context [describe what to remember..]` | Save a rule, pattern, or decision to permanent context |
-| `/session` | Generate a full session report |
-| `/session view [session name or date..]` | Browse past session reports |
-| `/session timeline` | Show all session reports chronologically |
+| Command | What it does | Example |
+|---------|-------------|---------|
+| `/spec` | 5-phase feature pipeline with approval gates | `/spec dark mode toggle` |
+| `/context init` | Scaffold context directory structure | `/context init` |
+| `/context find` | Search saved project knowledge | `/context find naming conventions` |
+| `/context harvest` | Mine session summaries for patterns to promote | `/context harvest` |
+| `/context append` | Scan current conversation for knowledge to save | `/context append` |
+| `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context We use pnpm not npm` |
+| `/session` | Generate a full session report | `/session` |
+| `/session view` | Browse past session reports | `/session view dark-mode` or `/session view 2026-06-05` |
+| `/session timeline` | Show all session reports chronologically | `/session timeline` |
 
 ## License
 
