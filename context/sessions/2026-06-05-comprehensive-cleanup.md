@@ -5,7 +5,7 @@
 
 ## Goal
 
-This session performed a comprehensive codebase cleanup of the Vibuzo framework. The user started by asking how other users update their Vibuzo installation, leading to a discussion that the install scripts are idempotent — re-running them is the update mechanism. This prompted a rewrite of `commands/session-compaction.md` into a comprehensive template with full narrative paragraphs and exhaustive per-section coverage. The user then noticed stale internal references (dead links to deleted files, wrong default values, deprecated command tables) and requested a full audit. The audit revealed: `opencode.jsonc` was a local-only config not distributed by installers (it also hid the agent dropdown by setting `default_agent`), `.opencode/prompts/vibuzo.txt` was a redundant mirror of AGENTS.md not shipped by installers, and 3 context files duplicated their command-file counterparts. Over the session, these were removed; architecture docs were cleaned of dead references and wrong claims; approval-gates.md was trimmed to decision rationale only; route-based-argument-handling.md was rewritten as a FAILED PATTERN record; and all changes were committed as 17-file cleanup. The session closed with options for next steps (push to origin, test /compact, create update command, smoke test commands, improve .gitignore).
+This session performed a comprehensive codebase cleanup of the Vibuzo framework. The user started by asking how other users update their Vibuzo installation, leading to a discussion that the install scripts are idempotent — re-running them is the update mechanism. This prompted a rewrite of `commands/session.md` into a comprehensive template with full narrative paragraphs and exhaustive per-section coverage. The user then noticed stale internal references (dead links to deleted files, wrong default values, deprecated command tables) and requested a full audit. The audit revealed: `opencode.jsonc` was a local-only config not distributed by installers (it also hid the agent dropdown by setting `default_agent`), `.opencode/prompts/vibuzo.txt` was a redundant mirror of AGENTS.md not shipped by installers, and 3 context files duplicated their command-file counterparts. Over the session, these were removed; architecture docs were cleaned of dead references and wrong claims; approval-gates.md was trimmed to decision rationale only; route-based-argument-handling.md was rewritten as a FAILED PATTERN record; and all changes were committed as 17-file cleanup. The session closed with options for next steps (push to origin, test /compact, create update command, smoke test commands, improve .gitignore).
 
 ## Chronological Log
 
@@ -20,15 +20,15 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 - **Decision:** Re-running the install script is the update mechanism (idempotent). No separate update command needed yet. Consider adding `--update` flag later.
 - **Output:** Determined installers always download fresh from origin/main. User told to re-run the one-liner.
 
-### 18:03 — Rewrite session-compaction.md
+### 18:03 — Rewrite session.md
 
 - **Request:** User wanted session compaction template to be comprehensive
 - **Actions:**
-  - edit: Replaced entire session-compaction.md with comprehensive template
+  - edit: Replaced entire session.md with comprehensive template
 - **Files:**
-  - `commands/session-compaction.md` — MODIFY — Rewrote with full Goal narrative paragraph, chronological log format, file manifest table, commands table, key decisions, critical context, state block, relevant files table, and timeline entry format
+  - `commands/session.md` — MODIFY — Rewrote with full Goal narrative paragraph, chronological log format, file manifest table, commands table, key decisions, critical context, state block, relevant files table, and timeline entry format
 - **Decision:** Template must capture every request, action, file change, decision, command, and git state. Goal must open with a full natural-language paragraph. All sections required — "None" if empty.
-- **State change:** sync mirrors (commands/session-compaction.md → .opencode/commands/session-compaction.md)
+- **State change:** sync mirrors (commands/session.md → .opencode/commands/session.md)
 
 ### 18:04 — Stale references discovered
 
@@ -162,7 +162,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 | DELETE | `context/patterns/add-context.md` | Duplicate of `commands/add-context.md` |
 | DELETE | `context/patterns/session-history-candidate-scanning.md` | Duplicate of `commands/context-append.md` |
 | DELETE | `context/standards/approval-gate-code-block-rendering.md` | Duplicate of gate format in `agents/vibuzo.md` |
-| MODIFY | `commands/session-compaction.md` | Rewritten into comprehensive template with full narrative, chronology, file manifest, commands table, decisions, critical context, state, and timeline |
+| MODIFY | `commands/session.md` | Rewritten into comprehensive template with full narrative, chronology, file manifest, commands table, decisions, critical context, state, and timeline |
 | MODIFY | `AGENTS.md` | Removed opencode.jsonc from tree, replaced stale gotchas with accurate two-execution-modes and always-sync-mirrors rules |
 | MODIFY | `context/architecture/agent-restructure.md` | Removed dead Orchestrator section (orchestrator.md never existed) |
 | MODIFY | `context/architecture/spec-command.md` | Removed deprecated command table (/plan, /tasks, /implement, /review) |
@@ -202,7 +202,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 - **approval_level is still 3** (Full Control) in `agents/vibuzo.md` — every action requires gate approval. Change to 0 for development.
 - **4 files deleted from repo**: opencode.jsonc, patterns/add-context.md, patterns/session-history-candidate-scanning.md, standards/approval-gate-code-block-rendering.md
 - **17 files in be58e01 commit** — 13 modified, 4 deleted. 162 insertions, 368 deletions.
-- **Session compaction was rewritten** in this session — see `commands/session-compaction.md` for the comprehensive template.
+- **Session compaction was rewritten** in this session — see `commands/session.md` for the comprehensive template.
 - **/compact has not been tested** since removing default_agent — try it in the next session.
 - **No `--update` flag exists** in installers — users re-run the install one-liner to update. Consider adding this.
 - **Next actionable options**: push to origin, test /compact, create update command, smoke test 9 commands, improve .gitignore.
@@ -218,7 +218,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 
 | File | Relevance |
 |------|-----------|
-| `commands/session-compaction.md` | Comprehensive template rewritten in this session — canonical spec for future compactions |
+| `commands/session.md` | Comprehensive template rewritten in this session — canonical spec for future compactions |
 | `context/architecture/approval-gates.md` | Trimmed to ADR only — default corrected to 3, gate examples removed |
 | `context/patterns/route-based-argument-handling.md` | Rewritten as FAILED PATTERN — documents why split files are used |
 | `opencode.jsonc` | DELETED — was the last local-only config; removal may fix /compact |

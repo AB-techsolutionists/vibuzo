@@ -1,187 +1,80 @@
 # Vibuzo — Agentic Framework
 
-**Vibuzo plans AND executes. Deepveloper handles implementation subtasks via `/spec`. Run `/spec` for the full spec-to-implement pipeline.**
+**Vibuzo is an agentic framework for AI coding agents.** AI agents make two common mistakes: they plan and execute at the same time (leading to half-baked solutions), and they forget everything between sessions (leading to repeated explanations). Vibuzo solves both.
 
-A minimal, universal agentic framework that works with ANY AI coding tool (opencode, Claude Code, Cursor, Codex, Gemini CLI, Copilot, Windsurf, and 20+ more).
+**How it works:**
 
-## Philosophy
+1. **Planning-first workflow** — Vibuzo always proposes a plan before touching code. You review and approve each step. Complex features are delegated to a dedicated implementation agent (Deepveloper) via `/spec`, with approval gates between every phase.
 
-Most AI coding mistakes come from one root cause: **planning and executing at the same time.**
+2. **Persistent context system** — your project's conventions, architecture decisions, and patterns are saved to `context/` via `/add-context`. Every new session and every agent automatically reads them at startup — no more re-explaining your stack.
 
-Vibuzo separates the two with a clear role split:
+3. **Session reports** — at natural breakpoints, `/session` generates a full markdown report of everything that happened: what was requested, what was built, every file changed, every decision made, and why. These reports live in `context/sessions/` and are available to future sessions and any agent via `/session view` and `/session timeline`.
 
-- **Vibuzo** (main agent) — plans, analyzes, delegates, reviews, AND executes everyday tasks. The single entry point for everything.
-- **Deepveloper** (subtask agent) — execution specialist. Triggered only as a subtask by Vibuzo. Never plans.
+Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
 
-This separation forces intentionality. Every line of code is planned before it's written. Every change is verified before it's complete.
-
-## Install
-
-### macOS / Linux (bash)
+## Installation
 
 ```bash
+# Local (per project)
+cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
+
 # Global (all projects)
 curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --global
 
-# Per-project
-cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
-
-# Update existing installation (shows version info + confirmation)
+# Update existing
 cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --update
 ```
 
-### Windows (PowerShell)
+**Windows (PowerShell):** Replace `| bash` with `pwsh -c "& { $(irm ...) }"`, use `-Global` / `-Update`.
 
-```powershell
-# Global (all projects)
-pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Global"
+## Quick Start
 
-# Per-project
-cd your-project
-pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
+1. **Restart opencode** — the installer adds agents to `.opencode/agent/core/`. After restart, select **Vibuzo** from the agent dropdown.
 
-# Update existing installation (shows version info + confirmation)
-pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Update"
-```
+2. **Initialize context** — run `/context init`. This creates `context/` with four directories:
+   ```
+   context/
+   ├── architecture/   ← ADRs and design decisions
+   ├── standards/      ← Conventions (naming, testing, style)
+   ├── patterns/       ← Reusable idioms
+   └── sessions/       ← Session archive (auto-generated)
+   ```
+
+3. **Save project context** — tell Vibuzo about your project so every session remembers:
+   ```
+   /add-context This is a Next.js 14 app with App Router, shadcn/ui, and Prisma
+   /add-context We use pnpm, not npm
+   ```
+   Search later with `/context find (user input)`.
+
+4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec (user input)` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
+
+5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending.    Browse past reports with `/session view (user input)` and `/session timeline`.
 
 ## What Gets Installed
 
 ```
 your-project/
-├── AGENTS.md                     ← Universal rules (read by 25+ tools)
+├── AGENTS.md                     ← Read by 25+ tools (commit this)
 └── .opencode/
-    ├── agent/core/
-    │   ├── vibuzo.md              ← Main agent (plans + executes)
-    │   └── deepveloper.md         ← Execution specialist (via /spec)
-    └── commands/
-        ├── spec.md               ← Full feature pipeline (/spec)
-        ├── add-context.md         ← Save context (/add-context)
-        ├── context-init.md        ← Scaffold context directories
-        ├── context-find.md        ← Search project context
-        ├── context-harvest.md     ← Promote sessions to permanent context
-        ├── context-append.md      ← Scan conversation for context
-        ├── session-compaction.md  ← Scaffold session compaction
-        ├── session-view.md        ← Browse past sessions
-        └── session-timeline.md    ← Show master timeline
+    ├── agent/core/vibuzo.md      ← Main agent (pick this from dropdown)
+    ├── agent/core/deepveloper.md  ← Subtask agent (/spec)
+    └── commands/                  ← 9 command files (spec, context*, session*)
 ```
-
-The installer creates `AGENTS.md` in your project root and places agent definitions in `.opencode/agent/core/`. Global install places agents in `~/.config/opencode/agent/core/` so they're available across all your projects.
 
 ## Commands
 
 | Command | What it does |
 |---------|-------------|
-| `/spec <feature>` | 5-phase pipeline: spec → plan → tasks → implement → review |
-| `/session` | Scaffold a session compaction file with generated summary |
-| `/session view <ref>` | Browse past session compactions |
-| `/session timeline` | Show master timeline of all compactions |
-| `/context init` | Scaffold the context directory structure |
-| `/context find <topic>` | Search project context for information |
-| `/context harvest` | Mine sessions for patterns worth promoting to permanent context |
-| `/context append` | Scan conversation for context-worthy content |
-| `/add-context <statement>` | Save a rule, pattern, or decision to permanent context |
-
-## How It Works
-
-```
-You: "Add a dark mode toggle"
-
-Vibuzo:
-  → Analyzes: "I see Tailwind + React. Option A: dark: prefix. Option B: CSS vars."
-  → Proposes plan, gets your approval
-  → Implements the toggle component directly
-  → Verifies it works
-  → "Done. Component created at src/DarkModeToggle.tsx"
-
-For complex features, use `/spec`:
-You: `/spec "user authentication"`
-
-Vibuzo:
-  → Phase 1: Creates spec.md (approve?)
-  → Phase 2: Creates plan.md (approve?)
-  → Phase 3: Creates tasks.md (approve?)
-  → Phase 4: Delegates to Deepveloper (approve between tasks)
-  → Phase 5: Saves review.md (approve?)
-  → Done. All artifacts in specs/user-authentication/
-```
-
-## Context System
-
-Context gives every new session instant access to project conventions, patterns, and architecture.
-
-```
-context/
-├── index.md                     ← Table of contents (auto-updated)
-├── architecture/                ← Architecture Decision Records
-├── standards/                   ← Naming, style, conventions
-├── patterns/                    ← Reusable patterns and idioms
-└── sessions/                    ← Auto-generated compaction archive
-```
-
-- **Save knowledge:** `/add-context <statement>` — agent infers type and name
-- **Search:** `/context find <topic>` — exact match first, then broader keyword search
-- **Harvest:** `/context harvest` — reads all sessions, presents promotion candidates
-- **Auto-load:** agents read `context/index.md` at session start
-
-## Session Management
-
-Use `/session` at natural breakpoints to checkpoint your work:
-
-```
-/session           → creates context/sessions/YYYY-MM-DD-<title>.md with generated summary
-/session view      → browse past compactions
-/session timeline  → view all compactions chronologically
-```
-
-Each session file uses descriptive title-based names (`session-redesign`, `session-polish`) with automatic collision handling.
-
-## Approval Gates
-
-Vibuzo supports configurable approval gates (levels 0-3) that control which actions require your confirmation:
-
-| Level | Name | Behavior |
-|-------|------|----------|
-| 0 | Trusted | No gates. Execute freely. |
-| 1 | Safe | File writes/edits/deletes and destructive commands require approval. |
-| 2 | Cautious | All file operations, all commands, and delegation to Deepveloper require approval. |
-| 3 | Full Control | Every action requires approval, including planning and large file reads. |
-
-**Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`).
-**Override inline:** Add "at gate level X" to any request for a one-time change.
-
-## Supported Tools
-
-| Tool | How it reads Vibuzo |
-|------|---------------------|
-| **opencode** | Native agents (vibuzo.md + deepveloper.md) |
-| **Claude Code** | AGENTS.md + .claude/agents/ (auto-created by installer) |
-| **Codex CLI** | AGENTS.md — uses built-in `/plan` + `/implement` modes |
-| **Cursor** | AGENTS.md (project rules) |
-| **Gemini CLI** | AGENTS.md (native support) |
-| **Copilot** | AGENTS.md (`.github/copilot-instructions.md`) |
-| **Windsurf** | AGENTS.md (native support) |
-| **Amp / Devin / 20+ more** | AGENTS.md (universal standard) |
-
-## Customize
-
-Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" section:
-
-- Your tech stack conventions
-- Your naming conventions
-- Your error handling patterns
-- Your testing requirements
-
-## Roadmap
-
-- **v0.0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer
-- **v0.0.2** — Commands (`/spec` pipeline)
-- **v0.0.3** — Context system (`/context`, `/session`, `/add-context`)
-- **v0.0.4** — Single-agent restructure (Vibuzo main)
-- **v0.0.5** — Approval gates (configurable levels 0-3)
-- **v0.0.6** — `/spec` command (consolidated pipeline)
-- **v0.0.7** — Session compaction system (title-based, comprehensive template)
-- **v0.0.8** — Context harvest + imperative command pattern
-- _v0.0.9+ planned: Skills (reusable workflows), multi-tool auto-detection_
+| `/spec (user input)` | 5-phase feature pipeline with approval gates |
+| `/context init` | Scaffold context directory structure |
+| `/context find (user input)` | Search saved project knowledge |
+| `/context harvest` | Mine session archive for patterns to promote |
+| `/context append` | Scan current conversation for knowledge to save |
+| `/add-context (user input)` | Save a rule, pattern, or decision to permanent context |
+| `/session` | Generate a full session report |
+| `/session view (user input)` | Browse past session reports |
+| `/session timeline` | Show all session reports chronologically |
 
 ## License
 

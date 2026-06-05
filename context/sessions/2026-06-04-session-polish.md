@@ -38,7 +38,7 @@
 - Use `/session timeline` to review the master session timeline
 
 ## Critical Context
-- This is the **third title-based compaction** for 2026-06-04 (after `session-redesign` and `session-compaction-activation`)
+- This is the **third title-based compaction** for 2026-06-04 (after `session-redesign` and `session-activation`)
 - The key fix was removing `subtask: true` — without it, the compact runs in the main session with full conversation context
 - Both source (`commands/session.md`) and mirror (`.opencode/commands/session.md`) are identical
 
@@ -46,6 +46,6 @@
 - `commands/session.md` + `.opencode/commands/session.md`: Session compaction command (imperative style, main-session execution)
 - `context/sessions/index.md`: Auto-generated master timeline
 - `context/sessions/2026-06-04-session-redesign.md`: First compaction — session redesign spec
-- `context/sessions/2026-06-04-session-compaction-activation.md`: Second compaction — first workflow activation
+- `context/sessions/2026-06-04-session-activation.md`: Second compaction — first workflow activation
 - `context/sessions/2026-06-04.md`: Legacy session file
 - `context/sessions/2026-06-03.md`: Legacy session file

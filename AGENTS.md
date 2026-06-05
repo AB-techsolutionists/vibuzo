@@ -23,7 +23,7 @@
 │   ├── context-find.md     ← Search context by topic
 │   ├── context-harvest.md  ← Promote session patterns to permanent context
 │   ├── context-append.md   ← Scan conversation for context-worthy content
-│   ├── session-compaction.md  ← Create YYYY-MM-DD-<title>.md skeleton
+│   ├── session.md  ← Create YYYY-MM-DD-<title>.md skeleton
 │   ├── session-view.md     ← Browse past compactions
 │   └── session-timeline.md ← Show master timeline
 ├── context/                ← Project knowledge base (auto-loaded at session start)

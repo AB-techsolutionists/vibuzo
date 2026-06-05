@@ -66,7 +66,7 @@
 - `/session view` and `/session timeline` subcommands can use `subtask: true` (they don't need main conversation context)
 - Legacy `context/sessions/YYYY-MM-DD.md` files (2026-06-03, 2026-06-04) preserved — listed in date views alongside title-based compactions
 - Four context files saved via harvest: 2 standards, 2 patterns; 1 architecture candidate skipped
-- Three title-based compactions exist for 2026-06-04: `session-redesign`, `session-polish`; `session-compaction-activation` was lost (subtask write didn't persist)
+- Three title-based compactions exist for 2026-06-04: `session-redesign`, `session-polish`; `session-activation` was lost (subtask write didn't persist)
 - `context/sessions/index.md` auto-updated on every compaction with Date, Time, File, and Summary columns
 - `context/index.md` must be updated manually after every context file change (hard rule enforced)
 - `context/patterns/add-context.md` was updated to document the full `/add-context` command specification

@@ -6,15 +6,15 @@
 - Clean up broken routing-only command files (commands/session.md, commands/context.md)
 - Rewrite AGENTS.md as compact, repo-specific guidance for framework development
 - Investigate why /compact paste workflow wasn't working
-- Fix session-compaction.md to generate body content directly instead of relying on /compact paste
+- Fix session.md to generate body content directly instead of relying on /compact paste
 
 ## Progress
 ### Done
 - Deleted commands/session.md and commands/context.md (routing-only files don't work — agent reads them as plain text)
 - Updated AGENTS.md: removed stale Handoff Protocol, corrected approval_level default (it's 3, not 0), added Critical Gotchas, repo-specific structure
 - Investigated /compact: confirmed it's a real built-in OpenCode TUI command (summarizes session for model, not a content-export tool)
-- Rewrote session-compaction.md: replaced broken paste workflow with direct body generation (analyzes conversation, writes Goal/Progress/Key Decisions/Critical Context sections)
-- Synced .opencode/commands/session-compaction.md mirror
+- Rewrote session.md: replaced broken paste workflow with direct body generation (analyzes conversation, writes Goal/Progress/Key Decisions/Critical Context sections)
+- Synced .opencode/commands/session.md mirror
 - Removed stale /compact reference from AGENTS.md Session Management section
 - Updated context/sessions/index.md with new timeline entry
 
@@ -24,7 +24,7 @@
 ## Key Decisions
 - **Routing-only main files removed**: They don't work because agents need imperative ("Do these steps NOW:") instructions to act. Sub-files with `subtask: true` remain the correct pattern.
 - **/compact is a built-in command**, not something defined in the repo. The paste workflow was based on a misunderstanding of what it does.
-- **session-compaction.md generates body directly**: Vibuzo now fills in Goal/Progress/Key Decisions/Critical Context from conversation analysis.
+- **session.md generates body directly**: Vibuzo now fills in Goal/Progress/Key Decisions/Critical Context from conversation analysis.
 
 ## Critical Context
 - commands/session.md and commands/context.md are permanently removed — don't restore them
@@ -34,7 +34,7 @@
 ────────────────────────────────────────
 
 ## Relevant Files
-- `commands/session-compaction.md`: Rewritten — generates body content directly
+- `commands/session.md`: Rewritten — generates body content directly
 - `AGENTS.md`: Rewritten — repo-specific, compact, corrected
 - `commands/session.md`: DELETED (routing-only, didn't work)
 - `commands/context.md`: DELETED (routing-only, didn't work)
