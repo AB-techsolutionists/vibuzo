@@ -67,12 +67,22 @@ Invoke-WebRequest -Uri "$RawUrl/agents/deepveloper.md" -OutFile "$AgentsDir\deep
 # Download command files
 Write-Host "   → spec.md (feature pipeline)"
 Invoke-WebRequest -Uri "$RawUrl/commands/spec.md" -OutFile "$CommandsDir\spec.md"
-Write-Host "   → context.md"
-Invoke-WebRequest -Uri "$RawUrl/commands/context.md" -OutFile "$CommandsDir\context.md"
 Write-Host "   → add-context.md"
 Invoke-WebRequest -Uri "$RawUrl/commands/add-context.md" -OutFile "$CommandsDir\add-context.md"
-Write-Host "   → session.md"
-Invoke-WebRequest -Uri "$RawUrl/commands/session.md" -OutFile "$CommandsDir\session.md"
+Write-Host "   → context-init.md (scaffold context)"
+Invoke-WebRequest -Uri "$RawUrl/commands/context-init.md" -OutFile "$CommandsDir\context-init.md"
+Write-Host "   → context-find.md (search context)"
+Invoke-WebRequest -Uri "$RawUrl/commands/context-find.md" -OutFile "$CommandsDir\context-find.md"
+Write-Host "   → context-harvest.md (promote sessions)"
+Invoke-WebRequest -Uri "$RawUrl/commands/context-harvest.md" -OutFile "$CommandsDir\context-harvest.md"
+Write-Host "   → context-append.md (scan conversation)"
+Invoke-WebRequest -Uri "$RawUrl/commands/context-append.md" -OutFile "$CommandsDir\context-append.md"
+Write-Host "   → session-compaction.md (scaffold session)"
+Invoke-WebRequest -Uri "$RawUrl/commands/session-compaction.md" -OutFile "$CommandsDir\session-compaction.md"
+Write-Host "   → session-view.md (browse sessions)"
+Invoke-WebRequest -Uri "$RawUrl/commands/session-view.md" -OutFile "$CommandsDir\session-view.md"
+Write-Host "   → session-timeline.md (session timeline)"
+Invoke-WebRequest -Uri "$RawUrl/commands/session-timeline.md" -OutFile "$CommandsDir\session-timeline.md"
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if (-not $Global) {

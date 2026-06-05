@@ -49,9 +49,14 @@ your-project/
     │   └── deepveloper.md         ← Execution specialist (via /spec)
     └── commands/
         ├── spec.md               ← Full feature pipeline (/spec)
-        ├── context.md             ← Context management (/context)
         ├── add-context.md         ← Save context (/add-context)
-        └── session.md             ← Session checkpoints (/session)
+        ├── context-init.md        ← Scaffold context directories
+        ├── context-find.md        ← Search project context
+        ├── context-harvest.md     ← Promote sessions to permanent context
+        ├── context-append.md      ← Scan conversation for context
+        ├── session-compaction.md  ← Scaffold session compaction
+        ├── session-view.md        ← Browse past sessions
+        └── session-timeline.md    ← Show master timeline
 ```
 
 The installer creates `AGENTS.md` in your project root and places agent definitions in `.opencode/agent/core/`. Global install places agents in `~/.config/opencode/agent/core/` so they're available across all your projects.
@@ -61,12 +66,13 @@ The installer creates `AGENTS.md` in your project root and places agent definiti
 | Command | What it does |
 |---------|-------------|
 | `/spec <feature>` | 5-phase pipeline: spec → plan → tasks → implement → review |
-| `/session` | Scaffold a compaction file (/compact output goes in the body) |
+| `/session` | Scaffold a session compaction file with generated summary |
 | `/session view <ref>` | Browse past session compactions |
 | `/session timeline` | Show master timeline of all compactions |
 | `/context init` | Scaffold the context directory structure |
 | `/context find <topic>` | Search project context for information |
 | `/context harvest` | Mine sessions for patterns worth promoting to permanent context |
+| `/context append` | Scan conversation for context-worthy content |
 | `/add-context <statement>` | Save a rule, pattern, or decision to permanent context |
 
 ## How It Works
@@ -116,10 +122,9 @@ context/
 Use `/session` at natural breakpoints to checkpoint your work:
 
 ```
-/session       → creates context/sessions/YYYY-MM-DD-<title>.md skeleton
-/compact       → opencode's built-in compaction → paste output into the file
-/session view  → browse past compactions
-/session timeline → view all compactions chronologically
+/session           → creates context/sessions/YYYY-MM-DD-<title>.md with generated summary
+/session view      → browse past compactions
+/session timeline  → view all compactions chronologically
 ```
 
 Each session file uses descriptive title-based names (`session-redesign`, `session-polish`) with automatic collision handling.
@@ -135,7 +140,7 @@ Vibuzo supports configurable approval gates (levels 0-3) that control which acti
 | 2 | Cautious | All file operations, all commands, and delegation to Deepveloper require approval. |
 | 3 | Full Control | Every action requires approval, including planning and large file reads. |
 
-**Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`). Default is 0.
+**Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`).
 **Override inline:** Add "at gate level X" to any request for a one-time change.
 
 ## Supported Tools
