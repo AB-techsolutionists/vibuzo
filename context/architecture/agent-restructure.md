@@ -7,7 +7,7 @@
 The original Vibuzo framework used a two-agent manual-switch system: Orchestrator (plan-only) and Vibuzo (execute-only). This required users to manually switch between agents, creating friction and context-switching overhead.
 
 ## Decision
-Restructure to a single-agent architecture where Vibuzo is the sole main agent for everything, and Deepveloper is a subtask-only execution specialist triggered by `/implement`.
+Restructure to a single-agent architecture where Vibuzo is the sole main agent for everything, and Deepveloper is a subtask-only execution specialist triggered by delegation via `/spec`.
 
 ## Architecture
 
@@ -21,7 +21,7 @@ User → manual switch → Orchestrator (plan-only, no permissions)
 ```
 User → Vibuzo (main — plans + executes)
             │
-            └──→ /implement → Deepveloper (subtask — pure execute)
+            └──→ /spec → Deepveloper (subtask — pure execute)
 ```
 
 ## Agent Roles
@@ -33,10 +33,10 @@ User → Vibuzo (main — plans + executes)
 - **Mode**: primary
 - **Tagline**: "I plan. I delegate. I review. I execute. I am the single entry point for everything."
 - **When to execute**: Small changes, questions, analysis, planning, running commands
-- **When to delegate**: Complex feature implementations via `/implement` → Deepveloper
+- **When to delegate**: Complex feature implementations via `/spec` → Deepveloper
 
 ### Deepveloper (Subtask Agent)
-- **Role**: Pure execution specialist, triggered only by `/implement`
+- **Role**: Pure execution specialist, triggered via `/spec` delegation
 - **Permissions**: bash(allow), edit(allow), write(allow), **NO task permission** (cannot spawn sub-agents)
 - **Temperature**: 0
 - **Mode**: subagent
@@ -57,7 +57,7 @@ Agent definitions live in `agents/` (source) and are mirrored in `.opencode/agen
 | `agents/deepveloper.md` (`mode: subagent`) | `.opencode/agent/core/deepveloper.md` (`mode: subagent`) |
 | `agents/orchestrator.md` (deprecated) | `.opencode/agent/core/orchestrator.md` (deprecated) |
 
-The `/implement` command template routes to Deepveloper via `agent: Deepveloper` and `subtask: true` in its YAML frontmatter (both `commands/implement.md` and `.opencode/commands/implement.md`).
+Deepveloper is triggered as a subtask during `/spec` Phase 4 (implement). The handoff includes the task description, file paths, numbered steps, and acceptance criteria.
 
 ## Key Principles
 

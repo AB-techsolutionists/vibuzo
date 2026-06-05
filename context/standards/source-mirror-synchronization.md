@@ -24,22 +24,10 @@ Every command file and agent definition MUST exist in **two locations**:
 
 | Source | Mirror |
 |--------|--------|
-| `commands/session.md` | `.opencode/commands/session.md` |
-| `commands/context.md` | `.opencode/commands/context.md` |
 | `commands/add-context.md` | `.opencode/commands/add-context.md` |
 | `commands/spec.md` | `.opencode/commands/spec.md` |
-| `commands/implement.md` | `.opencode/commands/implement.md` |
 | `agents/vibuzo.md` | `.opencode/agent/core/vibuzo.md` |
 | `agents/deepveloper.md` | `.opencode/agent/core/deepveloper.md` |
-
-## Deprecated (preserved, not mirrored)
-
-| Source | Purpose |
-|--------|---------|
-| `commands/plan.md` | Deprecated — use `/spec` |
-| `commands/tasks.md` | Deprecated — use `/spec` |
-| `commands/review.md` | Deprecated — use `/spec` |
-| `agents/orchestrator.md` | Deprecated — use Vibuzo directly |
 
 ## Rationale
 

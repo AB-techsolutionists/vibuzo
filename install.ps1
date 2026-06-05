@@ -64,8 +64,6 @@ Invoke-WebRequest -Uri "$RawUrl/agents/vibuzo.md" -OutFile "$AgentsDir\vibuzo.md
 Write-Host "   → deepveloper.md (execution specialist)"
 Invoke-WebRequest -Uri "$RawUrl/agents/deepveloper.md" -OutFile "$AgentsDir\deepveloper.md"
 
-# orchestrator.md intentionally omitted — deprecated, kept in repo for reference only
-
 # Download command files
 Write-Host "   → spec.md (feature pipeline)"
 Invoke-WebRequest -Uri "$RawUrl/commands/spec.md" -OutFile "$CommandsDir\spec.md"

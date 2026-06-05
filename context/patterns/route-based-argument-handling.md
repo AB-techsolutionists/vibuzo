@@ -50,8 +50,7 @@ Do these steps NOW:
 
 ## Examples
 
-- **`commands/session.md`** — Routes: empty → compaction, "view" → view, "timeline" → timeline
-- **`commands/context.md`** — Routes: empty → show options, "init" → init, "find" → find, "harvest" → harvest, NL → infer
+> ⚠️ **Note:** Routing-only main files (`commands/<command>.md`) have been removed — they don't work because the agent reads them as plain text with no imperative instructions. See `architecture/split-file-command-pattern.md` for details. Sub-files with `subtask: true` should be invoked directly.
 
 ## Rules
 

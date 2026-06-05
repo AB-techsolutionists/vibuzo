@@ -1,6 +1,6 @@
 # Vibuzo — Agentic Framework
 
-**Vibuzo plans AND executes. Deepveloper handles `/implement` subtasks. Run `/spec` for the full spec-to-implement pipeline.**
+**Vibuzo plans AND executes. Deepveloper handles implementation subtasks via `/spec`. Run `/spec` for the full spec-to-implement pipeline.**
 
 A minimal, universal agentic framework that works with ANY AI coding tool (opencode, Claude Code, Cursor, Codex, Gemini CLI, Copilot, Windsurf, and 20+ more).
 
@@ -11,7 +11,7 @@ Most AI coding mistakes come from one root cause: **planning and executing at th
 Vibuzo separates the two with a clear role split:
 
 - **Vibuzo** (main agent) — plans, analyzes, delegates, reviews, AND executes everyday tasks. The single entry point for everything.
-- **Deepveloper** (subtask agent) — execution specialist. Triggered only by `/implement`. Never plans.
+- **Deepveloper** (subtask agent) — execution specialist. Triggered only as a subtask by Vibuzo. Never plans.
 
 This separation forces intentionality. Every line of code is planned before it's written. Every change is verified before it's complete.
 
@@ -46,7 +46,7 @@ your-project/
 └── .opencode/
     ├── agent/core/
     │   ├── vibuzo.md              ← Main agent (plans + executes)
-    │   └── deepveloper.md         ← Execution specialist (/implement)
+    │   └── deepveloper.md         ← Execution specialist (via /spec)
     └── commands/
         ├── spec.md               ← Full feature pipeline (/spec)
         ├── context.md             ← Context management (/context)
@@ -132,7 +132,7 @@ Vibuzo supports configurable approval gates (levels 0-3) that control which acti
 |-------|------|----------|
 | 0 | Trusted | No gates. Execute freely. |
 | 1 | Safe | File writes/edits/deletes and destructive commands require approval. |
-| 2 | Cautious | All file operations, all commands, and `/implement` delegation require approval. |
+| 2 | Cautious | All file operations, all commands, and delegation to Deepveloper require approval. |
 | 3 | Full Control | Every action requires approval, including planning and large file reads. |
 
 **Set it:** Edit `approval_level` in `agents/vibuzo.md` (or `.opencode/agent/core/vibuzo.md`). Default is 0.
@@ -163,7 +163,7 @@ Add your own rules by editing `AGENTS.md` under the "Universal Project Rules" se
 ## Roadmap
 
 - **v0.0.1** — Two agents (Vibuzo + Deepveloper) + AGENTS.md + installer
-- **v0.0.2** — Commands (`/spec`, `/plan`, `/tasks`, `/implement`, `/review`)
+- **v0.0.2** — Commands (`/spec` pipeline)
 - **v0.0.3** — Context system (`/context`, `/session`, `/add-context`)
 - **v0.0.4** — Single-agent restructure (Vibuzo main, Orchestrator deprecated)
 - **v0.0.5** — Approval gates (configurable levels 0-3)

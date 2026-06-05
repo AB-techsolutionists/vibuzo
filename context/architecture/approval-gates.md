@@ -39,6 +39,8 @@ Add configurable approval gates to Vibuzo and Deepveloper agent definitions. Gat
 
 ### Standard Prompt Format
 
+The agent must always render the approval gate inside a code block (triple backticks) so opencode displays it as a terminal card UI element.
+
 ```
 ── APPROVAL GATE ──────────────────────
 Action: <write | edit | delete | command | delegate>

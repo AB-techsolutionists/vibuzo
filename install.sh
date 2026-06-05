@@ -50,8 +50,6 @@ curl -fsSL "$RAW_URL/agents/vibuzo.md" -o "$AGENTS_DIR/vibuzo.md"
 echo "   → deepveloper.md (execution specialist)"
 curl -fsSL "$RAW_URL/agents/deepveloper.md" -o "$AGENTS_DIR/deepveloper.md"
 
-# orchestrator.md intentionally omitted — deprecated, kept in repo for reference only
-
 # Download command files
 echo "   → spec.md (feature pipeline)"
 curl -fsSL "$RAW_URL/commands/spec.md" -o "$COMMANDS_DIR/spec.md"
