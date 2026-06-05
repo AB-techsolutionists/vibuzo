@@ -88,7 +88,7 @@ if ($Update) {
   # Try to fetch latest commit SHA from GitHub API (best-effort)
   try {
     $LatestCommit = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
-    Write-Host "  Latest on origin/$Branch: $LatestCommit"
+    Write-Host "  Latest on origin/$($Branch): $LatestCommit"
     if ($LatestCommit -eq $InstalledCommit) {
       Write-Host "  ✅ Already up to date!"
     } else {
