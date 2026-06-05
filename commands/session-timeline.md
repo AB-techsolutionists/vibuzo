@@ -1,7 +1,6 @@
 ---
 description: Show the session timeline
 agent: Vibuzo
-subtask: true
 ---
 
 ## RUN: `/session timeline [month]`

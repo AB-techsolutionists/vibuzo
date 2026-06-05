@@ -1,6 +1,6 @@
 # Split-File Command Pattern
 
-> Commands with subcommands should use standalone sub-files (each with `subtask: true`), not a monolithic file with multiple `## RUN:` sections, and not a routing-only main file.
+> Commands with subcommands should use standalone sub-files, not a monolithic file with multiple `## RUN:` sections, and not a routing-only main file.
 
 ## Problem
 
@@ -16,15 +16,19 @@ None worked because the agent processes the file linearly and never "jumps over"
 
 ## Solution
 
-Split into multiple files — each subcommand gets its own file:
+Split into multiple files — each subcommand gets its own file with a single `Do these steps NOW:` section. No routing-only main file — those don't work either (agent reads them as plain text with no imperative instructions).
 
-- `commands/<command>-<subcommand>.md` — **single purpose** with `Do these steps NOW:` instructions and `subtask: true` in YAML frontmatter.
-- No routing-only main file — those don't work either (agent reads them as plain text with no imperative instructions).
+### Execution Mode
 
-### Sub-file (`commands/context-append.md`)
+Commands use one of two modes:
+
+- **Main session** (no `subtask: true`) — runs inline in the current agent session. Used for context/session management commands that need access to the full conversation history.
+- **Subtask** (with `subtask: true`) — runs as a separate agent via the task tool. Used for pipelines like `/spec` that need isolated execution.
+
+### Sub-file example (`commands/context-append.md`)
 ```markdown
 ---
-subtask: true
+agent: Vibuzo
 ---
 
 Do these steps NOW:
@@ -34,11 +38,11 @@ Do these steps NOW:
 
 ## Key Rules
 
-1. Each sub-file gets `subtask: true` in YAML frontmatter
-2. Each sub-file has exactly one `Do these steps NOW:` section
-3. Sub-files go in `commands/` directory
-4. Mirrors must be synced to `.opencode/commands/`
-5. `$ARGUMENTS` must only appear in the first description line — never in section bodies
+1. Each sub-file has exactly one `Do these steps NOW:` section
+2. Sub-files go in `commands/` directory
+3. Mirrors must be synced to `.opencode/commands/`
+4. `$ARGUMENTS` must only appear in the first description line — never in section bodies
+5. Set `subtask: true` only for commands that need isolated execution (e.g., `/spec`)
 
 ## ⚠️ Lesson Learned: Routing-Only Main Files Don't Work
 
@@ -48,16 +52,19 @@ An earlier version of this pattern used a **routing-only main file** (`commands/
 - The routing text is just plain Markdown — the agent doesn't "execute" routing logic
 - It shows the raw text to the user instead of taking action
 
-**These routing files have been removed.** The sub-files remain and work correctly when invoked directly.
+**These routing files have been removed.**
 
 ## Applications
 
 This pattern has been applied to:
 
-| Command | Sub-Files |
-|---------|-----------|
-| `/context` | `context-init.md`, `context-find.md`, `context-harvest.md`, `context-append.md` |
-| `/session` | `session-compaction.md`, `session-view.md`, `session-timeline.md` |
+| Command | Sub-Files | Mode |
+|---------|-----------|------|
+| `/context` | `context-init.md`, `context-find.md`, `context-harvest.md`, `context-append.md` | Main session |
+| `/session` | `session-compaction.md`, `session-view.md`, `session-timeline.md` | Main session |
+| `/spec` | `spec.md` | Subtask |
+
+Context and session commands run in the main agent session so they can access conversation history and maintain continuity. `/spec` uses a subtask because the 5-phase pipeline benefits from isolated execution.
 
 All future commands with subcommands MUST follow this pattern — use standalone sub-files only, no routing main file.
 

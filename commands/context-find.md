@@ -1,7 +1,6 @@
 ---
 description: Search project context for a topic
 agent: Vibuzo
-subtask: true
 ---
 
 Search project context files for a matching topic.

@@ -1,7 +1,6 @@
 ---
 description: Scan the current conversation and save candidates to permanent context
 agent: Vibuzo
-subtask: true
 ---
 
 Scan the current conversation for context-worthy candidates and save them.

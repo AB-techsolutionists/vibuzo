@@ -1,7 +1,6 @@
 ---
 description: View session compaction files
 agent: Vibuzo
-subtask: true
 ---
 
 ## RUN: `/session view <ref>`

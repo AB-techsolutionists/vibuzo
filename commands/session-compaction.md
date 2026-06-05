@@ -1,7 +1,6 @@
 ---
 description: Generate a session compaction file with body content directly
 agent: Vibuzo
-subtask: true
 ---
 
 ## RUN: `/session` Compaction

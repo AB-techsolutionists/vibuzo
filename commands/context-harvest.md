@@ -1,7 +1,6 @@
 ---
 description: Mine session files for patterns to promote to permanent context
 agent: Vibuzo
-subtask: true
 ---
 
 Mine session compactions for patterns worth promoting to permanent context.

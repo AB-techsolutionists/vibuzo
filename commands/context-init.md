@@ -1,7 +1,6 @@
 ---
 description: Scaffold the context directory structure and index file
 agent: Vibuzo
-subtask: true
 ---
 
 Scaffold project context directories and index.
