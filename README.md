@@ -14,6 +14,7 @@ Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, G
 
 ## Installation
 
+**macOS / Linux (bash):**
 ```bash
 # Local (per project)
 cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
@@ -25,7 +26,17 @@ curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/ins
 cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --update
 ```
 
-**Windows (PowerShell):** Replace `| bash` with `pwsh -c "& { $(irm ...) }"`, use `-Global` / `-Update`.
+**Windows (PowerShell 7+):**
+```powershell
+# Local (per project)
+cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
+
+# Global (all projects)
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Global
+
+# Update existing
+cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Update
+```
 
 ## Quick Start
 
@@ -45,11 +56,25 @@ cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutioni
    /add-context This is a Next.js 14 app with App Router, shadcn/ui, and Prisma
    /add-context We use pnpm, not npm
    ```
-   Search later with `/context find (user input)`.
+   Search later with `/context find [type your search..]`.
 
-4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec (user input)` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
+4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
 
-5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending.    Browse past reports with `/session view (user input)` and `/session timeline`.
+5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending.    Browse past reports with `/session view [session name or date..]` and `/session timeline`.
+
+## How Vibuzo Learns Over Time
+
+Vibuzo doesn't learn on its own — you teach it as you work. The more context you save, the smarter it gets across sessions.
+
+**Three learning mechanisms:**
+
+1. **Saved context (`context/`)** — every time you run `/add-context`, you save a permanent rule, pattern, or decision. At the start of every new session, Vibuzo reads `context/index.md` and loads everything your project knows. You never re-explain your stack, conventions, or architecture decisions.
+
+2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. Before starting new work, Vibuzo scans recent session summaries for context. Run `/context harvest` to promote patterns discovered in sessions into permanent context files.
+
+3. **Harvest pipeline** — `/context append` scans your current conversation for anything worth saving and asks if you want to add it to context. `/context harvest` reads all your session summaries and presents patterns worth promoting. You approve what gets saved — nothing is automatic.
+
+**The result:** the first session starts from scratch. By session 10, Vibuzo knows your architecture, your naming conventions, your testing style, your past decisions, and why they were made. New agents on your team get the same knowledge instantly because it's all committed to the repo.
 
 ## What Gets Installed
 
@@ -66,14 +91,14 @@ your-project/
 
 | Command | What it does |
 |---------|-------------|
-| `/spec (user input)` | 5-phase feature pipeline with approval gates |
+| `/spec [enter complete feature specification]` | 5-phase feature pipeline with approval gates |
 | `/context init` | Scaffold context directory structure |
-| `/context find (user input)` | Search saved project knowledge |
+| `/context find [type your search..]` | Search saved project knowledge |
 | `/context harvest` | Mine session archive for patterns to promote |
 | `/context append` | Scan current conversation for knowledge to save |
-| `/add-context (user input)` | Save a rule, pattern, or decision to permanent context |
+| `/add-context [describe what to remember..]` | Save a rule, pattern, or decision to permanent context |
 | `/session` | Generate a full session report |
-| `/session view (user input)` | Browse past session reports |
+| `/session view [session name or date..]` | Browse past session reports |
 | `/session timeline` | Show all session reports chronologically |
 
 ## License
