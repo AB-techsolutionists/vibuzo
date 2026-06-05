@@ -3,7 +3,7 @@ description: Mine session files for patterns to promote to permanent context
 agent: Vibuzo
 ---
 
-Mine session compactions for patterns worth promoting to permanent context.
+Mine session summaries for patterns worth promoting to permanent context.
 
 Do these steps NOW:
 

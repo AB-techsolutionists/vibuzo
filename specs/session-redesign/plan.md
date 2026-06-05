@@ -2,17 +2,17 @@
 
 ## Objective
 
-Replace the single-file session log system with compaction-based session management using title-based files (`YYYY-MM-DD-<title>.md`), a master timeline, and view/timeline subcommands.
+Replace the single-file session log system with summary-based session management using title-based files (`YYYY-MM-DD-<title>.md`), a master timeline, and view/timeline subcommands.
 
 ## Approach
 
-Rewrite `/session` command (both `commands/session.md` and `.opencode/commands/session.md`) to support three subcommands: compaction, view, timeline. All changes in Markdown command files only.
+Rewrite `/session` command (both `commands/session.md` and `.opencode/commands/session.md`) to support three subcommands: summary, view, timeline. All changes in Markdown command files only.
 
 ## Phases
 
 ### Phase 1: Command Definition
 
-1. Rewrite `commands/session.md` with the full compaction logic:
+1. Rewrite `commands/session.md` with the full summary logic:
    - Conversation analysis (Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, Relevant Files)
    - Title generation (2-4 keywords → kebab-case, collision handling with `-2`, `-3`)
    - File save to `context/sessions/YYYY-MM-DD-<title>.md`
@@ -25,7 +25,7 @@ Rewrite `/session` command (both `commands/session.md` and `.opencode/commands/s
 
 3. Add `/session view <ref>` logic:
    - Exact filename match → full file content
-   - Date only → list compactions for that date
+   - Date only → list summaries for that date
    - NL keywords: yesterday, today, last, recent, all
    - Empty → show timeline + offer pick
 
@@ -37,7 +37,7 @@ Rewrite `/session` command (both `commands/session.md` and `.opencode/commands/s
 ### Phase 3: Verification
 
 5. Test all subcommands:
-   - `/session` compaction with zero arguments
+   - `/session` summary with zero arguments
    - `/session view` with various refs
    - `/session timeline` with and without month filter
 6. Verify backward compatibility with legacy `YYYY-MM-DD.md` files

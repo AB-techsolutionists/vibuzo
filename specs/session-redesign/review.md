@@ -4,11 +4,11 @@
 
 | # | Criterion | Status | Notes |
 |---|-----------|--------|-------|
-| 1 | `/session` with no arguments generates a rich summary from conversation and saves to `YYYY-MM-DD-<title>.md` | ✅ Pass | Verified with `session-polish` compaction — 8-section summary saved correctly |
+| 1 | `/session` with no arguments generates a rich summary from conversation and saves to `YYYY-MM-DD-<title>.md` | ✅ Pass | Verified with `session-polish` summary — 8-section summary saved correctly |
 | 2 | Title is a short kebab-case description (2-5 words) derived from conversation content | ✅ Pass | `session-polish`, `session-redesign` — both 2-3 word kebab-case titles |
-| 3 | `context/sessions/index.md` gets a new entry with every compaction | ✅ Pass | Timeline updated with Date, Time, File, Summary columns |
+| 3 | `context/sessions/index.md` gets a new entry with every summary | ✅ Pass | Timeline updated with Date, Time, File, Summary columns |
 | 4 | `/session view 2026-06-04-session-redesign` shows the full content of that file | ✅ Pass | View subcommand implemented and functional |
-| 5 | `/session view 2026-06-04` lists all compactions for that date | ✅ Pass | Date view lists both title-based and legacy files |
+| 5 | `/session view 2026-06-04` lists all summaries for that date | ✅ Pass | Date view lists both title-based and legacy files |
 | 6 | `/session view yesterday` / `last` / `today` work via NL inference | ✅ Pass | All NL keywords handled in route logic |
 | 7 | `/session timeline` shows the master timeline | ✅ Pass | Reads and displays `context/sessions/index.md` |
 | 8 | `/session view` shows timeline + offers to pick one | ✅ Pass | Empty view shows timeline |

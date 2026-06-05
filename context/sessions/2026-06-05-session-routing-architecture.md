@@ -3,7 +3,7 @@
 *Paste opencode /compact output below this line*
 ────────────────────────────────────────
 ## Goal
-- Refactor the Vibuzo framework: remove broken routing-only command files, fix the session compaction workflow, update installers and documentation, and change context/session commands to run in main agent session instead of as subtasks.
+- Refactor the Vibuzo framework: remove broken routing-only command files, fix the session summary workflow, update installers and documentation, and change context/session commands to run in main agent session instead of as subtasks.
 
 ## Constraints & Preferences
 - Commands must run in main agent session (Vibuzo), not as subtasks
@@ -67,11 +67,11 @@
 ## Relevant Files
 - ~~`commands/session.md`~~: **REMOVED** — routing-only main files don't work (no imperative instructions)
 - ~~`commands/context.md`~~: **REMOVED** — same reason
-- `commands/session.md`: Scaffolds new compaction files
-- `commands/session-view.md`: Views existing compaction files
+- `commands/session.md`: Scaffolds new summary files
+- `commands/session-view.md`: Views existing summary files
 - `commands/session-timeline.md`: Shows session timeline
-- `context/sessions/`: Auto-generated compaction archives
-- `context/sessions/index.md`: Master timeline of all compactions
+- `context/sessions/`: Auto-generated summary archives
+- `context/sessions/index.md`: Master timeline of all summaries
 
 ## Timeline
 | 2026-06-05 | 19:15 | `session-split-file-pattern` | Session split-file pattern |

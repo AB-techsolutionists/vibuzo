@@ -2,7 +2,7 @@
 
 ## Pattern
 
-Session compaction files use descriptive title-based filenames instead of opaque sequence numbers.
+Session summary files use descriptive title-based filenames instead of opaque sequence numbers.
 
 ## Format
 
@@ -18,7 +18,7 @@ context/sessions/YYYY-MM-DD-<title>.md
 
 1. Analyze the conversation for 2-4 key concepts
 2. Convert to kebab-case (lowercase, hyphens between words)
-3. Example: session about redesigning compaction → `session-redesign`
+3. Example: session about redesigning summary → `session-redesign`
 
 ## Collision Handling
 
@@ -34,8 +34,8 @@ Check is scoped to the current date only — titles reset each day.
 
 | File | Content |
 |------|---------|
-| `2026-06-04-session-redesign.md` | First compaction — session redesign spec |
-| `2026-06-04-session-polish.md` | Second compaction — session command refinement |
+| `2026-06-04-session-redesign.md` | First summary — session redesign spec |
+| `2026-06-04-session-polish.md` | Second summary — session command refinement |
 
 ## Rationale
 

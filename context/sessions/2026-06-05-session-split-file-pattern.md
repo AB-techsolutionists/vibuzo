@@ -3,7 +3,7 @@
 *Paste opencode /compact output below this line*
 ────────────────────────────────────────
 ## Goal
-- Refactor the Vibuzo framework: remove broken routing-only command files, fix the session compaction workflow, update installers and documentation, and change context/session commands to run in main agent session instead of as subtasks.
+- Refactor the Vibuzo framework: remove broken routing-only command files, fix the session summary workflow, update installers and documentation, and change context/session commands to run in main agent session instead of as subtasks.
 
 ## Constraints & Preferences
 - Commands must run in main agent session (Vibuzo), not as subtasks
@@ -66,7 +66,7 @@
 
 ## Relevant Files
 - `commands/session.md`: Rewritten as routing-only dispatcher
-- `commands/session.md`: New sub-file for compaction scaffolding
+- `commands/session.md`: New sub-file for summary scaffolding
 - `commands/session-view.md`: New sub-file for viewing session files
 - `commands/session-timeline.md`: New sub-file for timeline display
 - `.opencode/commands/session.md`: Synced mirror

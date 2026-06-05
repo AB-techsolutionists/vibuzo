@@ -24,14 +24,14 @@
 │   ├── context-harvest.md  ← Promote session patterns to permanent context
 │   ├── context-append.md   ← Scan conversation for context-worthy content
 │   ├── session.md  ← Create YYYY-MM-DD-<title>.md skeleton
-│   ├── session-view.md     ← Browse past compactions
+│   ├── session-view.md     ← Browse past summaries
 │   └── session-timeline.md ← Show master timeline
 ├── context/                ← Project knowledge base (auto-loaded at session start)
 │   ├── index.md            ← Auto-updated table of contents
 │   ├── architecture/       ← Architecture Decision Records
 │   ├── standards/          ← Rules and conventions
 │   ├── patterns/           ← Reusable idioms
-│   └── sessions/           ← Compaction archives
+│   └── sessions/           ← summary archives
 ├── specs/                  ← /spec pipeline artifacts (per-feature directories)
 ├── install.sh              ← macOS/Linux installer
 ├── install.ps1             ← Windows installer
@@ -77,7 +77,7 @@ At session start, read `context/index.md` to discover project conventions. This 
 ## Session Management
 
 At natural breakpoints:
-1. Run `/session` to create `context/sessions/YYYY-MM-DD-<title>.md` with a comprehensive compaction — full narrative summary, chronological log of every request/action/file/decision, file manifest, commands invoked, and git state
+1. Run `/session` to create `context/sessions/YYYY-MM-DD-<title>.md` with a comprehensive summary — full narrative summary, chronological log of every request/action/file/decision, file manifest, commands invoked, and git state
 2. The timeline at `context/sessions/index.md` auto-updates
 
 ## Approval Gates

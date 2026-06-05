@@ -1,10 +1,10 @@
 # Session Redesign — Tasks
 
-## Task 1: Rewrite session command with compaction logic
+## Task 1: Rewrite session command with summary logic
 - **File:** `commands/session.md`
 - **Actions:**
-  - Add routing for $ARGUMENTS (empty → compaction, "view" → view, "timeline" → timeline)
-  - Write "RUN: `/session` Compaction" section with 5 numbered steps
+  - Add routing for $ARGUMENTS (empty → summary, "view" → view, "timeline" → timeline)
+  - Write "RUN: `/session` summary" section with 5 numbered steps
   - Write "RUN: `/session view <ref>`" section with all ref types
   - Write "RUN: `/session timeline [month]`" section
   - Add backward compatibility note for legacy YYYY-MM-DD.md files
@@ -15,7 +15,7 @@
 
 ## Task 3: Verify functionality
 - **Actions:**
-  - Run `/session` with empty args → verify compaction saves correctly
+  - Run `/session` with empty args → verify summary saves correctly
   - Run `/session view` → verify view subcommands work
   - Run `/session timeline` → verify timeline displays
   - Confirm both source and mirror match

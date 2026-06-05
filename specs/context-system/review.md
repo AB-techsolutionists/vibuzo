@@ -18,8 +18,8 @@
 ## Deviations from Original Spec
 
 - **Agent attribution changed** — spec says `agent: Orchestrator` for context.md, `agent: Vibuzo` for add-context.md/session.md. Post-restructure, all active commands use `agent: Vibuzo`.
-- **subtask: true removed from session.md** — spec says `subtask: true` for session.md. Discovered that subtask file writes don't persist. Session compaction now runs in main session.
-- **session command evolved** — original spec described log/view/list model. Later redesigned to compaction-based system with paste workflow.
+- **subtask: true removed from session.md** — spec says `subtask: true` for session.md. Discovered that subtask file writes don't persist. Session summary now runs in main session.
+- **session command evolved** — original spec described log/view/list model. Later redesigned to summary-based system with paste workflow.
 
 ## All 12 Tasks
 

@@ -3,9 +3,9 @@
 ## Principles
 
 1. **One command, zero friction** — `/session` is the only command you need. It reads the conversation, generates a rich summary, and saves it. No arguments required.
-2. **Multiple sessions per day** — Each compaction creates its own file (`YYYY-MM-DD-<title>.md`). No more single-file overload.
-3. **Auto-timeline** — A master `index.md` in the sessions directory tracks every compaction across all days in chronological order.
-4. **Session-aware** — New compactions scan past sessions and reference relevant ones. You always know what came before.
+2. **Multiple sessions per day** — Each summary creates its own file (`YYYY-MM-DD-<title>.md`). No more single-file overload.
+3. **Auto-timeline** — A master `index.md` in the sessions directory tracks every summary across all days in chronological order.
+4. **Session-aware** — New summaries scan past sessions and reference relevant ones. You always know what came before.
 5. **No manual saves** — The anchored summary response IS the save. You never copy-paste again.
 6. **Zero code changes** — All in command Markdown definitions. No runtime code, no new dependencies.
 
@@ -19,24 +19,24 @@ The current `/session` command creates a single file per day (`YYYY-MM-DD.md`) w
 - You want to reference past sessions from new ones
 - You have to manually "compact" and save anchored summaries
 
-The redesign introduces **compaction-based session management**:
+The redesign introduces **summary-based session management**:
 
 1. At any point, run `/session` → Vibuzo analyzes the conversation, generates a comprehensive anchored summary, and saves it as a session file
 2. Each save creates a new file: `YYYY-MM-DD-<title>.md` where `<title>` is a short kebab-case description derived from the conversation.
 3. A master `context/sessions/index.md` timeline is auto-updated with every save
-4. When starting new work, Vibuzo reads past compactions for context
+4. When starting new work, Vibuzo reads past summaries for context
 
 ### User Stories
 
 1. As a developer, I want to run `/session` at the end of a work session and have it automatically save a comprehensive summary — no arguments, no options.
 2. As a developer working in multiple sessions per day (morning, afternoon, evening), I want each session saved as its own file so I can review them individually.
-3. As a developer starting a new session, I want Vibuzo to automatically reference relevant past compactions so I don't lose context.
-4. As a developer, I want a timeline view of all compactions so I can see session history at a glance.
-5. As a developer, I want to be able to view any past compaction's full content with `/session view <date-or-index>`.
+3. As a developer starting a new session, I want Vibuzo to automatically reference relevant past summaries so I don't lose context.
+4. As a developer, I want a timeline view of all summaries so I can see session history at a glance.
+5. As a developer, I want to be able to view any past summary's full content with `/session view <date-or-index>`.
 
 ### Functional Requirements
 
-#### FR1: `/session` — Zero-Argument Compaction
+#### FR1: `/session` — Zero-Argument summary
 
 The primary command. No arguments needed.
 
@@ -67,26 +67,26 @@ Behavior:
    ── SESSION ─────────────────────────────
    Saved:  context/sessions/YYYY-MM-DD-<title>.md
    Summary: <one-line headline>
-   Timeline: updated (N total compactions)
+   Timeline: updated (N total summaries)
    ────────────────────────────────────────
    ```
 
-#### FR2: `/session view` — View a Past Compaction
+#### FR2: `/session view` — View a Past summary
 
 ```
 /session view <date-or-index>
 ```
 
 Examples:
-- `/session view 2026-06-04` — show today's compactions as a list with summaries
-- `/session view 2026-06-04-session-redesign` — show the full content of that specific compaction
-- `/session view yesterday` — NL: show yesterday's compactions
-- `/session view last` — show the most recent compaction
+- `/session view 2026-06-04` — show today's summaries as a list with summaries
+- `/session view 2026-06-04-session-redesign` — show the full content of that specific summary
+- `/session view yesterday` — NL: show yesterday's summaries
+- `/session view last` — show the most recent summary
 - `/session view` — show timeline + offer to pick one
 
 Behavior:
 1. If a specific file is found by exact filename match, print its full content.
-2. If a date is given (no title), list all compactions for that date with summaries.
+2. If a date is given (no title), list all summaries for that date with summaries.
 3. Support NL keywords: `yesterday`, `today`, `last`, `recent`, `all`.
 
 #### FR3: `/session timeline` — View the Master Timeline
@@ -103,15 +103,15 @@ Behavior:
 #### FR4: Auto-Context on Session Start
 
 When Vibuzo starts a new session (detected by a fresh conversation), it should:
-1. Read `context/sessions/index.md` to see all past compactions.
-2. Read the last 3 most recent compaction files.
+1. Read `context/sessions/index.md` to see all past summaries.
+2. Read the last 3 most recent summary files.
 3. Include in its context a brief summary of what was done before: "Previous sessions: [summary of last 3]"
 
 This is already covered by the context auto-load in `context/index.md`, but the sessions timeline should be explicitly referenced there.
 
-#### FR5: Compaction Format
+#### FR5: summary Format
 
-Each compaction file uses the anchored summary format:
+Each summary file uses the anchored summary format:
 
 ```markdown
 # YYYY-MM-DD-<title> — <Brief Headline>
@@ -151,11 +151,11 @@ Each compaction file uses the anchored summary format:
 ```markdown
 # Session Timeline
 
-Auto-generated by `/session`. Updated on every compaction.
+Auto-generated by `/session`. Updated on every summary.
 
 | Date | Time | File | Summary |
 |------|------|------|------|---------|
-| 2026-06-04 | 22:52 | `session-redesign` | Session compaction command specification |
+| 2026-06-04 | 22:52 | `session-redesign` | Session summary command specification |
 | 2026-06-04 | 23:18 | `context-aware-commands` | Context-aware commands — NL inference for 4 commands |
 | 2026-06-04 | 23:30 | `agent-restructure` | Agent restructure — Vibuzo main, Deepveloper subtask |
 ```
@@ -164,17 +164,17 @@ Auto-generated by `/session`. Updated on every compaction.
 
 | Subcommand | Action |
 |------------|--------|
-| `/session` | Auto-generate and save compaction from conversation |
-| `/session view <ref>` | View one or more past compactions |
-| `/session timeline` | Show master timeline of all compactions |
+| `/session` | Auto-generate and save summary from conversation |
+| `/session view <ref>` | View one or more past summaries |
+| `/session timeline` | Show master timeline of all summaries |
 
 ### Acceptance Criteria
 
 - ✅ `/session` with no arguments generates a rich summary from conversation and saves to `YYYY-MM-DD-<title>.md`
 - ✅ Title is a short kebab-case description (2-5 words) derived from conversation content
-- ✅ `context/sessions/index.md` gets a new entry with every compaction
+- ✅ `context/sessions/index.md` gets a new entry with every summary
 - ✅ `/session view 2026-06-04-session-redesign` shows the full content of that file
-- ✅ `/session view 2026-06-04` lists all compactions for that date
+- ✅ `/session view 2026-06-04` lists all summaries for that date
 - ✅ `/session view yesterday` / `last` / `today` work via NL inference
 - ✅ `/session timeline` shows the master timeline
 - ✅ `/session view` and `/session timeline` work as described

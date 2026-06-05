@@ -3,7 +3,7 @@
 *Paste opencode /compact output below this line*
 ────────────────────────────────────────
 ## Goal
-- Transform Vibuzo framework from two-agent manual-switch system to single-agent architecture with consolidated `/spec` pipeline, configurable approval gates, context-aware commands, compaction-based session management, and a permanent context harvesting system.
+- Transform Vibuzo framework from two-agent manual-switch system to single-agent architecture with consolidated `/spec` pipeline, configurable approval gates, context-aware commands, summary-based session management, and a permanent context harvesting system.
 
 ## Constraints & Preferences
 - No new languages, dependencies, or build steps — pure Markdown + YAML frontmatter
@@ -22,11 +22,11 @@
 - Context-aware commands: NL inference on `/add-context`, `/context find`, `/session`, `/spec` — 4 tasks, 12/12 acceptance criteria
 - Install scripts cleaned — `orchestrator.md` removed from downloads, only active agents and commands ship
 - `README.md` fully rewritten — accurate tree, commands table, context system section, session management section, updated roadmap (v0.8 current)
-- Session compaction redesigned (paste workflow):
+- Session summary redesigned (paste workflow):
   - `/session` creates skeleton file with paste markers — user runs opencode's `/compact` and pastes body
   - `subtask: true` removed — runs in main session (subtask file writes don't persist)
   - Title-based filenames (`YYYY-MM-DD-<title>.md`) with collision handling
-  - Timeline at `context/sessions/index.md` tracks all compactions (now with `Time` column)
+  - Timeline at `context/sessions/index.md` tracks all summaries (now with `Time` column)
   - Legacy `YYYY-MM-DD.md` files preserved and readable via `/session view`
 - `/context` command rewritten in imperative style with routing, NL inference, and explicit subcommands
 - Context harvest executed: 5 candidates found, 4 saved (imperative-command-style standard, source-mirror-synchronization standard, route-based-argument-handling pattern, title-based-session-naming pattern), 1 skipped (subtask-vs-main-session)
@@ -46,7 +46,7 @@
 ## Key Decisions
 - `/spec` is the single pipeline command — replaces `/feature` and deprecates 5 old commands
 - Context-aware commands use NL-first fallback: rigid syntax tried first, natural language inference when it doesn't match
-- `/session` uses paste workflow: agent creates skeleton + timeline, user pastes opencode's `/compact` output into the body — ensures both compaction outputs are identical
+- `/session` uses paste workflow: agent creates skeleton + timeline, user pastes opencode's `/compact` output into the body — ensures both summary outputs are identical
 - Session commands run in main session (no `subtask: true`) — subtask file writes don't persist to the workspace
 - Titles derived from conversation (2-4 keywords, kebab-case, collision handling with `-2`, `-3`)
 - Command definitions must be imperative ("do this NOW") not spec-style ("the behavior is") — prevents agent from treating them as features to implement
@@ -64,10 +64,10 @@
 - `approval_level: 3` — Full Control mode active; every action requires gate approval; "at gate level X" provides one-time overrides
 - `/session` scaffolds a skeleton file, updates timeline, then instructs user to run opencode's `/compact` and paste output between marker lines
 - `/session view` and `/session timeline` subcommands can use `subtask: true` (they don't need main conversation context)
-- Legacy `context/sessions/YYYY-MM-DD.md` files (2026-06-03, 2026-06-04) preserved — listed in date views alongside title-based compactions
+- Legacy `context/sessions/YYYY-MM-DD.md` files (2026-06-03, 2026-06-04) preserved — listed in date views alongside title-based summaries
 - Four context files saved via harvest: 2 standards, 2 patterns; 1 architecture candidate skipped
-- Three title-based compactions exist for 2026-06-04: `session-redesign`, `session-polish`; `session-activation` was lost (subtask write didn't persist)
-- `context/sessions/index.md` auto-updated on every compaction with Date, Time, File, and Summary columns
+- Three title-based summaries exist for 2026-06-04: `session-redesign`, `session-polish`; `session-activation` was lost (subtask write didn't persist)
+- `context/sessions/index.md` auto-updated on every summary with Date, Time, File, and Summary columns
 - `context/index.md` must be updated manually after every context file change (hard rule enforced)
 - `context/patterns/add-context.md` was updated to document the full `/add-context` command specification
 - `specs/session-redesign/` now has full lifecycle: spec.md, plan.md, tasks.md, review.md
@@ -80,7 +80,7 @@
 - `agents/vibuzo.md` + `.opencode/agent/core/vibuzo.md`: Main agent, `approval_level: 3`, planning + execution rules, gate approval rules
 - `agents/deepveloper.md` + `.opencode/agent/core/deepveloper.md`: Execution specialist, `mode: subagent` (both copies), no `task` permission, temperature 0
 - `agents/orchestrator.md` + `.opencode/agent/core/orchestrator.md`: Deprecated, preserved for reference
-- `commands/session.md` + `.opencode/commands/session.md`: Session compaction with paste workflow (no `subtask: true`)
+- `commands/session.md` + `.opencode/commands/session.md`: Session summary with paste workflow (no `subtask: true`)
 - `commands/context.md` + `.opencode/commands/context.md`: Context management with init/find/harvest + NL inference (imperative style)
 - `commands/add-context.md` + `.opencode/commands/add-context.md`: NL inference for type/name/content extraction
 - `commands/spec.md` + `.opencode/commands/spec.md`: 5-phase pipeline command (active)
@@ -95,9 +95,9 @@
 - `context/architecture/spec-command.md`: ADR — /spec pipeline consolidated command
 - `context/index.md`: Master index of all context files, group by directory, hard rule for auto-update
 - `context/sessions/index.md`: Master timeline with Date, Time, File, Summary columns
-- `context/sessions/2026-06-04-session-redesign.md`: First title-based compaction
-- `context/sessions/2026-06-04-session-polish.md`: Third title-based compaction (polish + paste workflow)
-- `specs/session-redesign/`: Full lifecycle (spec, plan, tasks, review) — session compaction system
+- `context/sessions/2026-06-04-session-redesign.md`: First title-based summary
+- `context/sessions/2026-06-04-session-polish.md`: Third title-based summary (polish + paste workflow)
+- `specs/session-redesign/`: Full lifecycle (spec, plan, tasks, review) — session summary system
 - `specs/context-system/`: Full lifecycle (spec, plan, tasks, review) — context init/find/harvest
 - `install.sh` + `install.ps1`: Installers — ship vibuzo.md, deepveloper.md, spec.md, context.md, add-context.md, session.md (no deprecated artifacts)
 ────────────────────────────────────────

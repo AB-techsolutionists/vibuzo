@@ -9,9 +9,9 @@ This directory contains project-level context files that are automatically loade
 | `standards/` | Code quality, naming conventions, testing requirements, style guides |
 | `patterns/` | Reusable code patterns, architectural approaches, idioms |
 | `architecture/` | System design decisions, data flow, component relationships |
-| `sessions/` | Auto-generated compaction archives (via `/session`) |
+| `sessions/` | Auto-generated summary archives (via `/session`) |
 
-See the master timeline at `sessions/index.md` for a chronological list of all compactions.
+See the master timeline at `sessions/index.md` for a chronological list of all summaries.
 
 ## How to Add Context
 
@@ -31,7 +31,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all c
 
 ### Patterns
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
-- `patterns/title-based-session-naming.md` — Pattern for YYYY-MM-DD-<title>.md session compaction filenames
+- `patterns/title-based-session-naming.md` — Pattern for YYYY-MM-DD-<title>.md session summary filenames
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
@@ -41,7 +41,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all c
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 
 ### Sessions
-- `sessions/index.md` — Auto-generated master timeline of all compactions (via `/session`)
+- `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)
 
 ## Maintenance
 

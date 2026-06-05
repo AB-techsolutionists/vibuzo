@@ -1,6 +1,6 @@
 # comprehensive-cleanup
 
-*Session compaction — 2026-06-05 at 18:31*
+*Session summary — 2026-06-05 at 18:31*
 <br>*Total messages: ~12 | Files touched: 30 | Commands run: 0*
 
 ## Goal
@@ -22,7 +22,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 
 ### 18:03 — Rewrite session.md
 
-- **Request:** User wanted session compaction template to be comprehensive
+- **Request:** User wanted session summary template to be comprehensive
 - **Actions:**
   - edit: Replaced entire session.md with comprehensive template
 - **Files:**
@@ -140,23 +140,23 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
   4. Smoke test commands (verify all 9 commands work)
   5. Improve .gitignore (ensure context/sessions tracked but .opencode ignored)
 
-### 18:25 — Current: /session compaction
+### 18:25 — Current: /session summary
 
-- **Request:** User invoked `/session` compaction command
+- **Request:** User invoked `/session` summary command
 - **Actions:**
   - Analyze entire conversation
   - Check existing sessions for title collision
-  - Create compaction file
+  - Create summary file
   - Update timeline
 - **Files:**
-  - `context/sessions/2026-06-05-comprehensive-cleanup.md` — CREATE — This file (comprehensive session compaction)
+  - `context/sessions/2026-06-05-comprehensive-cleanup.md` — CREATE — This file (comprehensive session summary)
   - `context/sessions/index.md` — MODIFY — Timeline entry appended
 
 ## File Manifest
 
 | Action | File | Notes |
 |--------|------|-------|
-| CREATE | `context/sessions/2026-06-05-comprehensive-cleanup.md` | This session compaction |
+| CREATE | `context/sessions/2026-06-05-comprehensive-cleanup.md` | This session summary |
 | DELETE | `opencode.jsonc` | Local-only config, not shipped by installers, hid agent dropdown |
 | DELETE | `.opencode/prompts/vibuzo.txt` | Redundant mirror of AGENTS.md, not shipped by installers |
 | DELETE | `context/patterns/add-context.md` | Duplicate of `commands/add-context.md` |
@@ -175,7 +175,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 | MODIFY | `context/standards/imperative-command-style.md` | Removed stale `## RUN:` convention, updated conventions list |
 | MODIFY | `context/index.md` | Reflected 3 deletions, 2 deprecations, updated descriptions |
 | MODIFY | `README.md` | Roadmap cleaned up (removed stale Orchestrator/legacy entries) |
-| MODIFY | `context/sessions/index.md` | Timeline entry appended for this compaction |
+| MODIFY | `context/sessions/index.md` | Timeline entry appended for this summary |
 | READ | Full codebase | Comprehensive audit of stale references, wrong claims, and redundancies |
 | READ | `install.ps1`, `install.sh` | Checked for update mechanism |
 
@@ -183,7 +183,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 
 | Command | Args | Description |
 |---------|------|-------------|
-| `/session` | — | Created this compaction (2026-06-05-comprehensive-cleanup.md) |
+| `/session` | — | Created this summary (2026-06-05-comprehensive-cleanup.md) |
 
 ## Key Decisions
 
@@ -202,7 +202,7 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 - **approval_level is still 3** (Full Control) in `agents/vibuzo.md` — every action requires gate approval. Change to 0 for development.
 - **4 files deleted from repo**: opencode.jsonc, patterns/add-context.md, patterns/session-history-candidate-scanning.md, standards/approval-gate-code-block-rendering.md
 - **17 files in be58e01 commit** — 13 modified, 4 deleted. 162 insertions, 368 deletions.
-- **Session compaction was rewritten** in this session — see `commands/session.md` for the comprehensive template.
+- **Session summary was rewritten** in this session — see `commands/session.md` for the comprehensive template.
 - **/compact has not been tested** since removing default_agent — try it in the next session.
 - **No `--update` flag exists** in installers — users re-run the install one-liner to update. Consider adding this.
 - **Next actionable options**: push to origin, test /compact, create update command, smoke test 9 commands, improve .gitignore.
@@ -218,13 +218,13 @@ This session performed a comprehensive codebase cleanup of the Vibuzo framework.
 
 | File | Relevance |
 |------|-----------|
-| `commands/session.md` | Comprehensive template rewritten in this session — canonical spec for future compactions |
+| `commands/session.md` | Comprehensive template rewritten in this session — canonical spec for future summaries |
 | `context/architecture/approval-gates.md` | Trimmed to ADR only — default corrected to 3, gate examples removed |
 | `context/patterns/route-based-argument-handling.md` | Rewritten as FAILED PATTERN — documents why split files are used |
 | `opencode.jsonc` | DELETED — was the last local-only config; removal may fix /compact |
 | `AGENTS.md` | Updated — accurate gotchas about execution modes and mirror syncing |
 | `context/index.md` | Updated to reflect all 4 deletions and 2 deprecations |
-| `context/sessions/index.md` | Timeline — will be updated with this compaction entry |
+| `context/sessions/index.md` | Timeline — will be updated with this summary entry |
 | `install.ps1` / `install.sh` | No `--update` flag; re-run to get latest from origin/main |
 
 ## Timeline Entry

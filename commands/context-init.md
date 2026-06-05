@@ -30,7 +30,7 @@ Do these steps NOW:
    | `architecture/` | Architecture Decision Records — store design decisions and rationale |
    | `standards/` | Coding standards, style guides, and conventions enforced across the project |
    | `patterns/` | Reusable design patterns, code snippets, and templates |
-   | `sessions/` | Session compactions — auto-saved summaries via `/session` |
+   | `sessions/` | Session summaries — auto-saved summaries via `/session` |
 
    ## Adding Context
 
