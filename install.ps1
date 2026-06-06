@@ -120,8 +120,8 @@ if ($Update) {
       Write-Host "│                                                              │"
       Write-Host "│              ✅ Vibuzo is already up to date!                 │" -ForegroundColor $Green
       Write-Host "│                                                              │"
-      Write-Host "│  Installed: $InstalledDate at $InstalledTime ($InstalledCommit)"
-      Write-Host "│  Location:  $InstallTarget"
+      Write-Host "│  Installed: $InstalledDate at $InstalledTime ($InstalledCommit)  │"
+      Write-Host "│  Location:  $InstallTarget                                       │"
       Write-Host "│                                                              │"
       Write-Host "╰──────────────────────────────────────────────────────────────╯"
       exit 0
@@ -211,39 +211,39 @@ if (-not $Global) {
         }
       }
       Write-Host ""
-      Write-Host "╭── AGENTS.md ─────────────────────────────────────────╮" -ForegroundColor $Cyan
-      Write-Host "│                                                     │" -ForegroundColor $Cyan
-      Write-Host "│  Vibuzo AGENTS.md found with custom rules below     │" -ForegroundColor $Cyan
+      Write-Host "╭── AGENTS.md ──────────────────────────────────────────╮" -ForegroundColor $Cyan
+      Write-Host "│                                                       │" -ForegroundColor $Cyan
+      Write-Host "│  Vibuzo AGENTS.md found with custom rules below      │" -ForegroundColor $Cyan
       if ($UserRules) {
-        Write-Host "│  the marker. These custom rules will be preserved   │" -ForegroundColor $Cyan
+        Write-Host "│  the marker. These custom rules will be preserved    │" -ForegroundColor $Cyan
       } else {
-        Write-Host "│  the marker. No custom rules found below marker.    │" -ForegroundColor $Cyan
+        Write-Host "│  the marker. No custom rules found below marker.     │" -ForegroundColor $Cyan
       }
-      Write-Host "│  The framework section (above ---) will be updated   │" -ForegroundColor $Cyan
-      Write-Host "│  to the latest version.                              │" -ForegroundColor $Cyan
-      Write-Host "│                                                     │" -ForegroundColor $Cyan
-      Write-Host "╰─────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
+      Write-Host "│  The framework section (above ---) will be updated    │" -ForegroundColor $Cyan
+      Write-Host "│  to the latest version.                               │" -ForegroundColor $Cyan
+      Write-Host "│                                                       │" -ForegroundColor $Cyan
+      Write-Host "╰───────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
     } else {
       # User's own AGENTS.md — save entire content to prepend
       $ExistingContent = $Lines -join "`n"
       Write-Host ""
-      Write-Host "╭── AGENTS.md ─────────────────────────────────────────╮" -ForegroundColor $Cyan
-      Write-Host "│                                                     │" -ForegroundColor $Cyan
-      Write-Host "│  An existing AGENTS.md was found in your project.   │" -ForegroundColor $Cyan
-      Write-Host "│  Your current content will be preserved at the top. │" -ForegroundColor $Cyan
-      Write-Host "│  Vibuzo's framework content will be appended below  │" -ForegroundColor $Cyan
-      Write-Host "│  with a --- separator. Nothing will be overwritten. │" -ForegroundColor $Cyan
-      Write-Host "│                                                     │" -ForegroundColor $Cyan
-      Write-Host "╰─────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
+      Write-Host "╭── AGENTS.md ──────────────────────────────────────────╮" -ForegroundColor $Cyan
+      Write-Host "│                                                       │" -ForegroundColor $Cyan
+      Write-Host "│  An existing AGENTS.md was found in your project.     │" -ForegroundColor $Cyan
+      Write-Host "│  Your current content will be preserved at the top.   │" -ForegroundColor $Cyan
+      Write-Host "│  Vibuzo's framework content will be appended below    │" -ForegroundColor $Cyan
+      Write-Host "│  with a --- separator. Nothing will be overwritten.   │" -ForegroundColor $Cyan
+      Write-Host "│                                                       │" -ForegroundColor $Cyan
+      Write-Host "╰───────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
     }
   } else {
     Write-Host ""
-    Write-Host "╭── AGENTS.md ─────────────────────────────────────────╮" -ForegroundColor $Cyan
-    Write-Host "│                                                     │" -ForegroundColor $Cyan
-    Write-Host "│  No existing AGENTS.md found. A fresh copy will be  │" -ForegroundColor $Cyan
-    Write-Host "│  downloaded and placed in your project root.        │" -ForegroundColor $Cyan
-    Write-Host "│                                                     │" -ForegroundColor $Cyan
-    Write-Host "╰─────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
+    Write-Host "╭── AGENTS.md ──────────────────────────────────────────╮" -ForegroundColor $Cyan
+    Write-Host "│                                                       │" -ForegroundColor $Cyan
+    Write-Host "│  No existing AGENTS.md found. A fresh copy will be    │" -ForegroundColor $Cyan
+    Write-Host "│  downloaded and placed in your project root.          │" -ForegroundColor $Cyan
+    Write-Host "│                                                       │" -ForegroundColor $Cyan
+    Write-Host "╰───────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
   }
 
   $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
@@ -319,8 +319,8 @@ if ($Update) {
   Write-Host "│              ✅ Vibuzo installed successfully!                │" -ForegroundColor $Green
 }
 Write-Host "│                                                              │"
-Write-Host "│  Location: $InstallTarget"
-Write-Host "│  Agents:   $AgentsDir"
+Write-Host "│  Location: $InstallTarget                                             │"
+Write-Host "│  Agents:   $AgentsDir                                                │"
 Write-Host "│                                                              │"
 Write-Host "│  ── Next Steps ──                                             │"
 Write-Host "│                                                              │"

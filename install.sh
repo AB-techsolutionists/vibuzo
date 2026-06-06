@@ -109,8 +109,8 @@ if [ "$UPDATE" = true ]; then
             echo "│                                                              │"
             printf "│              ${GREEN}✅ Vibuzo is already up to date!${NC}                 │\n"
             echo "│                                                              │"
-            echo "│  Installed: $INSTALLED_DATE at $INSTALLED_TIME ($INSTALLED_COMMIT)"
-            echo "│  Location:  $INSTALL_TARGET"
+            echo "│  Installed: $INSTALLED_DATE at $INSTALLED_TIME ($INSTALLED_COMMIT)  │"
+            echo "│  Location:  $INSTALL_TARGET                                       │"
             echo "│                                                              │"
             echo "╰──────────────────────────────────────────────────────────────╯"
             exit 0
@@ -191,39 +191,39 @@ if [ "$GLOBAL" = false ]; then
             # Vibuzo file — save content below marker (user's custom rules)
             USER_RULES=$(awk '/PASTE YOUR CUSTOM RULES BELOW THIS LINE/{found=1; next} found' AGENTS.md 2>/dev/null)
             echo ""
-            printf "${CYAN}╭── AGENTS.md ─────────────────────────────────────────╮${NC}\n"
-            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  Vibuzo AGENTS.md found with custom rules below     ${CYAN}│${NC}\n"
+            printf "${CYAN}╭── AGENTS.md ──────────────────────────────────────────╮${NC}\n"
+            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  Vibuzo AGENTS.md found with custom rules below      ${CYAN}│${NC}\n"
             if [ -n "$USER_RULES" ]; then
-                printf "${CYAN}│${NC}  the marker. These custom rules will be preserved   ${CYAN}│${NC}\n"
+                printf "${CYAN}│${NC}  the marker. These custom rules will be preserved    ${CYAN}│${NC}\n"
             else
-                printf "${CYAN}│${NC}  the marker. No custom rules found below marker.    ${CYAN}│${NC}\n"
+                printf "${CYAN}│${NC}  the marker. No custom rules found below marker.     ${CYAN}│${NC}\n"
             fi
-            printf "${CYAN}│${NC}  The framework section (above ---) will be updated   ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  to the latest version.                              ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
-            printf "${CYAN}╰─────────────────────────────────────────────────────╯${NC}\n"
+            printf "${CYAN}│${NC}  The framework section (above ---) will be updated    ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  to the latest version.                               ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
+            printf "${CYAN}╰───────────────────────────────────────────────────────╯${NC}\n"
         else
             # User's own AGENTS.md — save entire content to prepend
             EXISTING_CONTENT=$(cat AGENTS.md)
             echo ""
-            printf "${CYAN}╭── AGENTS.md ─────────────────────────────────────────╮${NC}\n"
-            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  An existing AGENTS.md was found in your project.   ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  Your current content will be preserved at the top. ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  Vibuzo's framework content will be appended below  ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  with a --- separator. Nothing will be overwritten. ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
-            printf "${CYAN}╰─────────────────────────────────────────────────────╯${NC}\n"
+            printf "${CYAN}╭── AGENTS.md ──────────────────────────────────────────╮${NC}\n"
+            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  An existing AGENTS.md was found in your project.     ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  Your current content will be preserved at the top.   ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  Vibuzo's framework content will be appended below    ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  with a --- separator. Nothing will be overwritten.   ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
+            printf "${CYAN}╰───────────────────────────────────────────────────────╯${NC}\n"
         fi
     else
         echo ""
-        printf "${CYAN}╭── AGENTS.md ─────────────────────────────────────────╮${NC}\n"
-        printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
-        printf "${CYAN}│${NC}  No existing AGENTS.md found. A fresh copy will be  ${CYAN}│${NC}\n"
-        printf "${CYAN}│${NC}  downloaded and placed in your project root.        ${CYAN}│${NC}\n"
-        printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
-        printf "${CYAN}╰─────────────────────────────────────────────────────╯${NC}\n"
+        printf "${CYAN}╭── AGENTS.md ──────────────────────────────────────────╮${NC}\n"
+        printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
+        printf "${CYAN}│${NC}  No existing AGENTS.md found. A fresh copy will be    ${CYAN}│${NC}\n"
+        printf "${CYAN}│${NC}  downloaded and placed in your project root.          ${CYAN}│${NC}\n"
+        printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
+        printf "${CYAN}╰───────────────────────────────────────────────────────╯${NC}\n"
     fi
 
     if [ -t 0 ]; then
@@ -312,8 +312,8 @@ else
     printf "│              ${GREEN}✅ Vibuzo installed successfully!${NC}                │\n"
 fi
 echo "│                                                              │"
-echo "│  Location: $INSTALL_TARGET"
-echo "│  Agents:   $AGENTS_DIR/"
+echo "│  Location: $INSTALL_TARGET                                             │"
+echo "│  Agents:   $AGENTS_DIR/                                                │"
 echo "│                                                              │"
 echo "│  ── Next Steps ──                                             │"
 echo "│                                                              │"

@@ -9,7 +9,7 @@ Vibuzo is an agentic framework for AI coding agents — it gives you a planning-
 | **Vibuzo** | Plans, executes everyday tasks, runs `/spec` pipeline | Main (`mode: primary`) |
 | **Deepveloper** | Pure implementation — spawned as subtask via `/spec` | Subtask (`mode: subagent`) |
 
-## Codebase Structure
+## Agent Structure
 
 ```
 ├── AGENTS.md              ← Universal entry point (read by 25+ tools)
