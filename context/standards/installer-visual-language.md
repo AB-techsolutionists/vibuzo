@@ -6,11 +6,11 @@ Both `install.ps1` and `install.sh` use a consistent visual language for termina
 
 | Element | PowerShell | Bash (ANSI) | Usage |
 |---------|-----------|-------------|-------|
-| Headers/section titles | `$Cyan` | `\033[0;36m` | Section dividers (`─── Agents ───`), info labels |
-| Success/items | `$Green` | `\033[0;32m` | Checkmarks (`✓`), "Already up to date", "installed successfully" |
-| Warnings/notices | `$Yellow` | `\033[0;33m` | "Checking for updates...", "Update available!", AGENTS.md warnings |
+| Headers/section titles | `$Cyan` | `\033[0;36m` | Section dividers (`── Agents (N) ──`), box borders, "Installing Vibuzo..." title |
+| Success/items | `$Green` | `\033[0;32m` | Checkmarks (`✓`), status lines |
+| Warnings/notices | `$Yellow` | `\033[0;33m` | "Update available!", "Update cancelled" |
 | Errors | `$Red` | `\033[0;31m` | Network failures, file errors |
-| Default | None | `\033[0m` (NC) | Box borders, file paths, dimensions |
+| Default | None | `\033[0m` (NC) | Box corners, file paths, dimensions, success box borders |
 
 ## Layout Structure
 
@@ -23,35 +23,118 @@ Both `install.ps1` and `install.sh` use a consistent visual language for termina
 - Version number always shown in the install/update title line
 
 ### Update Mode (if applicable)
-- Version info block with cyan "Current install:" header
-- Remote check with comparison result
-- Exit early with "Already up to date" box if SHA matches
+Single compact rounded box with version comparison:
+```
+╭────── Vibuzo Update Check ──────╮
+│  Current:  0.0.19  (04638cc)    │
+│  Latest:   0.1.0   (bac3e89)    │
+│  Status:   ⬆️ Update available  │
+│                                  │
+│  Installed: Jun 07 at 00:42     │
+│  Location:  .opencode/           │
+╰──────────────────────────────────╯
+```
+- Three status modes: `✅ Up to date`, `⬆️ Update available`, `⚠️ Could not check`
+- "Up to date" exits immediately after the box
+- "Could not check" only shows Current line (no Latest)
+- Date uses short format (`Mon DD at HH:MM`)
 
 ### File Sections
-Files are grouped into sections with cyan headers:
+Files are grouped into sections with cyan headers showing item count:
 ```
-  ─── Agents ──────────────────────────────
-   ✓ vibuzo.md       (main agent)
-   ✓ deepveloper.md  (execution specialist)
+  ── Agents (2) ──────────────────────
+  ✓ vibuzo.md, deepveloper.md
 
-  ─── Commands ────────────────────────────
-   ✓ spec.md         (feature pipeline)
-   ...
+  ── Commands (9) ────────────────────
+  ✓ spec, add-context, context-init, context-find,
+    context-harvest, context-append, session,
+    session-view, session-timeline
 ```
-- Each file gets a green checkmark prefix
-- Descriptions in parentheses aligned by column
+- Each section header: `── Name (N) ──` padded with dashes to fill width
+- Items listed comma-separated on one line after a single green checkmark
+- Commands listed without `.md` extension (stem name only)
+- After 4 items, wrap to next line with 4-space indent
 
-### Success Box
-A rounded box (`╭╮╰╯`) containing:
-1. Green success message with version: `✅ Vibuzo 0.x.x installed successfully!`
-2. Location and agents path
-3. `── Next Steps ──` section with numbered steps (1-4)
-4. Link for more info
+### AGENTS.md Status
+Single line under the Project section instead of a decorative box:
+```
+  ── Project ────────────────────────
+  ✓ AGENTS.md (fresh copy)
+```
+Three status messages:
+- `✓ AGENTS.md (fresh copy)` — no existing file, downloaded new
+- `✓ AGENTS.md (with custom rules preserved)` — Vibuzo file with user rules below marker
+- `✓ AGENTS.md (your content preserved at top)` — user's own AGENTS.md
 
-### AGENTS.md Warning
-When overwriting an existing AGENTS.md:
-- Yellow warning that it will be overwritten
-- Instructions to copy custom rules and re-add via `/add-context`
+The interactive prompt (`Proceed with AGENTS.md? (y/N)`) appears after the status line without any decorative box.
+
+### Success Box (Install)
+Compact rounded box, ~9 lines total:
+```
+╭───── ✅ Vibuzo 0.1.0 installed successfully! ─────╮
+│  Location:  local (.opencode/)                      │
+│                                                     │
+│  ── Next Steps ──                                   │
+│  1. Restart opencode → select Vibuzo               │
+│  2. Run /context init to scaffold project memory    │
+│  3. Start building with /spec [feature description] │
+│  💡 github.com/AB-techsolutionists/vibuzo          │
+╰─────────────────────────────────────────────────────╯
+```
+
+### Success Box (Update)
+Compact rounded box, ~5 lines total:
+```
+╭───── ✅ Vibuzo 0.1.0 updated successfully! ──────╮
+│                                                     │
+│  Location:  local (.opencode/)                      │
+│                                                     │
+╰─────────────────────────────────────────────────────╯
+```
+- No "Next Steps" section for updates
+- Box dynamically sizes to fit content width
+
+## Helper Functions
+
+### PowerShell: Write-Section
+```powershell
+function Write-Section {
+    param([string]$Name, [string[]]$Items)
+    # Renders: "  ── Name (N) ─────" header + "  ✓ item1, item2, ..."
+    # Wraps at 4 items with 4-space indent on continuation lines
+}
+```
+
+### PowerShell: Write-Box
+```powershell
+function Write-Box {
+    param([string]$Title, [string[]]$Lines, [string]$Color = "Cyan")
+    # Renders a rounded box (╭╮╰╯) with title in top border
+    # Dynamically sizes width to content
+}
+```
+
+### Bash: print_section
+```bash
+print_section() {
+    local name="$1"
+    shift
+    local items=("$@")
+    # Same rendering as Write-Section
+    # Uses printf with ANSI color codes
+}
+```
+
+### Bash: print_box
+```bash
+print_box() {
+    local title="$1"
+    shift
+    local lines=("$@")
+    # Same rendering as Write-Box
+    # Uses printf with ANSI color codes
+}
+```
 
 ## PowerShell Implementation
 
@@ -78,3 +161,5 @@ Use `printf` (not `echo`) for ANSI-colored output. See `install.sh` for full imp
 3. **Use `printf` in bash** — `echo -e` behavior varies across shells; `printf` is portable
 4. **The banner must always appear first** — before any version checks or download output
 5. **Version always shown** — install/update lines, success box, and update-mode display must include the current semver (`0.x.x`)
+6. **Use arrays/loops** — file lists should be stored in arrays and processed with loops, not repeated `Write-Host`/`printf` + download pairs
+7. **Rounded corners everywhere** — all boxes use `╭╮╰╯` (rounded), never `╔╗╚╝` (double-line) or `┌┐└┘` (single-line) except the VIBUZO banner

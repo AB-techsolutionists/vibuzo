@@ -45,12 +45,84 @@ $VersionFile = "$OpenCodeDir\.vibuzo-version"
 
 $ScriptVersion = "0.1.0"
 
+# ─── File Arrays ──────────────────────────────────────────────────────────────
+
+$AgentFiles = @(
+    @{ Name = "vibuzo.md";      Desc = "main agent" }
+    @{ Name = "deepveloper.md"; Desc = "execution specialist" }
+)
+
+$CommandFiles = @(
+    "spec", "add-context", "context-init", "context-find",
+    "context-harvest", "context-append", "session",
+    "session-view", "session-timeline"
+)
+
 # ─── Terminal Colors ─────────────────────────────────────────────────────────
 
 $Cyan = "Cyan"
 $Green = "Green"
 $Yellow = "Yellow"
 $Red = "Red"
+
+# ─── Section Renderer ────────────────────────────────────────────────────────
+
+function Write-Section {
+    param(
+        [string]$Name,
+        [string[]]$Items
+    )
+
+    # Section header with count: "  ── Name (N) ──────────────────────"
+    $header = "  ── $Name ($($Items.Count)) "
+    $header = $header.PadRight(54, '─')
+    Write-Host $header -ForegroundColor $Cyan
+
+    # Grouped items with wrapping at 4 items
+    $line = "  ✓ "
+    for ($i = 0; $i -lt $Items.Count; $i++) {
+        if ($i -gt 0 -and $i % 4 -eq 0) {
+            Write-Host $line.TrimEnd(', ') -ForegroundColor $Green
+            $line = "    "
+        }
+        $line += "$($Items[$i]), "
+    }
+    if ($line -ne "  ✓ ") {
+        Write-Host $line.TrimEnd(', ') -ForegroundColor $Green
+    }
+}
+
+# ─── Box Renderer ───────────────────────────────────────────────────────────
+
+function Write-Box {
+    param(
+        [string]$Title,
+        [string[]]$Lines,
+        [string]$Color = "Cyan"
+    )
+
+    # Calculate content width from the longest line
+    $maxLen = 0
+    foreach ($line in $Lines) {
+        if ($line.Length -gt $maxLen) { $maxLen = $line.Length }
+    }
+    $contentWidth = [Math]::Max($maxLen, $Title.Length + 2)
+    $totalWidth = $contentWidth + 4  # 2 spaces padding each side
+
+    # Top border with title
+    $titleSection = " $Title "
+    $sideDashes = ($totalWidth - $titleSection.Length) / 2
+    $top = "╭" + "─" * [Math]::Floor($sideDashes) + $titleSection + "─" * [Math]::Ceiling($sideDashes) + "╮"
+    Write-Host $top -ForegroundColor $Color
+
+    # Content lines
+    foreach ($line in $Lines) {
+        Write-Host ("│ " + $line.PadRight($contentWidth) + " │") -ForegroundColor $Color
+    }
+
+    # Bottom border
+    Write-Host ("╰" + "─" * $totalWidth + "╯") -ForegroundColor $Color
+}
 
 # ─── Help ────────────────────────────────────────────────────────────────────
 
@@ -108,38 +180,40 @@ if ($Update) {
   $InstalledCommit = $OldParts[2]
   $InstalledMode = $OldParts[3]
 
-  Write-Host "🔍 Checking for updates..." -ForegroundColor $Yellow
-  Write-Host ""
-  Write-Host "  Current install:" -ForegroundColor $Cyan
-  Write-Host "    Version: $Version"
-  Write-Host "    Date:   $InstalledDate at $InstalledTime"
-  Write-Host "    Commit: $InstalledCommit"
-  Write-Host "    Mode:   $InstalledMode"
-  Write-Host "    Path:   $OpenCodeDir"
-  Write-Host ""
+  # Format date for display: "Jun 07 at 00:42"
+  $InstalledFull = Get-Date "$InstalledDate $InstalledTime" -Format "MMM dd 'at' HH:mm"
 
   # Try to fetch latest commit SHA from GitHub API (best-effort)
+  $LatestCommit = ""
+  $UpToDate = $false
   try {
     $LatestCommit = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
-    Write-Host "  Latest on origin/$($Branch): $LatestCommit" -ForegroundColor $Cyan
     if ($LatestCommit -eq $InstalledCommit) {
-      Write-Host ""
-      Write-Host "╭──────────────────────────────────────────────────────────────╮"
-      Write-Host "│                                                              │"
-      Write-Host "│              ✅ Vibuzo $Version is up to date!                │" -ForegroundColor $Green
-      Write-Host "│                                                              │"
-      Write-Host "│  Installed: $Version — $InstalledDate at $InstalledTime ($InstalledCommit)  │"
-      Write-Host "│  Location:  $InstallTarget                                              │"
-      Write-Host "│                                                              │"
-      Write-Host "╰──────────────────────────────────────────────────────────────╯"
-      exit 0
+      $Status = "✅ Up to date"
+      $UpToDate = $true
     } else {
-      Write-Host "  ⬆️  Update available!" -ForegroundColor $Yellow
+      $Status = "⬆️ Update available"
     }
   } catch {
-    Write-Host "  (Could not check remote — network issue or API limit)" -ForegroundColor $Red
+    $Status = "⚠️ Could not check"
   }
-  Write-Host ""
+
+  # Build and display the update check box
+  $BoxLines = @()
+  $BoxLines += "Current:  $Version  ($InstalledCommit)"
+  if ($LatestCommit) {
+    $BoxLines += "Latest:   $ScriptVersion  ($LatestCommit)"
+  }
+  $BoxLines += "Status:   $Status"
+  $BoxLines += ""
+  $BoxLines += "Installed: $InstalledFull"
+  $BoxLines += "Location:  $OpenCodeDir"
+
+  Write-Box -Title "Vibuzo Update Check" -Lines $BoxLines
+
+  if ($UpToDate) {
+    exit 0
+  }
 
   # Interactive confirmation (skip if piped or non-interactive)
   $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
@@ -166,47 +240,28 @@ New-Item -ItemType Directory -Path $AgentsDir -Force | Out-Null
 New-Item -ItemType Directory -Path $CommandsDir -Force | Out-Null
 
 Write-Host ""
-Write-Host "  ─── Agents ──────────────────────────────" -ForegroundColor $Cyan
-Write-Host ""
+Write-Section "Agents" ($AgentFiles | ForEach-Object { $_.Name })
 
-Write-Host "   ✓ vibuzo.md       (main agent)" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/agents/vibuzo.md" -OutFile "$AgentsDir\vibuzo.md"
-
-Write-Host "   ✓ deepveloper.md  (execution specialist)" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/agents/deepveloper.md" -OutFile "$AgentsDir\deepveloper.md"
+foreach ($file in $AgentFiles) {
+    Invoke-WebRequest -Uri "$RawUrl/agents/$($file.Name)" -OutFile "$AgentsDir\$($file.Name)"
+}
 
 Write-Host ""
-Write-Host "  ─── Commands ────────────────────────────" -ForegroundColor $Cyan
-Write-Host ""
+Write-Section "Commands" $CommandFiles
 
-Write-Host "   ✓ spec.md         (feature pipeline)" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/spec.md" -OutFile "$CommandsDir\spec.md"
-Write-Host "   ✓ add-context.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/add-context.md" -OutFile "$CommandsDir\add-context.md"
-Write-Host "   ✓ context-init.md (scaffold context)" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/context-init.md" -OutFile "$CommandsDir\context-init.md"
-Write-Host "   ✓ context-find.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/context-find.md" -OutFile "$CommandsDir\context-find.md"
-Write-Host "   ✓ context-harvest.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/context-harvest.md" -OutFile "$CommandsDir\context-harvest.md"
-Write-Host "   ✓ context-append.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/context-append.md" -OutFile "$CommandsDir\context-append.md"
-Write-Host "   ✓ session.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/session.md" -OutFile "$CommandsDir\session.md"
-Write-Host "   ✓ session-view.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/session-view.md" -OutFile "$CommandsDir\session-view.md"
-Write-Host "   ✓ session-timeline.md" -ForegroundColor $Green
-Invoke-WebRequest -Uri "$RawUrl/commands/session-timeline.md" -OutFile "$CommandsDir\session-timeline.md"
+foreach ($file in $CommandFiles) {
+    Invoke-WebRequest -Uri "$RawUrl/commands/$file.md" -OutFile "$CommandsDir\$file.md"
+}
 
 Write-Host ""
 Write-Host "  ─── Project ─────────────────────────────" -ForegroundColor $Cyan
-Write-Host ""
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if (-not $Global) {
-  # ─── Check AGENTS.md status and explain to user ────────────────
+  # ─── Check AGENTS.md status ────────────────────────────────────
   $ExistingContent = $null
   $UserRules = $null
+  $AgentsStatus = "fresh copy"
   if (Test-Path "AGENTS.md") {
     $Lines = Get-Content "AGENTS.md"
     $MarkerIndex = $Lines.IndexOf("─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───")
@@ -216,43 +271,17 @@ if (-not $Global) {
         $SavedContent = $Lines[($MarkerIndex + 1)..($Lines.Length - 1)] -join "`n"
         if ($SavedContent.Trim() -ne "") {
           $UserRules = $SavedContent
+          $AgentsStatus = "with custom rules preserved"
         }
       }
-      Write-Host ""
-      Write-Host "╭── AGENTS.md ──────────────────────────────────────────╮" -ForegroundColor $Cyan
-      Write-Host "│                                                       │" -ForegroundColor $Cyan
-      Write-Host "│  Vibuzo AGENTS.md found with custom rules below      │" -ForegroundColor $Cyan
-      if ($UserRules) {
-        Write-Host "│  the marker. These custom rules will be preserved    │" -ForegroundColor $Cyan
-      } else {
-        Write-Host "│  the marker. No custom rules found below marker.     │" -ForegroundColor $Cyan
-      }
-      Write-Host "│  The framework section (above ---) will be updated    │" -ForegroundColor $Cyan
-      Write-Host "│  to the latest version.                               │" -ForegroundColor $Cyan
-      Write-Host "│                                                       │" -ForegroundColor $Cyan
-      Write-Host "╰───────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
     } else {
       # User's own AGENTS.md — save entire content to prepend
       $ExistingContent = $Lines -join "`n"
-      Write-Host ""
-      Write-Host "╭── AGENTS.md ──────────────────────────────────────────╮" -ForegroundColor $Cyan
-      Write-Host "│                                                       │" -ForegroundColor $Cyan
-      Write-Host "│  An existing AGENTS.md was found in your project.     │" -ForegroundColor $Cyan
-      Write-Host "│  Your current content will be preserved at the top.   │" -ForegroundColor $Cyan
-      Write-Host "│  Vibuzo's framework content will be appended below    │" -ForegroundColor $Cyan
-      Write-Host "│  with a --- separator. Nothing will be overwritten.   │" -ForegroundColor $Cyan
-      Write-Host "│                                                       │" -ForegroundColor $Cyan
-      Write-Host "╰───────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
+      $AgentsStatus = "your content preserved at top"
     }
-  } else {
-    Write-Host ""
-    Write-Host "╭── AGENTS.md ──────────────────────────────────────────╮" -ForegroundColor $Cyan
-    Write-Host "│                                                       │" -ForegroundColor $Cyan
-    Write-Host "│  No existing AGENTS.md found. A fresh copy will be    │" -ForegroundColor $Cyan
-    Write-Host "│  downloaded and placed in your project root.          │" -ForegroundColor $Cyan
-    Write-Host "│                                                       │" -ForegroundColor $Cyan
-    Write-Host "╰───────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
   }
+
+  Write-Host "  ✓ AGENTS.md ($AgentsStatus)" -ForegroundColor $Green
 
   $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
   if ($Interactive) {
@@ -265,8 +294,6 @@ if (-not $Global) {
     Write-Host "(non-interactive shell — proceeding automatically)"
   }
 
-  Write-Host ""
-  Write-Host "   ✓ AGENTS.md       (project root)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "AGENTS.md"
   if ($ExistingContent) {
     # User had their own AGENTS.md — prepend it above Vibuzo content
@@ -277,7 +304,7 @@ if (-not $Global) {
     Add-Content -Path "AGENTS.md" -Value "`n$UserRules"
   }
 } else {
-  Write-Host "   ✓ AGENTS.md       (opencode dir)" -ForegroundColor $Green
+  Write-Host "  ✓ AGENTS.md (fresh copy)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "$OpenCodeDir\AGENTS.md"
 }
 
@@ -318,26 +345,42 @@ if (Get-Command "claude" -ErrorAction SilentlyContinue) {
 # ─── Done ────────────────────────────────────────────────────────────────────
 
 $Action = if ($Update) { "updated" } else { "installed" }
-Write-Host ""
-Write-Host "╭──────────────────────────────────────────────────────────────╮"
-Write-Host "│                                                              │"
+$StatusLine = "✅ Vibuzo $ScriptVersion ${Action} successfully!"
+
+# Build content lines (compact box)
+$BoxLines = @()
 if ($Update) {
-  Write-Host "│              ✅ Vibuzo $ScriptVersion updated successfully!            │" -ForegroundColor $Green
+    $BoxLines += ""
+    $BoxLines += "Location:  $InstallTarget"
+    $BoxLines += ""
 } else {
-  Write-Host "│              ✅ Vibuzo $ScriptVersion installed successfully!           │" -ForegroundColor $Green
+    $BoxLines += "Location:  $InstallTarget"
+    $BoxLines += ""
+    $BoxLines += "── Next Steps ──"
+    $BoxLines += "1. Restart opencode → select Vibuzo"
+    $BoxLines += "2. Run /context init to scaffold project memory"
+    $BoxLines += "3. Start building with /spec [feature description]"
+    $BoxLines += "💡 github.com/AB-techsolutionists/vibuzo"
 }
-Write-Host "│                                                              │"
-Write-Host "│  Location: $InstallTarget                                             │"
-Write-Host "│  Agents:   $AgentsDir                                                │"
-Write-Host "│                                                              │"
-Write-Host "│  ── Next Steps ──                                             │"
-Write-Host "│                                                              │"
-Write-Host "│  1. Restart opencode to pick up Vibuzo                       │"
-Write-Host "│  2. Select Vibuzo from the agent dropdown                    │"
-Write-Host "│  3. Run /context init to scaffold project memory             │"
-Write-Host "│  4. Start building with /spec [feature description]          │"
-Write-Host "│                                                              │"
-Write-Host "│  💡 Learn more: github.com/AB-techsolutionists/vibuzo        │"
-Write-Host "│                                                              │"
-Write-Host "╰──────────────────────────────────────────────────────────────╯"
+
+# Calculate box width from content
+$maxLineLen = $StatusLine.Length + 2
+foreach ($l in $BoxLines) { if ($l.Length -gt $maxLineLen) { $maxLineLen = $l.Length } }
+$innerWidth = $maxLineLen + 4
+
+Write-Host ""
+# Top border with title
+$titleSection = " $StatusLine "
+$sideDashes = ($innerWidth - $titleSection.Length) / 2
+Write-Host ("╭" + "─" * [Math]::Floor($sideDashes) + $titleSection + "─" * [Math]::Ceiling($sideDashes) + "╮")
+# Content lines
+foreach ($l in $BoxLines) {
+    if ($l -eq "") {
+        Write-Host ("│" + "".PadRight($innerWidth) + "│")
+    } else {
+        Write-Host ("│ " + $l.PadRight($innerWidth - 2) + " │")
+    }
+}
+# Bottom border
+Write-Host ("╰" + "─" * $innerWidth + "╯")
 Write-Host ""

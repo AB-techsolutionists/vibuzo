@@ -25,6 +25,19 @@ RAW_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
 
 SCRIPT_VERSION="0.1.0"
 
+# ─── File Arrays ──────────────────────────────────────────────────────────────
+
+AGENT_FILES=(
+    "vibuzo.md"
+    "deepveloper.md"
+)
+
+COMMAND_FILES=(
+    "spec" "add-context" "context-init" "context-find"
+    "context-harvest" "context-append" "session"
+    "session-view" "session-timeline"
+)
+
 # ─── Arg Parsing ─────────────────────────────────────────────────────────────
 
 GLOBAL=false
@@ -63,6 +76,88 @@ YELLOW='\033[0;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
+# ─── Section Renderer ────────────────────────────────────────────────────────
+
+print_section() {
+    local name="$1"
+    shift
+    local items=("$@")
+    local count=${#items[@]}
+
+    # Section header with count: "  ── Name (N) ──────────────────────"
+    local header="  ── $name ($count) "
+    local pad=$((54 - ${#header}))
+    printf "${CYAN}%s${NC}" "$header"
+    for ((j=0; j<pad; j++)); do printf '─'; done
+    printf "\n"
+
+    # Grouped items with wrapping at 4 items
+    local line="  ✓ "
+    local i=0
+    for item in "${items[@]}"; do
+        if [ $i -gt 0 ] && [ $((i % 4)) -eq 0 ]; then
+            line="${line%, }"
+            printf "${GREEN}%s${NC}\n" "$line"
+            line="    "
+        fi
+        line="${line}${item}, "
+        i=$((i + 1))
+    done
+    if [ "$line" != "  ✓ " ]; then
+        line="${line%, }"
+        printf "${GREEN}%s${NC}\n" "$line"
+    fi
+}
+
+# ─── Box Renderer ────────────────────────────────────────────────────────────
+
+print_box() {
+    local title="$1"
+    shift
+    local lines=("$@")
+    local max_len=0
+    local line
+
+    # Find the longest content line
+    for line in "${lines[@]}"; do
+        if [ ${#line} -gt $max_len ]; then
+            max_len=${#line}
+        fi
+    done
+
+    local content_width=$max_len
+    local title_len=${#title}
+    if [ $((title_len + 2)) -gt $content_width ]; then
+        content_width=$((title_len + 2))
+    fi
+    local total_width=$((content_width + 4))
+
+    # Top border with title
+    local title_section=" $title "
+    local side_dashes=$(((total_width - ${#title_section}) / 2))
+    local top="╭"
+    for ((i=0; i<side_dashes; i++)); do top="${top}─"; done
+    top="${top}${title_section}"
+    local right_dashes=$((total_width - ${#top} + 1))
+    for ((i=0; i<right_dashes; i++)); do top="${top}─"; done
+    top="${top}╮"
+    printf "${CYAN}%s${NC}\n" "$top"
+
+    # Content lines
+    for line in "${lines[@]}"; do
+        local padded="$line"
+        local pad_len=$((content_width - ${#line}))
+        for ((i=0; i<pad_len; i++)); do padded="${padded} "; done
+        printf "${CYAN}│${NC} %s ${CYAN}│${NC}\n" "$padded"
+    done
+
+    # Bottom border
+    local bottom="╰"
+    for ((i=0; i<total_width; i++)); do bottom="${bottom}─"; done
+    bottom="${bottom}╯"
+    printf "${CYAN}%s${NC}\n" "$bottom"
+}
+
 # ─── Banner ──────────────────────────────────────────────────────────────────
 
 printf "${CYAN}"
@@ -97,49 +192,61 @@ if [ "$UPDATE" = true ]; then
     REST="${CURRENT_VERSION_LINE#* | }"
     read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_COMMIT INSTALLED_MODE <<< "$REST"
 
-    echo ""
-    printf "${YELLOW}🔍 Checking for updates...${NC}\n"
-    echo ""
-    printf "  ${CYAN}Current install:${NC}\n"
-    echo "    Version: $VERSION"
-    echo "    Date:   $INSTALLED_DATE at $INSTALLED_TIME"
-    echo "    Commit: $INSTALLED_COMMIT"
-    echo "    Mode:   $INSTALLED_MODE"
-    echo "    Path:   $OPENCODE_DIR"
-    echo ""
+    # Format date for display: "Jun 07 at 00:42"
+    MONTH_NUM="${INSTALLED_DATE#*-}"; MONTH_NUM="${MONTH_NUM%%-*}"
+    DAY="${INSTALLED_DATE##*-}"
+    case $MONTH_NUM in
+        01) MONTH="Jan" ;; 02) MONTH="Feb" ;; 03) MONTH="Mar" ;;
+        04) MONTH="Apr" ;; 05) MONTH="May" ;; 06) MONTH="Jun" ;;
+        07) MONTH="Jul" ;; 08) MONTH="Aug" ;; 09) MONTH="Sep" ;;
+        10) MONTH="Oct" ;; 11) MONTH="Nov" ;; 12) MONTH="Dec" ;;
+    esac
+    DAY=$((10#$DAY))
+    INSTALLED_FULL="$MONTH $DAY at $INSTALLED_TIME"
 
     # Try to fetch latest commit SHA from GitHub API (best-effort)
+    LATEST_COMMIT=""
+    UP_TO_DATE=false
     LATEST_COMMIT=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/null \
         | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4 | cut -c1-7 || true)
     if [ -n "$LATEST_COMMIT" ]; then
-        printf "  ${CYAN}Latest on origin/$BRANCH: $LATEST_COMMIT${NC}\n"
         if [ "$LATEST_COMMIT" = "$INSTALLED_COMMIT" ]; then
-            echo ""
-            echo "╭──────────────────────────────────────────────────────────────╮"
-            echo "│                                                              │"
-            printf "│              ${GREEN}✅ Vibuzo $VERSION is up to date!${NC}                 │\n"
-            echo "│                                                              │"
-            echo "│  Installed: $VERSION — $INSTALLED_DATE at $INSTALLED_TIME ($INSTALLED_COMMIT)  │"
-            echo "│  Location:  $INSTALL_TARGET                                              │"
-            echo "│                                                              │"
-            echo "╰──────────────────────────────────────────────────────────────╯"
-            exit 0
+            STATUS="✅ Up to date"
+            UP_TO_DATE=true
         else
-            printf "  ${YELLOW}⬆️  Update available!${NC}\n"
+            STATUS="⬆️ Update available"
         fi
     else
-        printf "  ${RED}(Could not check remote — network issue or API limit)${NC}\n"
+        STATUS="⚠️ Could not check"
     fi
-    echo ""
+
+    # Build and display the update check box
+    BOX_LINES=()
+    BOX_LINES+=("Current:  $VERSION  ($INSTALLED_COMMIT)")
+    if [ -n "$LATEST_COMMIT" ]; then
+        BOX_LINES+=("Latest:   $SCRIPT_VERSION  ($LATEST_COMMIT)")
+    fi
+    BOX_LINES+=("Status:   $STATUS")
+    BOX_LINES+=("")
+    BOX_LINES+=("Installed: $INSTALLED_FULL")
+    BOX_LINES+=("Location:  $OPENCODE_DIR")
+
+    print_box "Vibuzo Update Check" "${BOX_LINES[@]}"
+
+    if [ "$UP_TO_DATE" = true ]; then
+        exit 0
+    fi
 
     # Interactive confirmation (skip if piped or non-interactive)
     if [ -t 0 ]; then
-        read -p "Proceed with update? (y/N) " -r RESPONSE
+        printf "\nProceed with update? (y/N): "
+        read -r RESPONSE
         if [ "$RESPONSE" != "y" ] && [ "$RESPONSE" != "Y" ] && [ "$RESPONSE" != "yes" ] && [ "$RESPONSE" != "YES" ]; then
             printf "${YELLOW}Update cancelled.${NC}\n"
             exit 0
         fi
     else
+        echo ""
         echo "(non-interactive shell — proceeding automatically)"
     fi
 
@@ -155,86 +262,43 @@ fi
 mkdir -p "$AGENTS_DIR" "$COMMANDS_DIR"
 
 echo ""
-printf "  ${CYAN}─── Agents ──────────────────────────────${NC}\n"
-echo ""
+print_section "Agents" "${AGENT_FILES[@]}"
 
-printf "   ${GREEN}✓ vibuzo.md       (main agent)${NC}\n"
-curl -fsSL "$RAW_URL/agents/vibuzo.md" -o "$AGENTS_DIR/vibuzo.md"
-
-printf "   ${GREEN}✓ deepveloper.md  (execution specialist)${NC}\n"
-curl -fsSL "$RAW_URL/agents/deepveloper.md" -o "$AGENTS_DIR/deepveloper.md"
+for f in "${AGENT_FILES[@]}"; do
+    curl -fsSL "$RAW_URL/agents/$f" -o "$AGENTS_DIR/$f"
+done
 
 echo ""
-printf "  ${CYAN}─── Commands ────────────────────────────${NC}\n"
-echo ""
+print_section "Commands" "${COMMAND_FILES[@]}"
 
-printf "   ${GREEN}✓ spec.md         (feature pipeline)${NC}\n"
-curl -fsSL "$RAW_URL/commands/spec.md" -o "$COMMANDS_DIR/spec.md"
-printf "   ${GREEN}✓ add-context.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/add-context.md" -o "$COMMANDS_DIR/add-context.md"
-printf "   ${GREEN}✓ context-init.md (scaffold context)${NC}\n"
-curl -fsSL "$RAW_URL/commands/context-init.md" -o "$COMMANDS_DIR/context-init.md"
-printf "   ${GREEN}✓ context-find.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/context-find.md" -o "$COMMANDS_DIR/context-find.md"
-printf "   ${GREEN}✓ context-harvest.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/context-harvest.md" -o "$COMMANDS_DIR/context-harvest.md"
-printf "   ${GREEN}✓ context-append.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/context-append.md" -o "$COMMANDS_DIR/context-append.md"
-printf "   ${GREEN}✓ session.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/session.md" -o "$COMMANDS_DIR/session.md"
-printf "   ${GREEN}✓ session-view.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/session-view.md" -o "$COMMANDS_DIR/session-view.md"
-printf "   ${GREEN}✓ session-timeline.md${NC}\n"
-curl -fsSL "$RAW_URL/commands/session-timeline.md" -o "$COMMANDS_DIR/session-timeline.md"
+for f in "${COMMAND_FILES[@]}"; do
+    curl -fsSL "$RAW_URL/commands/$f.md" -o "$COMMANDS_DIR/$f.md"
+done
 
 echo ""
 printf "  ${CYAN}─── Project ─────────────────────────────${NC}\n"
-echo ""
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if [ "$GLOBAL" = false ]; then
-    # ─── Check AGENTS.md status and explain to user ────────────────
+    # ─── Check AGENTS.md status ────────────────────────────────────
     EXISTING_CONTENT=""
     USER_RULES=""
+    AGENTS_STATUS="fresh copy"
     if [ -f "AGENTS.md" ]; then
         if grep -q "PASTE YOUR CUSTOM RULES BELOW THIS LINE" AGENTS.md 2>/dev/null; then
             # Vibuzo file — save content below marker (user's custom rules)
             USER_RULES=$(awk '/PASTE YOUR CUSTOM RULES BELOW THIS LINE/{found=1; next} found' AGENTS.md 2>/dev/null)
-            echo ""
-            printf "${CYAN}╭── AGENTS.md ──────────────────────────────────────────╮${NC}\n"
-            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  Vibuzo AGENTS.md found with custom rules below      ${CYAN}│${NC}\n"
             if [ -n "$USER_RULES" ]; then
-                printf "${CYAN}│${NC}  the marker. These custom rules will be preserved    ${CYAN}│${NC}\n"
-            else
-                printf "${CYAN}│${NC}  the marker. No custom rules found below marker.     ${CYAN}│${NC}\n"
+                AGENTS_STATUS="with custom rules preserved"
             fi
-            printf "${CYAN}│${NC}  The framework section (above ---) will be updated    ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  to the latest version.                               ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
-            printf "${CYAN}╰───────────────────────────────────────────────────────╯${NC}\n"
         else
             # User's own AGENTS.md — save entire content to prepend
             EXISTING_CONTENT=$(cat AGENTS.md)
-            echo ""
-            printf "${CYAN}╭── AGENTS.md ──────────────────────────────────────────╮${NC}\n"
-            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  An existing AGENTS.md was found in your project.     ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  Your current content will be preserved at the top.   ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  Vibuzo's framework content will be appended below    ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}  with a --- separator. Nothing will be overwritten.   ${CYAN}│${NC}\n"
-            printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
-            printf "${CYAN}╰───────────────────────────────────────────────────────╯${NC}\n"
+            AGENTS_STATUS="your content preserved at top"
         fi
-    else
-        echo ""
-        printf "${CYAN}╭── AGENTS.md ──────────────────────────────────────────╮${NC}\n"
-        printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
-        printf "${CYAN}│${NC}  No existing AGENTS.md found. A fresh copy will be    ${CYAN}│${NC}\n"
-        printf "${CYAN}│${NC}  downloaded and placed in your project root.          ${CYAN}│${NC}\n"
-        printf "${CYAN}│${NC}                                                       ${CYAN}│${NC}\n"
-        printf "${CYAN}╰───────────────────────────────────────────────────────╯${NC}\n"
     fi
+
+    printf "  ${GREEN}✓ AGENTS.md ($AGENTS_STATUS)${NC}\n"
 
     if [ -t 0 ]; then
         printf "\nProceed with AGENTS.md? (y/N): "
@@ -247,7 +311,6 @@ if [ "$GLOBAL" = false ]; then
         echo "(non-interactive shell — proceeding automatically)"
     fi
 
-    printf "   ${GREEN}✓ AGENTS.md       (project root)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o AGENTS.md
     if [ -n "$EXISTING_CONTENT" ]; then
         # User had their own AGENTS.md — prepend it above Vibuzo content
@@ -258,7 +321,7 @@ if [ "$GLOBAL" = false ]; then
         printf "\n%s" "$USER_RULES" >> AGENTS.md
     fi
 else
-    printf "   ${GREEN}✓ AGENTS.md       (opencode dir)${NC}\n"
+    printf "  ${GREEN}✓ AGENTS.md (fresh copy)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o "$OPENCODE_DIR/AGENTS.md"
 fi
 
@@ -313,26 +376,62 @@ if [ "$UPDATE" = true ]; then
 else
     ACTION="installed"
 fi
-echo ""
-echo "╭──────────────────────────────────────────────────────────────╮"
-echo "│                                                              │"
+
+STATUS_LINE="✅ Vibuzo ${SCRIPT_VERSION} ${ACTION} successfully!"
+
+# Build content lines (compact box)
+BOX_LINES=()
 if [ "$UPDATE" = true ]; then
-    printf "│              ${GREEN}✅ Vibuzo ${SCRIPT_VERSION} updated successfully!${NC}            │\n"
+    BOX_LINES+=("")
+    BOX_LINES+=("Location:  $INSTALL_TARGET")
+    BOX_LINES+=("")
 else
-    printf "│              ${GREEN}✅ Vibuzo ${SCRIPT_VERSION} installed successfully!${NC}           │\n"
+    BOX_LINES+=("Location:  $INSTALL_TARGET")
+    BOX_LINES+=("")
+    BOX_LINES+=("── Next Steps ──")
+    BOX_LINES+=("1. Restart opencode → select Vibuzo")
+    BOX_LINES+=("2. Run /context init to scaffold project memory")
+    BOX_LINES+=("3. Start building with /spec [feature description]")
+    BOX_LINES+=("💡 github.com/AB-techsolutionists/vibuzo")
 fi
-echo "│                                                              │"
-echo "│  Location: $INSTALL_TARGET                                             │"
-echo "│  Agents:   $AGENTS_DIR/                                                │"
-echo "│                                                              │"
-echo "│  ── Next Steps ──                                             │"
-echo "│                                                              │"
-echo "│  1. Restart opencode to pick up Vibuzo                       │"
-echo "│  2. Select Vibuzo from the agent dropdown                    │"
-echo "│  3. Run /context init to scaffold project memory             │"
-echo "│  4. Start building with /spec [feature description]          │"
-echo "│                                                              │"
-echo "│  💡 Learn more: github.com/AB-techsolutionists/vibuzo        │"
-echo "│                                                              │"
-echo "╰──────────────────────────────────────────────────────────────╯"
+
+# Calculate box width from content
+MAX_LEN=${#STATUS_LINE}
+MAX_LEN=$((MAX_LEN + 2))
+for line in "${BOX_LINES[@]}"; do
+    if [ ${#line} -gt $MAX_LEN ]; then
+        MAX_LEN=${#line}
+    fi
+done
+INNER_WIDTH=$((MAX_LEN + 4))
+
+echo ""
+# Top border with title
+TITLE_SECTION=" $STATUS_LINE "
+SIDE_DASHES=$(((INNER_WIDTH - ${#TITLE_SECTION}) / 2))
+TOP="╭"
+for ((i=0; i<SIDE_DASHES; i++)); do TOP="${TOP}─"; done
+TOP="${TOP}${TITLE_SECTION}"
+RIGHT_DASHES=$((INNER_WIDTH - ${#TOP} + 1))
+for ((i=0; i<RIGHT_DASHES; i++)); do TOP="${TOP}─"; done
+TOP="${TOP}╮"
+printf "%s\n" "$TOP"
+# Content lines
+for line in "${BOX_LINES[@]}"; do
+    if [ -z "$line" ]; then
+        PAD=""
+        for ((i=0; i<INNER_WIDTH; i++)); do PAD="${PAD} "; done
+        printf "│${PAD}│\n"
+    else
+        PAD=""
+        PAD_LEN=$((INNER_WIDTH - 2 - ${#line}))
+        for ((i=0; i<PAD_LEN; i++)); do PAD="${PAD} "; done
+        printf "│ ${line}${PAD} │\n"
+    fi
+done
+# Bottom border
+BOTTOM="╰"
+for ((i=0; i<INNER_WIDTH; i++)); do BOTTOM="${BOTTOM}─"; done
+BOTTOM="${BOTTOM}╯"
+printf "%s\n" "$BOTTOM"
 echo ""
