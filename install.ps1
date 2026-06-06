@@ -41,6 +41,13 @@ $AgentsDir = "$OpenCodeDir\agent\core"
 $CommandsDir = "$OpenCodeDir\commands"
 $VersionFile = "$OpenCodeDir\.vibuzo-version"
 
+# ─── Terminal Colors ─────────────────────────────────────────────────────────
+
+$Cyan = "Cyan"
+$Green = "Green"
+$Yellow = "Yellow"
+$Red = "Red"
+
 # ─── Help ────────────────────────────────────────────────────────────────────
 
 if ($Help) {
@@ -60,6 +67,24 @@ Options:
   exit 0
 }
 
+# ─── Banner ──────────────────────────────────────────────────────────────────
+
+$Banner = @'
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗          ║
+║   ██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗         ║
+║   ██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║         ║
+║   ╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║         ║
+║    ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝         ║
+║     ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝          ║
+║                                                           ║
+║               Agentic Framework                           ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+'@
+Write-Host $Banner -ForegroundColor $Cyan
+
 # ─── Update Mode ─────────────────────────────────────────────────────────────
 
 if ($Update) {
@@ -76,9 +101,9 @@ if ($Update) {
   $InstalledCommit = $Parts[2]
   $InstalledMode = $Parts[3]
 
-  Write-Host "🔍 Checking for updates..."
+  Write-Host "🔍 Checking for updates..." -ForegroundColor $Yellow
   Write-Host ""
-  Write-Host "  Current install:"
+  Write-Host "  Current install:" -ForegroundColor $Cyan
   Write-Host "    Date:   $InstalledDate at $InstalledTime"
   Write-Host "    Commit: $InstalledCommit"
   Write-Host "    Mode:   $InstalledMode"
@@ -88,14 +113,23 @@ if ($Update) {
   # Try to fetch latest commit SHA from GitHub API (best-effort)
   try {
     $LatestCommit = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
-    Write-Host "  Latest on origin/$($Branch): $LatestCommit"
+    Write-Host "  Latest on origin/$($Branch): $LatestCommit" -ForegroundColor $Cyan
     if ($LatestCommit -eq $InstalledCommit) {
-      Write-Host "  ✅ Already up to date!"
+      Write-Host ""
+      Write-Host "╭──────────────────────────────────────────────────────────────╮"
+      Write-Host "│                                                              │"
+      Write-Host "│              ✅ Vibuzo is already up to date!                 │" -ForegroundColor $Green
+      Write-Host "│                                                              │"
+      Write-Host "│  Installed: $InstalledDate at $InstalledTime ($InstalledCommit)"
+      Write-Host "│  Location:  $InstallTarget"
+      Write-Host "│                                                              │"
+      Write-Host "╰──────────────────────────────────────────────────────────────╯"
+      exit 0
     } else {
-      Write-Host "  ⬆️  Update available!"
+      Write-Host "  ⬆️  Update available!" -ForegroundColor $Yellow
     }
   } catch {
-    Write-Host "  (Could not check remote — network issue or API limit)"
+    Write-Host "  (Could not check remote — network issue or API limit)" -ForegroundColor $Red
   }
   Write-Host ""
 
@@ -104,16 +138,18 @@ if ($Update) {
   if ($Interactive) {
     $Response = Read-Host "Proceed with update? (y/N)"
     if ($Response -notin @('y', 'Y', 'yes', 'YES')) {
-      Write-Host "Update cancelled."
+      Write-Host "Update cancelled." -ForegroundColor $Yellow
       exit 0
     }
   } else {
     Write-Host "(non-interactive shell — proceeding automatically)"
   }
 
-  Write-Host "⬆️  Updating Vibuzo ($InstallTarget)..."
+  Write-Host ""
+  Write-Host "⬆️  Updating Vibuzo ($InstallTarget)..." -ForegroundColor $Yellow
 } else {
-  Write-Host "🔧 Installing Vibuzo ($InstallTarget)..."
+  Write-Host ""
+  Write-Host "🔧 Installing Vibuzo ($InstallTarget)..." -ForegroundColor $Cyan
 }
 
 # ─── Install / Update ────────────────────────────────────────────────────────
@@ -121,45 +157,65 @@ if ($Update) {
 New-Item -ItemType Directory -Path $AgentsDir -Force | Out-Null
 New-Item -ItemType Directory -Path $CommandsDir -Force | Out-Null
 
-Write-Host "   → vibuzo.md (main agent)"
+Write-Host ""
+Write-Host "  ─── Agents ──────────────────────────────" -ForegroundColor $Cyan
+Write-Host ""
+
+Write-Host "   ✓ vibuzo.md       (main agent)" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/agents/vibuzo.md" -OutFile "$AgentsDir\vibuzo.md"
 
-Write-Host "   → deepveloper.md (execution specialist)"
+Write-Host "   ✓ deepveloper.md  (execution specialist)" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/agents/deepveloper.md" -OutFile "$AgentsDir\deepveloper.md"
 
-# Download command files
-Write-Host "   → spec.md (feature pipeline)"
+Write-Host ""
+Write-Host "  ─── Commands ────────────────────────────" -ForegroundColor $Cyan
+Write-Host ""
+
+Write-Host "   ✓ spec.md         (feature pipeline)" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/spec.md" -OutFile "$CommandsDir\spec.md"
-Write-Host "   → add-context.md"
+Write-Host "   ✓ add-context.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/add-context.md" -OutFile "$CommandsDir\add-context.md"
-Write-Host "   → context-init.md (scaffold context)"
+Write-Host "   ✓ context-init.md (scaffold context)" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/context-init.md" -OutFile "$CommandsDir\context-init.md"
-Write-Host "   → context-find.md (search context)"
+Write-Host "   ✓ context-find.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/context-find.md" -OutFile "$CommandsDir\context-find.md"
-Write-Host "   → context-harvest.md (promote sessions)"
+Write-Host "   ✓ context-harvest.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/context-harvest.md" -OutFile "$CommandsDir\context-harvest.md"
-Write-Host "   → context-append.md (scan conversation)"
+Write-Host "   ✓ context-append.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/context-append.md" -OutFile "$CommandsDir\context-append.md"
-Write-Host "   → session.md"
+Write-Host "   ✓ session.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/session.md" -OutFile "$CommandsDir\session.md"
-Write-Host "   → session-view.md (browse sessions)"
+Write-Host "   ✓ session-view.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/session-view.md" -OutFile "$CommandsDir\session-view.md"
-Write-Host "   → session-timeline.md (session timeline)"
+Write-Host "   ✓ session-timeline.md" -ForegroundColor $Green
 Invoke-WebRequest -Uri "$RawUrl/commands/session-timeline.md" -OutFile "$CommandsDir\session-timeline.md"
+
+Write-Host ""
+Write-Host "  ─── Project ─────────────────────────────" -ForegroundColor $Cyan
+Write-Host ""
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if (-not $Global) {
-  Write-Host "   → AGENTS.md (project root)"
+  if (Test-Path "AGENTS.md") {
+    Write-Host ""
+    Write-Host "  ⚠️  AGENTS.md will be overwritten" -ForegroundColor $Yellow
+    Write-Host "  AGENTS.md is required for Vibuzo to work with 25+ AI tools."
+    Write-Host "  If you have custom rules in your current AGENTS.md,"
+    Write-Host "  copy them before continuing — they can be re-added"
+    Write-Host "  as context after installation via /add-context."
+    Write-Host ""
+  }
+  Write-Host "   ✓ AGENTS.md       (project root)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "AGENTS.md"
 } else {
-  Write-Host "   → AGENTS.md (opencode dir)"
+  Write-Host "   ✓ AGENTS.md       (opencode dir)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "$OpenCodeDir\AGENTS.md"
 }
 
 # ─── Path Rewriting (global install only) ────────────────────────────────────
 
 if ($Global) {
-  Write-Host "   → Rewriting paths for global install"
+  Write-Host "   ✓ Path rewriting" -ForegroundColor $Green
   (Get-Content "$AgentsDir\vibuzo.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\vibuzo.md"
   (Get-Content "$AgentsDir\deepveloper.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepveloper.md"
   (Get-Content "$OpenCodeDir\AGENTS.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$OpenCodeDir\AGENTS.md"
@@ -181,35 +237,39 @@ try {
 
 # Claude Code
 if (Get-Command "claude" -ErrorAction SilentlyContinue) {
-  Write-Host "   📋 Detected Claude Code — creating .claude/agents/"
+  Write-Host ""
+  Write-Host "  ─── Integrations ─────────────────────────" -ForegroundColor $Cyan
+  Write-Host ""
+  Write-Host "   ✓ Claude Code agents" -ForegroundColor $Green
   New-Item -ItemType Directory -Path ".claude\agents" -Force | Out-Null
   Copy-Item "$AgentsDir\vibuzo.md" ".claude\agents\vibuzo.md"
   Copy-Item "$AgentsDir\deepveloper.md" ".claude\agents\deepveloper.md"
-  Write-Host "   ✓ .claude/agents/ created"
 }
 
 # ─── Done ────────────────────────────────────────────────────────────────────
 
 $Action = if ($Update) { "updated" } else { "installed" }
-$Sep = "────────────────────────────────────────────"
 Write-Host ""
-Write-Host "  ╭$Sep╮"
-Write-Host "  │"
-Write-Host "  │  ✅ Vibuzo $Action successfully!"
-Write-Host "  │"
-Write-Host "  │  Location: $InstallTarget"
-Write-Host "  │  Agents:   $AgentsDir"
-Write-Host "  │"
-if (-not $Global) {
-  Write-Host "  │  AGENTS.md is in your project root."
-  Write-Host "  │  Commit it to share with your team."
+Write-Host "╭──────────────────────────────────────────────────────────────╮"
+Write-Host "│                                                              │"
+if ($Update) {
+  Write-Host "│              ✅ Vibuzo updated successfully!                 │" -ForegroundColor $Green
 } else {
-  Write-Host "  │  Vibuzo is now available in ALL your projects."
-  Write-Host "  │  Run install without -Global per project for AGENTS.md."
+  Write-Host "│              ✅ Vibuzo installed successfully!                │" -ForegroundColor $Green
 }
-Write-Host "  │"
-Write-Host "  │  Next: opencode will pick up Vibuzo"
-Write-Host "  │  as your primary agent. Use /spec to start a feature pipeline."
-Write-Host "  │"
-Write-Host "  ╰$Sep╯"
+Write-Host "│                                                              │"
+Write-Host "│  Location: $InstallTarget"
+Write-Host "│  Agents:   $AgentsDir"
+Write-Host "│                                                              │"
+Write-Host "│  ── Next Steps ──                                             │"
+Write-Host "│                                                              │"
+Write-Host "│  1. Restart opencode to pick up Vibuzo                       │"
+Write-Host "│  2. Select Vibuzo from the agent dropdown                    │"
+Write-Host "│     or create opencode.json to set as default                │"
+Write-Host "│  3. Run /context init to scaffold project memory             │"
+Write-Host "│  4. Start building with /spec [feature description]          │"
+Write-Host "│                                                              │"
+Write-Host "│  💡 Learn more: github.com/AB-techsolutionists/vibuzo        │"
+Write-Host "│                                                              │"
+Write-Host "╰──────────────────────────────────────────────────────────────╯"
 Write-Host ""

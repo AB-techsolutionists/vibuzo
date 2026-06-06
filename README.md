@@ -1,5 +1,14 @@
 # Vibuzo — Agentic Framework
 
+```
+██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗ 
+██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗
+██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║
+╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║
+ ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝
+  ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ 
+```
+
 **Vibuzo is an agentic framework for AI coding agents.** AI agents make two common mistakes: they plan and execute at the same time (leading to half-baked solutions), and they forget everything between sessions (leading to repeated explanations). Vibuzo solves both.
 
 **How it works:**
@@ -61,6 +70,25 @@ cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsol
 4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
 
 5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending.    Browse past reports with `/session view [session name or date..]` and `/session timeline`.
+
+## Setting Vibuzo as Your Default Agent
+
+By default, opencode opens the built-in **Build** agent. To have Vibuzo selected automatically every time you start a session:
+
+1. **Create `opencode.json`** in your project root:
+
+   ```json
+   {
+     "$schema": "https://opencode.ai/config.json",
+     "default_agent": "Vibuzo"
+   }
+   ```
+
+2. **For global installs** — place it in `~/.config/opencode/opencode.json` instead to make Vibuzo the default for all your projects.
+
+> ⚠️ `opencode.json` is a **personal/local preference** — add it to `.gitignore` and don't commit it. Each teammate should set their own default agent.
+>
+> If the agent name doesn't exist or the config is invalid, opencode gracefully falls back to the built-in `"build"` agent.
 
 ## How Vibuzo Learns Over Time
 

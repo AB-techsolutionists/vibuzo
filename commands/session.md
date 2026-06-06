@@ -33,7 +33,7 @@ Do these steps NOW:
 
     ## Goal
 
-    <A single natural language paragraph that tells the complete story of this session. What was the user trying to do? What happened step by step? What was built, changed, decided, or left undone? This should be 4-10 sentences that anyone can read to fully understand the session without reading the rest of the file. Write it like a changelog narrative — specific, factual, no fluff.>
+    <A tight 3-5 sentence paragraph that tells the complete story. What was built, changed, or decided? Write it like a changelog — specific, factual, no fluff.>
 
     ## Chronological Log
 

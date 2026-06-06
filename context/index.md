@@ -50,6 +50,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/command-parameter-notation.md` — All command parameters use `[descriptive prompts]` in square brackets; consistent across all surfaces
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
+- `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)

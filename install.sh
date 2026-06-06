@@ -50,6 +50,33 @@ AGENTS_DIR="$OPENCODE_DIR/agent/core"
 COMMANDS_DIR="$OPENCODE_DIR/commands"
 VERSION_FILE="$OPENCODE_DIR/.vibuzo-version"
 
+# ─── Terminal Colors ─────────────────────────────────────────────────────────
+
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+# ─── Banner ──────────────────────────────────────────────────────────────────
+
+printf "${CYAN}"
+cat << 'EOF'
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗          ║
+║   ██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗         ║
+║   ██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║         ║
+║   ╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║         ║
+║    ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝         ║
+║     ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝          ║
+║                                                           ║
+║               Agentic Framework                           ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+EOF
+printf "${NC}"
+
 # ─── Update Mode ─────────────────────────────────────────────────────────────
 
 if [ "$UPDATE" = true ]; then
@@ -61,9 +88,10 @@ if [ "$UPDATE" = true ]; then
 
     read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_COMMIT INSTALLED_MODE < "$VERSION_FILE"
 
-    echo "🔍 Checking for updates..."
     echo ""
-    echo "  Current install:"
+    printf "${YELLOW}🔍 Checking for updates...${NC}\n"
+    echo ""
+    printf "  ${CYAN}Current install:${NC}\n"
     echo "    Date:   $INSTALLED_DATE at $INSTALLED_TIME"
     echo "    Commit: $INSTALLED_COMMIT"
     echo "    Mode:   $INSTALLED_MODE"
@@ -74,14 +102,23 @@ if [ "$UPDATE" = true ]; then
     LATEST_COMMIT=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/null \
         | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4 | cut -c1-7 || true)
     if [ -n "$LATEST_COMMIT" ]; then
-        echo "  Latest on origin/$BRANCH: $LATEST_COMMIT"
+        printf "  ${CYAN}Latest on origin/$BRANCH: $LATEST_COMMIT${NC}\n"
         if [ "$LATEST_COMMIT" = "$INSTALLED_COMMIT" ]; then
-            echo "  ✅ Already up to date!"
+            echo ""
+            echo "╭──────────────────────────────────────────────────────────────╮"
+            echo "│                                                              │"
+            printf "│              ${GREEN}✅ Vibuzo is already up to date!${NC}                 │\n"
+            echo "│                                                              │"
+            echo "│  Installed: $INSTALLED_DATE at $INSTALLED_TIME ($INSTALLED_COMMIT)"
+            echo "│  Location:  $INSTALL_TARGET"
+            echo "│                                                              │"
+            echo "╰──────────────────────────────────────────────────────────────╯"
+            exit 0
         else
-            echo "  ⬆️  Update available!"
+            printf "  ${YELLOW}⬆️  Update available!${NC}\n"
         fi
     else
-        echo "  (Could not check remote — network issue or API limit)"
+        printf "  ${RED}(Could not check remote — network issue or API limit)${NC}\n"
     fi
     echo ""
 
@@ -89,55 +126,76 @@ if [ "$UPDATE" = true ]; then
     if [ -t 0 ]; then
         read -p "Proceed with update? (y/N) " -r RESPONSE
         if [ "$RESPONSE" != "y" ] && [ "$RESPONSE" != "Y" ] && [ "$RESPONSE" != "yes" ] && [ "$RESPONSE" != "YES" ]; then
-            echo "Update cancelled."
+            printf "${YELLOW}Update cancelled.${NC}\n"
             exit 0
         fi
     else
         echo "(non-interactive shell — proceeding automatically)"
     fi
 
-    echo "⬆️  Updating Vibuzo ($INSTALL_TARGET)..."
+    echo ""
+    printf "${YELLOW}⬆️  Updating Vibuzo ($INSTALL_TARGET)...${NC}\n"
 else
-    echo "🔧 Installing Vibuzo ($INSTALL_TARGET)..."
+    echo ""
+    printf "${CYAN}🔧 Installing Vibuzo ($INSTALL_TARGET)...${NC}\n"
 fi
 
 # ─── Install / Update ────────────────────────────────────────────────────────
 
 mkdir -p "$AGENTS_DIR" "$COMMANDS_DIR"
 
-# Download agent files
-echo "   → vibuzo.md (main agent)"
+echo ""
+printf "  ${CYAN}─── Agents ──────────────────────────────${NC}\n"
+echo ""
+
+printf "   ${GREEN}✓ vibuzo.md       (main agent)${NC}\n"
 curl -fsSL "$RAW_URL/agents/vibuzo.md" -o "$AGENTS_DIR/vibuzo.md"
 
-echo "   → deepveloper.md (execution specialist)"
+printf "   ${GREEN}✓ deepveloper.md  (execution specialist)${NC}\n"
 curl -fsSL "$RAW_URL/agents/deepveloper.md" -o "$AGENTS_DIR/deepveloper.md"
 
-# Download command files
-echo "   → spec.md (feature pipeline)"
+echo ""
+printf "  ${CYAN}─── Commands ────────────────────────────${NC}\n"
+echo ""
+
+printf "   ${GREEN}✓ spec.md         (feature pipeline)${NC}\n"
 curl -fsSL "$RAW_URL/commands/spec.md" -o "$COMMANDS_DIR/spec.md"
-echo "   → add-context.md"
+printf "   ${GREEN}✓ add-context.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/add-context.md" -o "$COMMANDS_DIR/add-context.md"
-echo "   → context-init.md (scaffold context)"
+printf "   ${GREEN}✓ context-init.md (scaffold context)${NC}\n"
 curl -fsSL "$RAW_URL/commands/context-init.md" -o "$COMMANDS_DIR/context-init.md"
-echo "   → context-find.md (search context)"
+printf "   ${GREEN}✓ context-find.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/context-find.md" -o "$COMMANDS_DIR/context-find.md"
-echo "   → context-harvest.md (promote sessions)"
+printf "   ${GREEN}✓ context-harvest.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/context-harvest.md" -o "$COMMANDS_DIR/context-harvest.md"
-echo "   → context-append.md (scan conversation)"
+printf "   ${GREEN}✓ context-append.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/context-append.md" -o "$COMMANDS_DIR/context-append.md"
-echo "   → session.md"
+printf "   ${GREEN}✓ session.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/session.md" -o "$COMMANDS_DIR/session.md"
-echo "   → session-view.md (browse sessions)"
+printf "   ${GREEN}✓ session-view.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/session-view.md" -o "$COMMANDS_DIR/session-view.md"
-echo "   → session-timeline.md (session timeline)"
+printf "   ${GREEN}✓ session-timeline.md${NC}\n"
 curl -fsSL "$RAW_URL/commands/session-timeline.md" -o "$COMMANDS_DIR/session-timeline.md"
+
+echo ""
+printf "  ${CYAN}─── Project ─────────────────────────────${NC}\n"
+echo ""
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if [ "$GLOBAL" = false ]; then
-    echo "   → AGENTS.md (project root)"
+    if [ -f "AGENTS.md" ]; then
+        echo ""
+        printf "${YELLOW}  ⚠️  AGENTS.md will be overwritten${NC}\n"
+        printf "  AGENTS.md is required for Vibuzo to work with 25+ AI tools.\n"
+        printf "  If you have custom rules in your current AGENTS.md,\n"
+        printf "  copy them before continuing — they can be re-added\n"
+        printf "  as context after installation via /add-context.\n"
+        echo ""
+    fi
+    printf "   ${GREEN}✓ AGENTS.md       (project root)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o AGENTS.md
 else
-    echo "   → AGENTS.md (opencode dir)"
+    printf "   ${GREEN}✓ AGENTS.md       (opencode dir)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o "$OPENCODE_DIR/AGENTS.md"
 fi
 
@@ -146,6 +204,7 @@ fi
 if [ "$GLOBAL" = true ]; then
     # Rewrite .opencode/ references to the actual global path
     # Works on macOS (sed -i '') and Linux/Windows (sed -i)
+    printf "   ${GREEN}✓ Path rewriting${NC}\n"
     if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s|\.opencode/context/|$OPENCODE_DIR/context/|g" "$AGENTS_DIR/vibuzo.md" "$AGENTS_DIR/deepveloper.md"
         sed -i '' "s|\.opencode/|$OPENCODE_DIR/|g" "$OPENCODE_DIR/AGENTS.md"
@@ -175,11 +234,13 @@ echo "$NOW $SHA $MODE" > "$VERSION_FILE"
 
 # Claude Code
 if command -v claude &>/dev/null; then
-    echo "   📋 Detected Claude Code — creating .claude/agents/"
+    echo ""
+    printf "  ${CYAN}─── Integrations ─────────────────────────${NC}\n"
+    echo ""
+    printf "   ${GREEN}✓ Claude Code agents${NC}\n"
     mkdir -p .claude/agents
     cp "$AGENTS_DIR/vibuzo.md" .claude/agents/vibuzo.md
     cp "$AGENTS_DIR/deepveloper.md" .claude/agents/deepveloper.md
-    echo "   ✓ .claude/agents/ created"
 fi
 
 # ─── Done ────────────────────────────────────────────────────────────────────
@@ -189,25 +250,27 @@ if [ "$UPDATE" = true ]; then
 else
     ACTION="installed"
 fi
-SEP="────────────────────────────────────────────"
 echo ""
-echo "  ╭$SEP╮"
-echo "  │"
-echo "  │  ✅ Vibuzo $ACTION successfully!"
-echo "  │"
-echo "  │  Location: $INSTALL_TARGET"
-echo "  │  Agents:   $AGENTS_DIR/"
-echo "  │"
-if [ "$GLOBAL" = false ]; then
-    echo "  │  AGENTS.md is in your project root."
-    echo "  │  Commit it to share with your team."
+echo "╭──────────────────────────────────────────────────────────────╮"
+echo "│                                                              │"
+if [ "$UPDATE" = true ]; then
+    printf "│              ${GREEN}✅ Vibuzo updated successfully!${NC}                 │\n"
 else
-    echo "  │  Vibuzo is now available in ALL your projects."
-    echo "  │  Run install without --global per project for AGENTS.md."
+    printf "│              ${GREEN}✅ Vibuzo installed successfully!${NC}                │\n"
 fi
-echo "  │"
-echo "  │  Next: opencode will pick up Vibuzo"
-echo "  │  as your primary agent. Use /spec to start a feature pipeline."
-echo "  │"
-echo "  ╰$SEP╯"
+echo "│                                                              │"
+echo "│  Location: $INSTALL_TARGET"
+echo "│  Agents:   $AGENTS_DIR/"
+echo "│                                                              │"
+echo "│  ── Next Steps ──                                             │"
+echo "│                                                              │"
+echo "│  1. Restart opencode to pick up Vibuzo                       │"
+echo "│  2. Select Vibuzo from the agent dropdown                    │"
+echo "│     or create opencode.json to set as default                │"
+echo "│  3. Run /context init to scaffold project memory             │"
+echo "│  4. Start building with /spec [feature description]          │"
+echo "│                                                              │"
+echo "│  💡 Learn more: github.com/AB-techsolutionists/vibuzo        │"
+echo "│                                                              │"
+echo "╰──────────────────────────────────────────────────────────────╯"
 echo ""
