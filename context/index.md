@@ -2,6 +2,13 @@
 
 This directory contains project-level context files that are automatically loaded at the start of every new session. Agents read this index to discover available knowledge.
 
+**At session start, after reading this file, the agent MUST:**
+1. Read `sessions/index.md` to find the latest (last) entry
+2. Read that latest session summary file to understand the previous session's state, pending work, and decisions
+3. Then proceed normally
+
+This ensures every new session automatically picks up where the last one left off — no manual prompting needed.
+
 ## Structure
 
 | Directory | Purpose |
@@ -33,6 +40,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 ### Patterns
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
 - `patterns/title-based-session-naming.md` — Pattern for YYYY-MM-DD-<title>.md session summary filenames
+- `patterns/session-workflow.md` — Pattern for `/session → /compact → /new` golden workflow: preserve state before compaction, avoid overlap, auto-load latest session on `/new`
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
@@ -41,6 +49,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/source-mirror-synchronization.md` — Every active source file in commands/ and agents/ must have an identical mirror in .opencode/
 - `standards/command-parameter-notation.md` — All command parameters use `[descriptive prompts]` in square brackets; consistent across all surfaces
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
+- `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)

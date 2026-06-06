@@ -122,3 +122,27 @@ Do these steps NOW:
     Timeline: updated (N total summaries)
     ────────────────────────────────────────────────
     ```
+
+6. **Extract context candidates from the new session file** — using the file you just created, scan for knowledge worth preserving permanently:
+
+    - Read the **Key Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
+    - Read the **Critical Context** section — any repeated gotcha or hard-won lesson belongs in `context/standards/` or `context/patterns/`
+    - Read the **File Manifest** — any newly created context file is already saved; skip those. But if a new pattern emerged from modifying existing files, it may be candidate material
+    - Read the **Goal** and **Chronological Log** — any workaround, trick, or insight that isn't documented elsewhere
+
+    Then present candidates in this format:
+    ```
+    ── CONTEXT CANDIDATES ────────────────
+    From your session summary, I see these candidates for permanent context:
+
+    1. <title> — <1-2 sentence description>
+       → context/<type>/<filename>.md
+
+    2. <title> — <1-2 sentence description>
+       → context/<type>/<filename>.md
+
+    (0 = skip all)
+    ──────────────────────────────────────
+    ```
+
+    Wait for the user to respond with numbers (e.g., "1", "1 2", "0") before saving anything. Do NOT save or create any files without explicit approval.

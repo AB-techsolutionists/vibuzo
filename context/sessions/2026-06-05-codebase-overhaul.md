@@ -153,9 +153,9 @@ This massive session overhauled the entire Vibuzo framework codebase from initia
 - **Request:** `/session` (user requested interim summary)
 - **Actions:**
   - Analyzed conversation up to this point
-  - Created comprehensive-cleanup.md session summary
+  - Created comprehensive-cleanup.md session summary (deleted in 2026-06-06 cleanup — content merged into this file)
 - **Files:**
-  - `context/sessions/2026-06-05-comprehensive-cleanup.md` — created — interim session checkpoint
+  - `context/sessions/2026-06-05-comprehensive-cleanup.md` — created (interim checkpoint; deleted 2026-06-06, content merged here)
 - **Commands:** `/session` — created session checkpoint summary
 
 ### ~19:00 — "what can we do now" — planning README rewrite
@@ -402,7 +402,7 @@ This massive session overhauled the entire Vibuzo framework codebase from initia
 | CREATE | `context/standards/agent-report-summary-next-steps.md` | Standards doc for agent reporting |
 | CREATE | `context/patterns/route-based-argument-handling.md` | ⚠️ Failed pattern — routing files don't work |
 | CREATE | `context/patterns/title-based-session-naming.md` | Pattern for YYYY-MM-DD session filenames |
-| CREATE | `context/sessions/2026-06-05-comprehensive-cleanup.md` | Interim session checkpoint |
+| DELETE | `context/sessions/2026-06-05-comprehensive-cleanup.md` | Interim checkpoint deleted after merging its content into this file (2026-06-06 cleanup) |
 | CREATE | `context/sessions/2026-06-05-codebase-overhaul.md` | This file — final session summary |
 | RENAME | `commands/session-compaction.md` → `commands/session.md` | File = command trigger name |
 | RENAME | `.opencode/commands/session-compaction.md` → `.opencode/commands/session.md` | Mirror sync |
@@ -444,6 +444,11 @@ This massive session overhauled the entire Vibuzo framework codebase from initia
 ## Key Decisions
 
 - **Remove opencode.jsonc entirely** — The `default_agent` config prevented the TUI agent dropdown from appearing, breaking `/compact`. All references cleaned; dependent docs marked deprecated.
+- **`.opencode/prompts/vibuzo.txt` removed** — Redundant mirror of AGENTS.md. AGENTS.md is already read at session start. The `prompts/` directory is not shipped by installers.
+- **Route-based-argument-handling is a FAILED PATTERN** — Single-file multi-section routing doesn't work because the agent reads the entire file at once. All commands use one-file-one-purpose standalone files.
+- **approval-gates.md trimmed to ADR only** — The gate format examples duplicated the specification in `agents/vibuzo.md`. The architecture doc now only contains the design decision rationale.
+- **3 redundant context files deleted** — `patterns/add-context.md`, `patterns/session-history-candidate-scanning.md`, and `standards/approval-gate-code-block-rendering.md` duplicated their command-file counterparts.
+- **`## RUN:` convention removed from standards** — The `## RUN:` header was inconsistent with the one-file-one-purpose pattern. All commands now use a single `Do these steps NOW:` section per file.
 - **Standardize on `approval_level` (not `approval_gate`)** — `approval_gate` was the original term but `approval_level` became canonical. Set to 3 (Full Control) for development safety.
 - **Command parameter notation: `[descriptive prompts]`** — Evolved through `USER_INPUT` → `(user input)` → `[descriptive prompts]`. Square brackets separate prompt from syntax; pipe-dots `..` indicate open-ended input.
 - **File naming = command trigger** — `session.md` not `session-compaction.md` because the file is named after the `/session` command, not what it does.
@@ -457,9 +462,10 @@ This massive session overhauled the entire Vibuzo framework codebase from initia
 ## Critical Context
 
 - **Uncommitted files:** `context/architecture/installer-update-mechanism.md`, `context/standards/command-parameter-notation.md`, and `context/index.md` are modified but not yet committed
+- **be58e01 was a 17-file commit** — 13 modified, 4 deleted, 162 insertions, 368 deletions. 4 deletions: `opencode.jsonc`, `patterns/add-context.md`, `patterns/session-history-candidate-scanning.md`, `standards/approval-gate-code-block-rendering.md`
 - **Installer works** but CDN delay means `install.ps1` from raw.githubusercontent.com may serve the old version (with the colon bug) for up to 5 minutes after push
 - **`approval_level` is still 3** (Full Control) in `agents/vibuzo.md` — every action requires approval; lower to 0 for frictionless development
-- **Session checkpoint** `2026-06-05-comprehensive-cleanup.md` exists as an interim record — this final summary (`codebase-overhaul.md`) is the authoritative record
+- **Session checkpoint** `2026-06-05-comprehensive-cleanup.md` was created as an interim record during the session; deleted on 2026-06-06 after its content was merged into this file. This file (`codebase-overhaul.md`) is the authoritative record.
 - **No `default_agent`** means `/compact` should now work (agent dropdown appears in TUI) — needs testing
 - **`agent-report-summary-next-steps.md`** was added to context/standards/ — all agents must report summary and next steps after completing work
 - **Architecture decisions** for approval gates, split-file pattern, spec command, and agent restructure are documented in `context/architecture/`
