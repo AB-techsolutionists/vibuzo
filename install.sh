@@ -4,7 +4,7 @@
 #
 # Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and active commands.
 #
-# Version: 0.0.19
+# Version: ${SCRIPT_VERSION}
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --global
@@ -20,6 +20,10 @@ set -euo pipefail
 REPO="AB-techsolutionists/vibuzo"
 BRANCH="main"
 RAW_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
+
+# ─── Version ─────────────────────────────────────────────────────────────────
+
+SCRIPT_VERSION="0.1.0"
 
 # ─── Arg Parsing ─────────────────────────────────────────────────────────────
 
@@ -88,7 +92,7 @@ if [ "$UPDATE" = true ]; then
     fi
 
     read -r CURRENT_VERSION_LINE < "$VERSION_FILE"
-    # Format: 0.0.19 | 2026-06-07 00:42 04638cc local
+    # Format: 0.x.x | yyyy-MM-dd HH:mm sssssss mode
     VERSION="${CURRENT_VERSION_LINE%% | *}"
     REST="${CURRENT_VERSION_LINE#* | }"
     read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_COMMIT INSTALLED_MODE <<< "$REST"
@@ -140,10 +144,10 @@ if [ "$UPDATE" = true ]; then
     fi
 
     echo ""
-    printf "${YELLOW}⬆️  Updating Vibuzo 0.0.19 ($INSTALL_TARGET)...${NC}\n"
+    printf "${YELLOW}⬆️  Updating Vibuzo ${SCRIPT_VERSION} ($INSTALL_TARGET)...${NC}\n"
 else
     echo ""
-    printf "${CYAN}🔧 Installing Vibuzo 0.0.19 ($INSTALL_TARGET)...${NC}\n"
+    printf "${CYAN}🔧 Installing Vibuzo ${SCRIPT_VERSION} ($INSTALL_TARGET)...${NC}\n"
 fi
 
 # ─── Install / Update ────────────────────────────────────────────────────────
@@ -287,7 +291,7 @@ SHA=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/nul
 if [ -z "$SHA" ]; then
     SHA="unknown"
 fi
-echo "0.0.19 | $NOW $SHA $MODE" > "$VERSION_FILE"
+echo "${SCRIPT_VERSION} | $NOW $SHA $MODE" > "$VERSION_FILE"
 
 # ─── Tool Detection ──────────────────────────────────────────────────────────
 
@@ -313,9 +317,9 @@ echo ""
 echo "╭──────────────────────────────────────────────────────────────╮"
 echo "│                                                              │"
 if [ "$UPDATE" = true ]; then
-    printf "│              ${GREEN}✅ Vibuzo 0.0.19 updated successfully!${NC}            │\n"
+    printf "│              ${GREEN}✅ Vibuzo ${SCRIPT_VERSION} updated successfully!${NC}            │\n"
 else
-    printf "│              ${GREEN}✅ Vibuzo 0.0.19 installed successfully!${NC}           │\n"
+    printf "│              ${GREEN}✅ Vibuzo ${SCRIPT_VERSION} installed successfully!${NC}           │\n"
 fi
 echo "│                                                              │"
 echo "│  Location: $INSTALL_TARGET                                             │"

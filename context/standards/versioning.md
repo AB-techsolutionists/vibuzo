@@ -31,7 +31,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
-**0.0.19** — The patch is at the rollover cap (19). The next push to GitHub will bump to **0.1.0**, marking the beginning of post-dev/refinement versions.
+**0.1.0** — The first post-dev refinement release. Minor version 1, patch 0. The 0.0.x development phase is complete. Future bumps are patch increments (0.1.0 → 0.1.1...) until the next minor or major rollover.
 
 ## Bump Rules
 
@@ -45,7 +45,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 The single source of truth for the version is **`.opencode/.vibuzo-version`**:
 
 ```
-0.0.19 | 2026-06-07 00:42 04638cc local
+0.x.x | yyyy-MM-dd HH:mm sssssss mode
 ```
 
 - The semver (`0.x.x`) comes first, before the `|`
@@ -56,21 +56,22 @@ The single source of truth for the version is **`.opencode/.vibuzo-version`**:
 
 | Location | What Shows |
 |----------|------------|
-| `.opencode/.vibuzo-version` | Canonical: `0.0.19 | ...` |
-| `install.ps1` | Install line, update display, success box |
-| `install.sh` | Install line, update display, success box |
-| Agent (vibuzo.md) | When asked "what version?" → reads and reports |
-| `AGENTS.md` | Annotated in directory tree: `← Version marker (current: 0.0.19)` |
+| `.opencode/.vibuzo-version` | Canonical: `<semver> \| ...` |
+| `install.ps1` | `$ScriptVersion` variable at top, referenced everywhere |
+| `install.sh` | `SCRIPT_VERSION` variable at top, referenced everywhere |
+| Agent (vibuzo.md) | Reads `.vibuzo-version` and reports dynamically — no hardcode |
+| `AGENTS.md` | Directory tree annotation: `← Version marker` (no hardcoded version) |
 
 ## How to Bump
 
 1. Edit `.opencode/.vibuzo-version` — change the `0.x.x` prefix
 2. Update the version in:
-   - `install.ps1` (4 places: help text, install line, success box, version write)
-   - `install.sh` (same 4 places)
-   - `AGENTS.md` (version marker annotation)
-   - `.opencode/agent/core/vibuzo.md` (version reporting rule text — if it hardcodes the version string)
+   - `install.ps1` — change the `$ScriptVersion = "..."` value at the top
+   - `install.sh` — change the `SCRIPT_VERSION="..."` value at the top
+   - `context/standards/versioning.md` — update the "Current Version" section
 3. Commit and push to GitHub
+
+**That's 4 spots total.** No more scattering version strings across a dozen locations.
 
 ## Related
 

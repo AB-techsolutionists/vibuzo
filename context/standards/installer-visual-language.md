@@ -19,7 +19,7 @@ Both `install.ps1` and `install.sh` use a consistent visual language for termina
 - Always printed first, before any other output
 
 ### Install/Update Title
-- Single colored line: `🔧 Installing Vibuzo 0.0.19 (local)...` (cyan) or `⬆️  Updating Vibuzo 0.0.19...` (yellow)
+- Single colored line: `🔧 Installing Vibuzo 0.x.x (local)...` (cyan) or `⬆️  Updating Vibuzo 0.x.x...` (yellow)
 - Version number always shown in the install/update title line
 
 ### Update Mode (if applicable)
@@ -43,7 +43,7 @@ Files are grouped into sections with cyan headers:
 
 ### Success Box
 A rounded box (`╭╮╰╯`) containing:
-1. Green success message with version: `✅ Vibuzo 0.0.19 installed successfully!`
+1. Green success message with version: `✅ Vibuzo 0.x.x installed successfully!`
 2. Location and agents path
 3. `── Next Steps ──` section with numbered steps (1-4)
 4. Link for more info

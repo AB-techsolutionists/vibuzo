@@ -41,6 +41,10 @@ $AgentsDir = "$OpenCodeDir\agent\core"
 $CommandsDir = "$OpenCodeDir\commands"
 $VersionFile = "$OpenCodeDir\.vibuzo-version"
 
+# ─── Version ─────────────────────────────────────────────────────────────────
+
+$ScriptVersion = "0.1.0"
+
 # ─── Terminal Colors ─────────────────────────────────────────────────────────
 
 $Cyan = "Cyan"
@@ -52,7 +56,7 @@ $Red = "Red"
 
 if ($Help) {
   Write-Host @"
-install.ps1 — Vibuzo Agentic Framework Installer (0.0.19)
+install.ps1 — Vibuzo Agentic Framework Installer ($ScriptVersion)
 
 Usage:
   pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
@@ -95,7 +99,7 @@ if ($Update) {
   }
 
   $CurrentVersion = Get-Content $VersionFile
-  # Format: 0.0.19 | 2026-06-07 00:42 04638cc local
+  # Format: 0.x.x | yyyy-MM-dd HH:mm sssssss mode
   $VersionAndRest = $CurrentVersion -split ' \| '
   $Version = $VersionAndRest[0]
   $OldParts = $VersionAndRest[1] -split ' '
@@ -150,10 +154,10 @@ if ($Update) {
   }
 
   Write-Host ""
-  Write-Host "⬆️  Updating Vibuzo 0.0.19 ($InstallTarget)..." -ForegroundColor $Yellow
+  Write-Host "⬆️  Updating Vibuzo $ScriptVersion ($InstallTarget)..." -ForegroundColor $Yellow
 } else {
   Write-Host ""
-  Write-Host "🔧 Installing Vibuzo 0.0.19 ($InstallTarget)..." -ForegroundColor $Cyan
+  Write-Host "🔧 Installing Vibuzo $ScriptVersion ($InstallTarget)..." -ForegroundColor $Cyan
 }
 
 # ─── Install / Update ────────────────────────────────────────────────────────
@@ -296,7 +300,7 @@ try {
 } catch {
   $Sha = "unknown"
 }
-"0.0.19 | $Now $Sha $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
+"$ScriptVersion | $Now $Sha $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
 
 # ─── Tool Detection ──────────────────────────────────────────────────────────
 
@@ -318,9 +322,9 @@ Write-Host ""
 Write-Host "╭──────────────────────────────────────────────────────────────╮"
 Write-Host "│                                                              │"
 if ($Update) {
-  Write-Host "│              ✅ Vibuzo 0.0.19 updated successfully!            │" -ForegroundColor $Green
+  Write-Host "│              ✅ Vibuzo $ScriptVersion updated successfully!            │" -ForegroundColor $Green
 } else {
-  Write-Host "│              ✅ Vibuzo 0.0.19 installed successfully!           │" -ForegroundColor $Green
+  Write-Host "│              ✅ Vibuzo $ScriptVersion installed successfully!           │" -ForegroundColor $Green
 }
 Write-Host "│                                                              │"
 Write-Host "│  Location: $InstallTarget                                             │"

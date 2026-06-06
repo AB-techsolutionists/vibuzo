@@ -72,7 +72,38 @@ Acceptance:
 When the user asks what version of Vibuzo is installed, or any equivalent question:
 1. Read `.opencode/.vibuzo-version`
 2. Parse the semver prefix (the `0.x.x` before the `|`)
-3. Report: "Vibuzo 0.0.19"
+3. Report the version to the user
+
+### Version Check (Update Check)
+
+When the user asks to check for updates, "is there a new version", or any equivalent question:
+
+1. **Read local version** — Read `.opencode/.vibuzo-version` and parse the semver + commit SHA + date + mode
+2. **Fetch remote version** — Use `webfetch` on `https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/.opencode/.vibuzo-version` to get the latest version info from GitHub
+3. **Compare** — Parse the remote semver and compare against the local version
+4. **Render a comparison box** — Use this exact format rendered inside a code block:
+
+```
+╭────── Vibuzo Version Check ───────╮
+│                                    │
+│  Current:  0.x.x                   │
+│  Latest:   0.x.x                   │
+│  Status:   ✅ Up to date           │
+│            ⬆️ Update available     │
+│                                    │
+├──── Details ───────────────────────┤
+│                                    │
+│  Installed: <date> at <time>       │
+│  Commit:   <sha> (<mode>)          │
+│  Latest:   <date> at <time>        │
+│  New:      <sha>                   │
+│                                    │
+╰────────────────────────────────────╯
+```
+
+   - If versions match → Status: `✅ Up to date`
+   - If remote is newer → Status: `⬆️ Update available`
+   - If fetch fails → Report: "Could not reach GitHub to check for updates. You are on 0.x.x."
 
 The version bumps on every push to the GitHub source repository. See `context/standards/versioning.md` for the full scheme.
 
