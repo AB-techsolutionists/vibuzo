@@ -160,13 +160,16 @@ Do these steps NOW:
     Your session file is ready at context/sessions/YYYY-MM-DD-<title>.md
 
     Workflow to complete the Session Compaction:
-    1. Open the session file
-    2. In opencode's TUI, run /compact
-    3. Copy the compaction output
+    1. In opencode, run /compact 
+    2. Copy the compaction output
+    3. Open the session file
     4. Paste it into the Session Compaction section at the bottom
        (replace the placeholder text)
+    5. Paste it into new session directly for agent memory
+       
 
-    Next session:
+    Next session: 
+    - Paste compaction output directly or
     - Open this session file
     - Copy the Session Compaction block
     - Paste as starting context
