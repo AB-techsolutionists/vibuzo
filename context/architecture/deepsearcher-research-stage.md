@@ -29,7 +29,7 @@ A new subagent (`mode: subagent`) dedicated exclusively to web research. It foll
 
 A command that routes research queries to Deepsearcher as a subtask for lightweight, ad-hoc research. Deepsearcher researches the topic and reports findings back to Vibuzo. **No files are created** — this is a pure research-and-report invocation.
 
-**Locations:** `commands/research.md`, `.opencode/commands/research.md` (mirrored per convention)
+**Location:** `commands/research.md` — installed to `.opencode/commands/research.md` by `install.ps1`/`install.sh`
 
 ### 3. Research Stage in `/spec`
 
@@ -71,8 +71,8 @@ Deepsearcher can be invoked inline via `@Deepsearcher` in any conversation, allo
 │       ├── research.md         ← NEW: /research command (no-file mode)
 │       └── ... (existing)
 commands/
-├── spec.md                     ← UPDATED: Research stage added (mirror)
-├── research.md                 ← NEW: /research command (mirror)
+├── spec.md                     ← UPDATED: Research stage added
+├── research.md                 ← NEW: /research command
 └── ... (existing)
 context/
 ├── architecture/
@@ -86,7 +86,7 @@ AGENTS.md                       ← UPDATED: Three-Agent System table
 
 - [`agent-restructure.md`](agent-restructure.md) — Original agent architecture with Vibuzo + Deepveloper
 - [`spec-command.md`](spec-command.md) — The /spec pipeline that the Research stage extends
-- [`split-file-command-pattern.md`](split-file-command-pattern.md) — Each command gets one file, mirrored in two locations
+- [`split-file-command-pattern.md`](split-file-command-pattern.md) — Each command gets one file with one purpose
 
 ## Related Standards
 

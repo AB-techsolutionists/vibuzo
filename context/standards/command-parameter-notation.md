@@ -22,7 +22,7 @@ All Vibuzo command parameters use `[descriptive prompts]` inside square brackets
 
 1. **Always use square brackets** — `[ ]`, not `( )`, `< >`, or bare words
 2. **Always descriptive** — `[type your search..]`, `[enter complete feature specification]`, not `[input]` or `[args]`
-3. **Consistent across all surfaces** — commands files (`commands/`), mirrors (`.opencode/commands/`), README, context docs, and AGENTS.md all use the same notation
+3. **Consistent across all surfaces** — commands files (`commands/`), context docs, AGENTS.md, and installers all use the same notation
 4. **Added pipe-dots** — end prompts with `..` to indicate open-ended input: `[type your search..]`
 
 ## Rationale

@@ -45,4 +45,4 @@ Current default in `agents/vibuzo.md`: **level 3** (Full Control). Set to 0 for 
 4. **Level 0 = unchanged** — Setting level 0 preserves the original behavior exactly.
 5. **Deepveloper inherits, doesn't own** — The subtask agent never sets its own level.
 
-> **Full gate format and behavior details** are defined in `agents/vibuzo.md` (section "Approval Gates / Gate Behavior") and mirrored in `.opencode/agent/core/vibuzo.md`. These are the source of truth for exact prompt format, rejection handling, and gate logic.
+> **Full gate format and behavior details** are defined in `agents/vibuzo.md` (section "Approval Gates / Gate Behavior"). Installed to `.opencode/agent/core/vibuzo.md` by `install.ps1`/`install.sh`.

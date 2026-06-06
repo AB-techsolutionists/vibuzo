@@ -44,19 +44,19 @@ User → Vibuzo (main — plans + executes)
 
 ## File Structure
 
-Agent definitions live in `agents/` (source) and are mirrored in `.opencode/agent/core/` (opencode registry):
+Agent definitions live in `agents/` and are installed to `.opencode/agent/core/` by the installer (`install.ps1`/`install.sh`). The installer copies them on install and overwrites on `--update`.
 
-| Source | Registry Copy |
+| Source | Install Target |
 |--------|---------------|
 | `agents/vibuzo.md` | `.opencode/agent/core/vibuzo.md` |
-| `agents/deepveloper.md` (`mode: subagent`) | `.opencode/agent/core/deepveloper.md` (`mode: subagent`) |
+| `agents/deepveloper.md` | `.opencode/agent/core/deepveloper.md` |
 
-Deepveloper is triggered as a subtask during `/spec` Phase 4 (implement). The handoff includes the task description, file paths, numbered steps, and acceptance criteria.
+Deepveloper is triggered as a subtask during `/spec` Implementation stage. The handoff includes the task description, file paths, numbered steps, and acceptance criteria.
 
 ## Key Principles
 
 1. **Single entry point** — Vibuzo handles everything directly. No manual agent switching.
 2. **Deepveloper constrained** — Cannot spawn sub-agents; no planning or scope creep.
 3. **Planning discipline** — Planning rules are embedded in Vibuzo's definition.
-4. **Source + registry mirror** — Every agent definition exists in both `agents/` and `.opencode/agent/core/`.
-5. **Unified mode** — Both source (`agents/deepveloper.md`) and registry copy (`.opencode/agent/core/deepveloper.md`) use `mode: subagent`. The `mode: subagent` value is required by opencode for runtime compatibility.
+4. **Installer-managed deployment** — `agents/` is the source of truth; `.opencode/agent/core/` is refreshed by `install.ps1`/`install.sh --update`.
+5. **Unified mode** — `agents/deepveloper.md` uses `mode: subagent`, required by opencode for runtime compatibility.

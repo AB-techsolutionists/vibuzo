@@ -2,7 +2,7 @@
 
 ## Rule
 
-All command files in `commands/` (and mirrored in `.opencode/commands/`) MUST be written as **imperative step-by-step instructions**, not as behavioral specifications.
+All command files in `commands/` MUST be written as **imperative step-by-step instructions**, not as behavioral specifications.
 
 ## Format
 
