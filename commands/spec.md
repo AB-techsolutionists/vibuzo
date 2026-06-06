@@ -1,7 +1,6 @@
 ---
 description: Run the full feature development pipeline (spec → plan → tasks → implement → review)
 agent: Vibuzo
-subtask: true
 ---
 
 Run the full feature development pipeline for: $ARGUMENTS
@@ -17,14 +16,35 @@ Run the full feature development pipeline for: $ARGUMENTS
 3. Create `specs/<feature>/` directory if it doesn't exist.
 4. Check `approval_level` from Vibuzo's YAML frontmatter. If level ≥ 1, gates are active. If level is 0, skip all gates and auto-proceed.
 
+## Phase 0 — Research (Optional)
+
+1. Present the user with: "Research this feature? (y/N)"
+2. If "y" or "yes":
+   - Spawn Deepsearcher via `task()` with subagent_type "Deepsearcher"
+   - Pass the feature description as the research query
+   - Instruct Deepsearcher to save results to `specs/<feature>/research.md`
+   - Wait for Deepsearcher to report back
+   - Present gate:
+     ```
+     ── PHASE GATE ─────────────────────────
+     Phase 0: Research complete.
+     Summary: Created specs/<feature>/research.md
+     ───────────────────────────────────────
+     Proceed to Phase 1? (y/N):
+     ```
+   - If "y": continue to Phase 1
+   - If "N" or anything else: offer (r)etry, (s)kip to next, (a)bort
+3. If "N" or anything else: skip to Phase 1 directly
+
 ## Phase 1 — Specification
 
-1. Ask clarifying questions if the description is vague (what problem, who users are, what success looks like).
-2. Once clear, generate a specification document with:
+1. Read `specs/<feature>/research.md` if it exists, incorporate findings into the specification.
+2. Ask clarifying questions if the description is vague (what problem, who users are, what success looks like).
+3. Once clear, generate a specification document with:
    - **Principles**: Code quality, testing, performance, UX consistency
    - **Specification**: Overview, User Stories, Functional Requirements, Acceptance Criteria, Out of Scope
-3. Write to `specs/<feature>/spec.md`.
-4. **Gate**: If approval_level ≥ 1, present:
+4. Write to `specs/<feature>/spec.md`.
+5. **Gate**: If approval_level ≥ 1, present:
    ```
    ── PHASE GATE ─────────────────────────
    Phase 1: Specification complete.

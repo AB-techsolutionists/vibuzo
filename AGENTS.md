@@ -2,12 +2,13 @@
 
 Vibuzo is an agentic framework for AI coding agents — it gives you a planning-first workflow, persistent project context, session summaries, and a dedicated implementation agent for complex features.
 
-## Two-Agent System
+## Three-Agent System
 
 | Agent | Role | Mode |
 |-------|------|------|
 | **Vibuzo** | Plans, executes everyday tasks, runs `/spec` pipeline | Main (`mode: primary`) |
 | **Deepveloper** | Pure implementation — spawned as subtask via `/spec` | Subtask (`mode: subagent`) |
+| **Deepsearcher** | Web research — spawned as subtask via `/research` or inline via `@deepsearcher` | Subtask (`mode: subagent`) |
 
 ## Agent Structure
 
@@ -15,8 +16,9 @@ Vibuzo is an agentic framework for AI coding agents — it gives you a planning-
 ├── AGENTS.md              ← Universal entry point (read by 25+ tools)
 ├── .opencode/
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
-│   ├── agent/core/deepveloper.md ← Sub-agent
-│   ├── commands/                 ← 9 command files (spec, context*, session*)
+│   ├── agent/core/deepveloper.md ← Implementation sub-agent
+│   ├── agent/core/deepsearcher.md← Research sub-agent
+│   ├── commands/                 ← 10 command files (research, spec, context*, session*)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
@@ -40,9 +42,11 @@ Do these steps NOW:
 1. ...
 ```
 
-- `subtask: true` (optional) tells opencode to run this via the task tool. **Not used** for context/session commands — they run in the main session to access conversation history. Used for `/spec` and `/add-context`.
+- `subtask: true` (optional) tells opencode to run this via the task tool. **Not used** for context/session commands — they run in the main session to access conversation history. Used for `/spec`, `/add-context`, and `/research`.
 - `Do these steps NOW:` is the only imperative instruction — one file, one purpose
 - `$ARGUMENTS` is substituted at the top of the file (parsed from the user's `/command ...` text)
+- `/research [query]` routes to Deepsearcher for structured web research, saving results to `specs/<feature>/research.md`
+- `@deepsearcher` invokes Deepsearcher inline for ad-hoc research without the full pipeline
 
 ## Context Auto-Load
 

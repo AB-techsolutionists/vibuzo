@@ -33,6 +33,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 ### Architecture
 - `architecture/agent-restructure.md` — Agent architecture decision: Vibuzo as main agent, Deepveloper triggered via /spec for implementation subtasks
 - `architecture/approval-gates.md` — Architecture decision for configurable approval gates (levels 0-3)
+- `architecture/deepsearcher-research-stage.md` — Architecture decision for Deepsearcher agent, /research command, and Phase 0 integration in /spec
 - `architecture/spec-command.md` — Architecture decision for the /spec command (5-phase pipeline)
 - `architecture/split-file-command-pattern.md` — Architecture decision: each command gets one file with one `Do these steps NOW:` section. No routing-only files. Two execution modes: main session vs subtask.
 - `architecture/build-agent-override.md` — 🗑️ DEPRECATED — Referenced opencode.jsonc (removed)
