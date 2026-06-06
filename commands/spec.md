@@ -1,5 +1,5 @@
 ---
-description: Run the full feature development pipeline (spec → plan → tasks → implement → review)
+description: Run the full feature development pipeline (research → specification → plan → tasks → implementation → review)
 agent: Vibuzo
 ---
 
@@ -16,27 +16,29 @@ Run the full feature development pipeline for: $ARGUMENTS
 3. Create `specs/<feature>/` directory if it doesn't exist.
 4. Check `approval_level` from Vibuzo's YAML frontmatter. If level ≥ 1, gates are active. If level is 0, skip all gates and auto-proceed.
 
-## Phase 0 — Research (Optional)
+## Research (Optional)
 
 1. Present the user with: "Research this feature? (y/N)"
 2. If "y" or "yes":
    - Spawn Deepsearcher via `task()` with subagent_type "Deepsearcher"
    - Pass the feature description as the research query
-   - Instruct Deepsearcher to save results to `specs/<feature>/research.md`
+   - Instruct Deepsearcher to:
+     - This is `/spec` Research stage mode — save results to `specs/<feature>/research.md`
+     - Keep research output under 150–200 lines. Be concise: summarize key findings, list 5–10 top resources, include brief source metadata. No verbatim citations or long paragraph prose.
    - Wait for Deepsearcher to report back
    - Present gate:
      ```
-     ── PHASE GATE ─────────────────────────
-     Phase 0: Research complete.
+     ── PIPELINE GATE ──────────────────────
+     Research complete.
      Summary: Created specs/<feature>/research.md
      ───────────────────────────────────────
-     Proceed to Phase 1? (y/N):
+     Proceed to Specification? (y/N):
      ```
-   - If "y": continue to Phase 1
+   - If "y": continue to Specification
    - If "N" or anything else: offer (r)etry, (s)kip to next, (a)bort
-3. If "N" or anything else: skip to Phase 1 directly
+3. If "N" or anything else: skip to Specification directly
 
-## Phase 1 — Specification
+## Specification
 
 1. Read `specs/<feature>/research.md` if it exists, incorporate findings into the specification.
 2. Ask clarifying questions if the description is vague (what problem, who users are, what success looks like).
@@ -46,16 +48,16 @@ Run the full feature development pipeline for: $ARGUMENTS
 4. Write to `specs/<feature>/spec.md`.
 5. **Gate**: If approval_level ≥ 1, present:
    ```
-   ── PHASE GATE ─────────────────────────
-   Phase 1: Specification complete.
+   ── PIPELINE GATE ──────────────────────
+   Specification complete.
    Summary: Created specs/<feature>/spec.md
    ───────────────────────────────────────
-   Proceed to next phase? (y/N):
+   Proceed to Plan? (y/N):
    ```
-   - If "y": continue to Phase 2
+   - If "y": continue to Plan
    - If "N" or anything else: offer (r)etry, (s)kip to next, (a)bort
 
-## Phase 2 — Plan
+## Plan
 
 1. Read `specs/<feature>/spec.md`.
 2. Generate a technical implementation plan with:
@@ -64,23 +66,23 @@ Run the full feature development pipeline for: $ARGUMENTS
    - **Components**: List of components, responsibilities, interfaces
    - **Implementation Order**: Dependencies, risk factors
 3. Write to `specs/<feature>/plan.md`.
-4. **Gate**: Same format as Phase 1, with "Phase 2: Plan complete."
+4. **Gate**: Same format, with "Plan complete."
 
-## Phase 3 — Tasks
+## Tasks
 
 1. Read `specs/<feature>/spec.md` and `specs/<feature>/plan.md`.
 2. Break down into actionable tasks. Each task includes:
    - Description, Files, Dependencies, Parallel marker [P], Acceptance criteria
 3. Write to `specs/<feature>/tasks.md`.
-4. **Gate**: Same format, with "Phase 3: Task breakdown complete."
+4. **Gate**: Same format, with "Task breakdown complete."
 
-## Phase 4 — Implementation
+## Implementation
 
 1. Read `specs/<feature>/tasks.md` to understand the task list and dependency order.
 2. **Gate**: If approval_level ≥ 1, present:
    ```
-   ── PHASE GATE ─────────────────────────
-   Phase 4: Implementation ready.
+   ── PIPELINE GATE ──────────────────────
+   Implementation ready.
    Summary: <N> tasks to execute via Deepveloper
    ───────────────────────────────────────
    Proceed to implementation? (y/N):
@@ -90,9 +92,9 @@ Run the full feature development pipeline for: $ARGUMENTS
    - Include `approval_level` in the handoff so Deepveloper respects gates
 4. Wait for Deepveloper to report back.
 5. If Deepveloper reports failure: offer (r)etry, (s)kip to review, or (a)bort.
-6. **Gate**: After implementation, present "Phase 4: Implementation complete" gate.
+6. **Gate**: After implementation, present "Implementation complete" gate.
 
-## Phase 5 — Review
+## Review
 
 1. Read `specs/<feature>/spec.md`, `specs/<feature>/plan.md`, `specs/<feature>/tasks.md`.
 2. Find implemented code in the codebase (read files referenced in tasks.md).
@@ -103,15 +105,16 @@ Run the full feature development pipeline for: $ARGUMENTS
    - **Gaps**: What's missing or incomplete?
    - **Issues**: Bugs, tech debt, concerns
 4. Save the report to `specs/<feature>/review.md`.
-5. **Gate**: Present "Phase 5: Review complete. Report saved to specs/<feature>/review.md."
+5. **Gate**: Present "Review complete. Report saved to specs/<feature>/review.md."
 
 ## Done
 
 Present a final summary:
 ```
-── SPEC COMPLETE ─────────────────────────
+── PIPELINE COMPLETE ─────────────────────
 Feature: <name>
 Artifacts:
+  - specs/<feature>/research.md (if research was done)
   - specs/<feature>/spec.md
   - specs/<feature>/plan.md
   - specs/<feature>/tasks.md

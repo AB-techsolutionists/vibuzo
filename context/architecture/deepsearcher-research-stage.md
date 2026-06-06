@@ -5,7 +5,7 @@
 
 ## Context
 
-The Vibuzo agentic framework currently operates as a two-agent system: Vibuzo (primary planner/executor) and Deepveloper (implementation subagent). The `/spec` command pipeline follows a 5-phase approach (Specification → Plan → Tasks → Implementation → Review). However, there is no dedicated research capability in the pipeline.
+The Vibuzo agentic framework currently operates as a three-agent system: Vibuzo (primary planner/executor), Deepveloper (implementation subagent), and Deepsearcher (research subagent). The `/spec` command pipeline follows a 6-stage approach (Research → Specification → Plan → Tasks → Implementation → Review).
 
 When developing features that require understanding of external technologies, libraries, APIs, or best practices, the agents have no structured way to conduct web research. Vibuzo can perform web searches during everyday tasks, but there is no specialized, reproducible research workflow integrated into the feature development pipeline.
 
@@ -27,33 +27,35 @@ A new subagent (`mode: subagent`) dedicated exclusively to web research. It foll
 
 ### 2. `/research` Command
 
-A new command that routes research queries to Deepsearcher as a subtask. Accepts a natural language query via `$ARGUMENTS`, derives a kebab-case feature name, creates `specs/<feature>/` if needed, and instructs Deepsearcher to save structured research to `specs/<feature>/research.md`.
+A command that routes research queries to Deepsearcher as a subtask for lightweight, ad-hoc research. Deepsearcher researches the topic and reports findings back to Vibuzo. **No files are created** — this is a pure research-and-report invocation.
 
 **Locations:** `commands/research.md`, `.opencode/commands/research.md` (mirrored per convention)
 
-### 3. Phase 0 Integration in `/spec`
+### 3. Research Stage in `/spec`
 
-The existing `/spec` command gains an optional **Phase 0 — Research** at the start of the pipeline. The user is asked if they want to research the feature first. If yes, Deepsearcher is spawned with the feature description as the research query. After research completes, a phase gate asks whether to proceed to Phase 1 (Specification). Phase 1 is also updated to read `research.md` if it exists before generating the specification.
+The `/spec` command includes an optional **Research** stage at the start of the pipeline. The user is asked if they want to research the feature first. If yes, Deepsearcher is spawned with the feature description as the research query. Unlike `/research` mode, **this invocation saves results** to `specs/<feature>/research.md` as a permanent pipeline artifact. After research completes, a pipeline gate asks whether to proceed to Specification. The Specification phase reads the research file if it exists.
 
-### 4. `@deepsearcher` Inline Support
+### 4. `@Deepsearcher` Inline Support
 
-Deepsearcher can be invoked inline via `@deepsearcher` in any conversation, allowing ad-hoc research without going through the full `/spec` pipeline. This is supported by the agent definition being registered in the opencode agent system.
+Deepsearcher can be invoked inline via `@Deepsearcher` in any conversation, allowing ad-hoc research without going through the full `/spec` pipeline. This spawns Deepsearcher as a subtask — **no files are created**. Findings are reported to Vibuzo, who presents them in the main session.
 
 ## Consequences
 
 ### Positive
 
 - **Three-agent system:** Vibuzo (planning/execution), Deepveloper (implementation), Deepsearcher (research) — clear separation of concerns
-- **Optional research phase:** Features that don't need research skip Phase 0 entirely; features that do get structured, saved research
-- **Reusable research artifacts:** `specs/<feature>/research.md` is a permanent project artifact that can be referenced later
+- **Optional research stage:** Features that don't need research skip the stage entirely; features that do get structured, saved research
+- **Reusable research artifacts:** `/spec` Research stage saves `specs/<feature>/research.md` as a permanent project artifact
 - **Consistent output format:** Every research task produces Summary, Key Findings, Resources, Source Metadata
-- **Inline invocation:** `@deepsearcher` provides ad-hoc research without pipeline overhead
+- **No-file modes:** `@Deepsearcher` and `/research` provide lightweight research without cluttering the project with files
+- **Three clear invocation modes:** Different behaviors for inline, command, and pipeline contexts
 
 ### Negative
 
 - **New command surface:** One additional command (`/research`) adds complexity to the command system
-- **Subagent dependency:** Phase 0 introduces another subagent spawn in the `/spec` pipeline, adding latency
+- **Subagent dependency:** Research stage introduces another subagent spawn in the `/spec` pipeline, adding latency
 - **Mirror maintenance:** Two copies of the command file must be kept in sync (`commands/` and `.opencode/commands/`)
+- **Three modes to remember:** Users must understand which mode creates files and which doesn't
 
 ## File Structure
 
@@ -65,12 +67,12 @@ Deepsearcher can be invoked inline via `@deepsearcher` in any conversation, allo
 │   │   ├── deepveloper.md      ← Implementation subagent (unchanged)
 │   │   └── deepsearcher.md     ← NEW: Research subagent
 │   └── commands/
-│       ├── spec.md             ← UPDATED: Phase 0 added
-│       ├── research.md         ← NEW: Research command
+│       ├── spec.md             ← UPDATED: Research stage added
+│       ├── research.md         ← NEW: /research command (no-file mode)
 │       └── ... (existing)
 commands/
-├── spec.md                     ← UPDATED: Phase 0 added (mirror)
-├── research.md                 ← NEW: Research command (mirror)
+├── spec.md                     ← UPDATED: Research stage added (mirror)
+├── research.md                 ← NEW: /research command (mirror)
 └── ... (existing)
 context/
 ├── architecture/
@@ -83,5 +85,10 @@ AGENTS.md                       ← UPDATED: Three-Agent System table
 ## Related Decisions
 
 - [`agent-restructure.md`](agent-restructure.md) — Original agent architecture with Vibuzo + Deepveloper
-- [`spec-command.md`](spec-command.md) — The 5-phase /spec pipeline that Phase 0 extends
+- [`spec-command.md`](spec-command.md) — The /spec pipeline that the Research stage extends
 - [`split-file-command-pattern.md`](split-file-command-pattern.md) — Each command gets one file, mirrored in two locations
+
+## Related Standards
+
+- [`standards/deepsearcher-invocation-modes.md`](../standards/deepsearcher-invocation-modes.md) — Three-mode invocation rules (@Deepsearcher, /research, /spec)
+- [`standards/vibuzo-main-session-only.md`](../standards/vibuzo-main-session-only.md) — Vibuzo never spawned as subtask

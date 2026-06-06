@@ -33,7 +33,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 ### Architecture
 - `architecture/agent-restructure.md` — Agent architecture decision: Vibuzo as main agent, Deepveloper triggered via /spec for implementation subtasks
 - `architecture/approval-gates.md` — Architecture decision for configurable approval gates (levels 0-3)
-- `architecture/deepsearcher-research-stage.md` — Architecture decision for Deepsearcher agent, /research command, and Phase 0 integration in /spec
+- `architecture/deepsearcher-research-stage.md` — Architecture decision for Deepsearcher agent, /research command, and Research stage integration in /spec
 - `architecture/spec-command.md` — Architecture decision for the /spec command (5-phase pipeline)
 - `architecture/split-file-command-pattern.md` — Architecture decision: each command gets one file with one `Do these steps NOW:` section. No routing-only files. Two execution modes: main session vs subtask.
 - `architecture/build-agent-override.md` — 🗑️ DEPRECATED — Referenced opencode.jsonc (removed)
@@ -56,6 +56,8 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
 - `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
 - `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
+- `standards/deepsearcher-invocation-modes.md` — Standard for the three Deepsearcher invocation modes (@Deepsearcher, /research, /spec Research stage) and their file-creation rules
+- `standards/vibuzo-main-session-only.md` — Vibuzo must never be spawned as a subtask; only Deepsearcher and Deepveloper use subtask: true
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)
