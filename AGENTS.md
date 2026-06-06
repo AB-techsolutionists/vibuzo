@@ -167,4 +167,4 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 > Add your custom project rules below the marker — they will be preserved across updates.
 
 ─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───
- 1. Don't push or commit code.
+
