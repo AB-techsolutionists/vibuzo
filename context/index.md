@@ -59,6 +59,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/deepsearcher-invocation-modes.md` — Standard for the three Deepsearcher invocation modes (@Deepsearcher, /research, /spec Research stage) and their file-creation rules
 - `standards/vibuzo-main-session-only.md` — Vibuzo must never be spawned as a subtask; only Deepsearcher and Deepveloper use subtask: true
 - `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
+- `standards/session-summary-forward-template.md` — Standard for the 7-section forward-looking session summary template: what each section covers, trim rules, naming convention, and how it complements /compact without duplication
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)

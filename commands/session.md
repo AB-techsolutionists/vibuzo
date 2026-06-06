@@ -7,91 +7,63 @@ agent: Vibuzo
 
 Do these steps NOW:
 
-1. **Analyze the entire conversation** — read ALL messages in this session. Extract **literally everything**:
-
-   - Every user request (verbatim or close paraphrase)
-   - Every tool call you made (bash, edit, write, read, glob, grep, task, webfetch, websearch)
-   - Every file created, modified, deleted, or read (with full paths)
-   - Every decision made and why
-   - Every command invoked (`/spec`, `/context`, `/session`, `/add-context`, etc.)
-   - Every error, blocker, or rollback
-   - Git state changes (commits, branches, pushes, status)
-   - Configuration changes
-   - Any external resources fetched
+1. **Analyze the entire conversation** — read ALL messages in this session. Distill into the forward-looking template below. Do NOT write a chronological log, file manifest, commands table, or state section — `/compact` captures those exhaustively. Your sections cover what compaction misses: intent, preferences, structured progress, curated decisions, forward context, and hot files.
 
 2. **Generate a title** — extract 2-4 key words from the session, convert to kebab-case. Check `context/sessions/` for existing files with the same title today. If collision, append `-2`, `-3`, etc.
 
-3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — use the template below. Fill **EVERY section** (except Session Compaction — leave it as a placeholder for the user to paste `/compact` output). If a section has no entries, write "None" explicitly. The `Goal` section must open with a full narrative paragraph.
+3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — use the template below. Fill **EVERY section** (except Session Compaction — leave it as a placeholder for `/compact` paste). If a section has no entries, write "None" explicitly.
 
     ```markdown
     # <title>
 
-    *Session summary — YYYY-MM-DD at HH:MM*
-    <br>*Total messages: <N> | Files touched: <N> | Commands run: <N>*
+    *Session summary — YYYY-MM-DD | <N> messages | <N> files touched | <N> commits*
 
-    > **Timestamp rule:** Every HH:MM in this file MUST be the actual system time when the event occurred. Use `Get-Date -Format "HH:mm"` (PowerShell) or `date +%H:%M` (bash) to capture each timestamp. Never use `~` approximate times — if you don't know the exact time, use a tool to find out.
+    ## Session Summary
 
-    ## Goal
+    <3-5 sentence paragraph. What was built, changed, or decided? Changelog-style — specific, factual, no fluff.>
 
-    <A tight 3-5 sentence paragraph that tells the complete story. What was built, changed, or decided? Write it like a changelog — specific, factual, no fluff.>
+    ## Constraints & Preferences
 
-    ## Chronological Log
+    - **<Topic>:** <rule that governed this session's decisions>
+    - **<Topic>:** <same format — only the ones that shaped the session>
 
-    <Every distinct user request → action sequence, ordered by time. Use this format for each entry:>
+    ## Progress
 
-    ### <HH:MM> — <short event label>
+    ### Done
+    - <What was completed — bullet list with specific file/feature references>
 
-    HH:MM must be the actual system time of this interaction. Run `Get-Date -Format "HH:mm"` (PowerShell) or `date +%H:%M` (bash) to get it for each entry.
+    ### In Progress
+    *(none)*
 
-    - **Request:** <what the user asked, quoted or closely paraphrased>
-    - **Actions:**
-      - <tool type>: <what was done> → <result>
-      - <tool type>: <what was done> → <result>
-    - **Files:**
-      - `<path>` — <action: created/modified/deleted/read> — <description of change>
-    - **Decision:** <any decision made at this point, with rationale>
-    - **State change:** <git, config, dependency changes>
-    - **Output:** <key results, errors, or notable output>
+    ### Blocked
+    *(none)*
 
-    <Repeat for every distinct interaction in the session. Leave nothing out.>
+    ## Forward Decisions
 
-    ## File Manifest
+    | # | Decision | Rationale |
+    |---|----------|-----------|
+    | 1 | **<Title>** — <concise statement> | <why it was decided this way> |
 
-    | Action | File | Notes |
-    |--------|------|-------|
-    | CREATE | `<path>` | <why created and brief content summary> |
-    | MODIFY | `<path>` | <what changed and why> |
-    | DELETE | `<path>` | <why deleted> |
-    | READ | `<path>` | <why read> |
+    Only decisions that shape NEXT session's work. If it won't matter next session, don't include it.
 
-    ## Commands Invoked
+    ## Forward Context
 
-    | Command | Args | Description |
-    |---------|------|-------------|
-    | `/spec` | <feature name> | Started pipeline |
-    | `/context find` | <topic> | Searched for... |
-    | `/add-context` | <statement> | Saved to context/ |
+    - <What the next session MUST know — unfinished work, gotchas, state that compaction won't capture>
+    - <Keep it to the 2-5 items that are actually actionable next session>
 
-    ## Key Decisions
+    ## Next Steps
 
-    - <Decision> — rationale
+    1. Run `/compact` in opencode TUI (immediately after this summary)
+    2. Copy the output and paste into **Session Compaction** section below
+    3. That block becomes starting context for next `/new` session
 
-    ## Critical Context
+    ## Hot Files
 
-    <Information future sessions MUST know. Unfinished work, gotchas, pending actions, important state.>
+    | File | Why Hot |
+    |------|---------|
+    | `<path>` | <why it's likely to be touched next session — be specific> |
 
-    ## State
-
-    - **Git:** <branch> <dirty/clean>, <N> ahead/behind, last commit <hash>
-    - **Config:** <any config files modified>
-    - **Dependencies:** <any packages installed, updated, or removed>
-    - **Environment:** <any env changes, tooling changes>
-
-    ## Relevant Files
-
-    | File | Relevance |
-    |------|-----------|
-    | `<path>` | <why it matters for future work> |
+    Only files likely to be edited/read next session. Not every file touched this session.
 
     ## Timeline Entry
 
@@ -99,9 +71,7 @@ Do these steps NOW:
 
     ## Session Compaction
 
-    (Copy this block and paste into a new session to feed the agent with memory)
-
-    > *(Paste the output from `/compact`. To populate: after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it here.)*
+    > Paste `/compact` output here. This replaces Chronological Log, File Manifest, Commands Invoked, and State — compaction captures those better. Everything above covers what compaction misses: intent, constraints, categorized progress, forward decisions, forward context, and hot files.
     ```
 
 4. **Update the timeline** at `context/sessions/index.md` — if it doesn't exist, create it with:
@@ -122,19 +92,17 @@ Do these steps NOW:
     ```
     ── SESSION ──────────────────────────────────────
     Saved:   context/sessions/YYYY-MM-DD-<title>.md
-    Entries: <N> chronological entries
     Files:   <N> touched
-    Commands: <N> invoked
+    Commits: <N>
     Timeline: updated (N total summaries)
     ────────────────────────────────────────────────
     ```
 
 6. **Extract context candidates from the new session file** — using the file you just created, scan for knowledge worth preserving permanently:
 
-    - Read the **Key Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
-    - Read the **Critical Context** section — any repeated gotcha or hard-won lesson belongs in `context/standards/` or `context/patterns/`
-    - Read the **File Manifest** — any newly created context file is already saved; skip those. But if a new pattern emerged from modifying existing files, it may be candidate material
-    - Read the **Goal** and **Chronological Log** — any workaround, trick, or insight that isn't documented elsewhere
+    - Read the **Forward Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
+    - Read the **Session Summary** and **Progress** — any workaround, trick, or insight that isn't documented elsewhere
+    - Check if any **Hot Files** were newly created context files — already saved; skip. But if a new pattern emerged from modifications, it may be candidate material
 
     Then present candidates in this format:
     ```

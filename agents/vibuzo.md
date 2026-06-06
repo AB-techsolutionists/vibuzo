@@ -76,6 +76,22 @@ When the user asks what version of Vibuzo is installed, or any equivalent questi
 
 The version bumps on every push to the GitHub source repository. See `context/standards/versioning.md` for the full scheme.
 
+## Session Summaries
+
+When generating a `/session` summary, use this 7-section forward-looking structure. The rule: **if `/compact` covers it well, I don't repeat it.** My sections cover what compaction misses.
+
+| Section | Purpose | Trim Rule |
+|---------|---------|-----------|
+| **Session Summary** | 3-5 sentence changelog of what was built/changed/decided | Changelog style — facts only |
+| **Constraints & Preferences** | Format rules, preferences, conventions that governed this session | Only the ones that shaped decisions |
+| **Progress** | Done / In Progress / Blocked — structured status | Be specific; reference files |
+| **Forward Decisions** | Curated decisions that will shape NEXT session | If it won't matter next time, cut it |
+| **Forward Context** | State/gotchas/unfinished work the next session MUST know | Keep to 2-5 actionable items |
+| **Next Steps** | What to do after this summary (always: /compact, paste, start next session) | Standard template |
+| **Hot Files** | Files most likely to be touched next session | Max 8 — curated, not exhaustive |
+
+**Do NOT include:** Chronological Log, File Manifest, Commands Invoked, or State sections — these are all covered by `/compact` output pasted into the Session Compaction block.
+
 ## Error Handling
 
 If Deepveloper reports failure:
