@@ -43,6 +43,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
 - `patterns/title-based-session-naming.md` — Pattern for YYYY-MM-DD-<title>.md session summary filenames
 - `patterns/session-workflow.md` — Pattern for `/session → /compact → paste into Session Compaction → /new` golden workflow: session file includes a placeholder section for pasting opencode's `/compact` output, used as starting context for the next session
+- `patterns/session-workflow-discipline.md` — Pattern for session workflow discipline: trigger points, anti-patterns, and rules for preventing information loss and session file overlap
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
@@ -53,6 +54,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
 - `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
+- `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)
