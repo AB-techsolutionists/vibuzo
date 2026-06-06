@@ -89,7 +89,9 @@ At natural breakpoints:
 2. `/session` then scans the new summary for context-worthy patterns and presents them as save candidates (you approve before anything is saved)
 3. The timeline at `context/sessions/index.md` auto-updates
 
-**Golden workflow:** `/session → /compact → /new` in that order, every time. Never `/compact` without `/session` first. The auto-load chain ensures the next session picks up exactly where this one left off.
+**Each session file includes a Session Compaction section at the bottom** — a placeholder where you paste opencode's `/compact` output after running `/session`. This block is then copy-pasted as starting context for the next session.
+
+**Golden workflow:** `/session → /compact → paste into Session Compaction → /new` in that order. After `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it into the Session Compaction section in the session file. When starting a new session, copy that block as your starting context. Never `/compact` without `/session` first.
 
 **Session sub-commands:**
 - `/session` — generate and save a comprehensive summary

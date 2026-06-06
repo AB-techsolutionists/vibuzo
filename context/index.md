@@ -4,8 +4,10 @@ This directory contains project-level context files that are automatically loade
 
 **At session start, after reading this file, the agent MUST:**
 1. Read `sessions/index.md` to find the latest (last) entry
-2. Read that latest session summary file to understand the previous session's state, pending work, and decisions
-3. Then proceed normally
+2. Read that latest session summary file
+3. If the file has a `## Session Compaction` section with pasted content (not the placeholder text), use it as the primary context for the previous session's state, pending work, and decisions
+4. If no pasted content exists in Session Compaction, fall back to reading the **Goal**, **Critical Context**, and **State** sections directly
+5. Then proceed normally
 
 This ensures every new session automatically picks up where the last one left off — no manual prompting needed.
 
@@ -40,7 +42,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 ### Patterns
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
 - `patterns/title-based-session-naming.md` — Pattern for YYYY-MM-DD-<title>.md session summary filenames
-- `patterns/session-workflow.md` — Pattern for `/session → /compact → /new` golden workflow: preserve state before compaction, avoid overlap, auto-load latest session on `/new`
+- `patterns/session-workflow.md` — Pattern for `/session → /compact → paste into Session Compaction → /new` golden workflow: session file includes a placeholder section for pasting opencode's `/compact` output, used as starting context for the next session
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions

@@ -21,7 +21,7 @@ Do these steps NOW:
 
 2. **Generate a title** — extract 2-4 key words from the session, convert to kebab-case. Check `context/sessions/` for existing files with the same title today. If collision, append `-2`, `-3`, etc.
 
-3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — use the template below. Fill **EVERY section**. If a section has no entries, write "None" explicitly. The `Goal` section must open with a full narrative paragraph.
+3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — use the template below. Fill **EVERY section** (except Session Compaction — leave it as a placeholder for the user to paste `/compact` output). If a section has no entries, write "None" explicitly. The `Goal` section must open with a full narrative paragraph.
 
     ```markdown
     # <title>
@@ -96,6 +96,12 @@ Do these steps NOW:
     ## Timeline Entry
 
     | YYYY-MM-DD | HH:MM | `<title>` | <one-line summary> |
+
+    ## Session Compaction
+
+    (Copy this block and paste into a new session to feed the agent with memory)
+
+    > *(Paste the output from `/compact`. To populate: after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it here.)*
     ```
 
 4. **Update the timeline** at `context/sessions/index.md` — if it doesn't exist, create it with:
@@ -146,3 +152,23 @@ Do these steps NOW:
     ```
 
     Wait for the user to respond with numbers (e.g., "1", "1 2", "0") before saving anything. Do NOT save or create any files without explicit approval.
+
+7. **Instruct the user on the workflow** — after the status box, print:
+
+    ```
+    ── NEXT STEPS ──────────────────────────
+    Your session file is ready at context/sessions/YYYY-MM-DD-<title>.md
+
+    Workflow to complete the Session Compaction:
+    1. Open the session file
+    2. In opencode's TUI, run /compact
+    3. Copy the compaction output
+    4. Paste it into the Session Compaction section at the bottom
+       (replace the placeholder text)
+
+    Next session:
+    - Open this session file
+    - Copy the Session Compaction block
+    - Paste as starting context
+    ─────────────────────────────────────────
+    ```
