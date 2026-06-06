@@ -23,7 +23,7 @@
 │   ├── context-find.md     ← Search context by topic
 │   ├── context-harvest.md  ← Promote session patterns to permanent context
 │   ├── context-append.md   ← Scan conversation for context-worthy content
-│   ├── session.md  ← Create YYYY-MM-DD-<title>.md skeleton
+│   ├── session.md  ← Generate comprehensive session summary
 │   ├── session-view.md     ← Browse past summaries
 │   └── session-timeline.md ← Show master timeline
 ├── context/                ← Project knowledge base (auto-loaded at session start)
@@ -65,20 +65,36 @@ Do these steps NOW:
 
 ## Context Auto-Load
 
-At session start, read `context/index.md` to discover project conventions. This is the single entry point into the knowledge base.
+At session start, read `context/index.md` to discover project conventions. This file also chains to the latest session summary:
+
+1. `context/index.md` → lists all architecture, standards, patterns
+2. `context/sessions/index.md` → master timeline of all summaries
+3. Latest session file → previous session's state, decisions, pending work
+
+This chain ensures every new session automatically picks up where the last one left off — no manual prompting needed.
 
 ## Working With the Context System
 
-- **Add knowledge:** `/add-context <statement>` — agent infers type (architecture/standard/pattern) and file name
-- **Search:** `/context find <topic>` — exact match first, then broader keyword search
 - **Scaffold:** `/context init` — ensures all 4 directories exist
+- **Add knowledge:** `/add-context <statement>` — agent infers type (architecture/standard/pattern) and file name
+- **Scan conversation:** `/context append` — scan current conversation for context-worthy patterns and save them
+- **Mine sessions:** `/context harvest` — read all session summaries and present patterns worth promoting to permanent context
+- **Search:** `/context find <topic>` — exact match first, then broader keyword search
 - **Update index:** After creating, modifying, or deleting any file under `context/`, update `context/index.md` immediately
 
 ## Session Management
 
 At natural breakpoints:
 1. Run `/session` to create `context/sessions/YYYY-MM-DD-<title>.md` with a comprehensive summary — full narrative summary, chronological log of every request/action/file/decision, file manifest, commands invoked, and git state
-2. The timeline at `context/sessions/index.md` auto-updates
+2. `/session` then scans the new summary for context-worthy patterns and presents them as save candidates (you approve before anything is saved)
+3. The timeline at `context/sessions/index.md` auto-updates
+
+**Golden workflow:** `/session → /compact → /new` in that order, every time. Never `/compact` without `/session` first. The auto-load chain ensures the next session picks up exactly where this one left off.
+
+**Session sub-commands:**
+- `/session` — generate and save a comprehensive summary
+- `/session view [session name or date..]` — browse past summaries
+- `/session timeline` — show all summaries chronologically
 
 ## Approval Gates
 

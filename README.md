@@ -70,7 +70,7 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 1. **Saved context (`context/`)** — every time you run `/add-context`, you save a permanent rule, pattern, or decision. At the start of every new session, Vibuzo reads `context/index.md` and loads everything your project knows. You never re-explain your stack, conventions, or architecture decisions.
 
-2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. Before starting new work, Vibuzo scans recent session summaries for context. Run `/context harvest` to promote patterns discovered in sessions into permanent context files.
+2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. At the start of every new session, Vibuzo automatically reads the latest session summary to pick up where you left off. Run `/context harvest` to promote patterns discovered in sessions into permanent context files.
 
 3. **Harvest pipeline** — `/context append` scans your current conversation for anything worth saving and asks if you want to add it to context. `/context harvest` reads all your session summaries and presents patterns worth promoting. You approve what gets saved — nothing is automatic.
 
