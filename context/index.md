@@ -58,6 +58,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
 - `standards/deepsearcher-invocation-modes.md` — Standard for the three Deepsearcher invocation modes (@Deepsearcher, /research, /spec Research stage) and their file-creation rules
 - `standards/vibuzo-main-session-only.md` — Vibuzo must never be spawned as a subtask; only Deepsearcher and Deepveloper use subtask: true
+- `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)

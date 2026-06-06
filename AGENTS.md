@@ -19,7 +19,7 @@ Vibuzo is an agentic framework for AI coding agents — it gives you a planning-
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
 │   ├── commands/                 ← 10 command files (research, spec, context*, session*)
-│   └── .vibuzo-version           ← Version marker
+│   └── .vibuzo-version           ← Version marker (current: 0.0.19)
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
 │   ├── architecture/             ← Architecture Decision Records

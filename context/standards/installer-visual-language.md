@@ -19,7 +19,8 @@ Both `install.ps1` and `install.sh` use a consistent visual language for termina
 - Always printed first, before any other output
 
 ### Install/Update Title
-- Single colored line: `🔧 Installing Vibuzo (local)...` (cyan) or `⬆️  Updating Vibuzo...` (yellow)
+- Single colored line: `🔧 Installing Vibuzo 0.0.19 (local)...` (cyan) or `⬆️  Updating Vibuzo 0.0.19...` (yellow)
+- Version number always shown in the install/update title line
 
 ### Update Mode (if applicable)
 - Version info block with cyan "Current install:" header
@@ -42,7 +43,7 @@ Files are grouped into sections with cyan headers:
 
 ### Success Box
 A rounded box (`╭╮╰╯`) containing:
-1. Green success message
+1. Green success message with version: `✅ Vibuzo 0.0.19 installed successfully!`
 2. Location and agents path
 3. `── Next Steps ──` section with numbered steps (1-4)
 4. Link for more info
@@ -76,3 +77,4 @@ Use `printf` (not `echo`) for ANSI-colored output. See `install.sh` for full imp
 2. **Both installers must match visually** — any visual change to one must be mirrored in the other
 3. **Use `printf` in bash** — `echo -e` behavior varies across shells; `printf` is portable
 4. **The banner must always appear first** — before any version checks or download output
+5. **Version always shown** — install/update lines, success box, and update-mode display must include the current semver (`0.x.x`)

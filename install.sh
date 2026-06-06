@@ -4,6 +4,7 @@
 #
 # Installs Vibuzo (main), Deepveloper (subtask), /spec pipeline, and active commands.
 #
+# Version: 0.0.19
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
 #   curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --global
@@ -86,12 +87,17 @@ if [ "$UPDATE" = true ]; then
         exit 1
     fi
 
-    read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_COMMIT INSTALLED_MODE < "$VERSION_FILE"
+    read -r CURRENT_VERSION_LINE < "$VERSION_FILE"
+    # Format: 0.0.19 | 2026-06-07 00:42 04638cc local
+    VERSION="${CURRENT_VERSION_LINE%% | *}"
+    REST="${CURRENT_VERSION_LINE#* | }"
+    read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_COMMIT INSTALLED_MODE <<< "$REST"
 
     echo ""
     printf "${YELLOW}🔍 Checking for updates...${NC}\n"
     echo ""
     printf "  ${CYAN}Current install:${NC}\n"
+    echo "    Version: $VERSION"
     echo "    Date:   $INSTALLED_DATE at $INSTALLED_TIME"
     echo "    Commit: $INSTALLED_COMMIT"
     echo "    Mode:   $INSTALLED_MODE"
@@ -107,10 +113,10 @@ if [ "$UPDATE" = true ]; then
             echo ""
             echo "╭──────────────────────────────────────────────────────────────╮"
             echo "│                                                              │"
-            printf "│              ${GREEN}✅ Vibuzo is already up to date!${NC}                 │\n"
+            printf "│              ${GREEN}✅ Vibuzo $VERSION is up to date!${NC}                 │\n"
             echo "│                                                              │"
-            echo "│  Installed: $INSTALLED_DATE at $INSTALLED_TIME ($INSTALLED_COMMIT)  │"
-            echo "│  Location:  $INSTALL_TARGET                                       │"
+            echo "│  Installed: $VERSION — $INSTALLED_DATE at $INSTALLED_TIME ($INSTALLED_COMMIT)  │"
+            echo "│  Location:  $INSTALL_TARGET                                              │"
             echo "│                                                              │"
             echo "╰──────────────────────────────────────────────────────────────╯"
             exit 0
@@ -134,10 +140,10 @@ if [ "$UPDATE" = true ]; then
     fi
 
     echo ""
-    printf "${YELLOW}⬆️  Updating Vibuzo ($INSTALL_TARGET)...${NC}\n"
+    printf "${YELLOW}⬆️  Updating Vibuzo 0.0.19 ($INSTALL_TARGET)...${NC}\n"
 else
     echo ""
-    printf "${CYAN}🔧 Installing Vibuzo ($INSTALL_TARGET)...${NC}\n"
+    printf "${CYAN}🔧 Installing Vibuzo 0.0.19 ($INSTALL_TARGET)...${NC}\n"
 fi
 
 # ─── Install / Update ────────────────────────────────────────────────────────
@@ -281,7 +287,7 @@ SHA=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/nul
 if [ -z "$SHA" ]; then
     SHA="unknown"
 fi
-echo "$NOW $SHA $MODE" > "$VERSION_FILE"
+echo "0.0.19 | $NOW $SHA $MODE" > "$VERSION_FILE"
 
 # ─── Tool Detection ──────────────────────────────────────────────────────────
 
@@ -307,9 +313,9 @@ echo ""
 echo "╭──────────────────────────────────────────────────────────────╮"
 echo "│                                                              │"
 if [ "$UPDATE" = true ]; then
-    printf "│              ${GREEN}✅ Vibuzo updated successfully!${NC}                 │\n"
+    printf "│              ${GREEN}✅ Vibuzo 0.0.19 updated successfully!${NC}            │\n"
 else
-    printf "│              ${GREEN}✅ Vibuzo installed successfully!${NC}                │\n"
+    printf "│              ${GREEN}✅ Vibuzo 0.0.19 installed successfully!${NC}           │\n"
 fi
 echo "│                                                              │"
 echo "│  Location: $INSTALL_TARGET                                             │"

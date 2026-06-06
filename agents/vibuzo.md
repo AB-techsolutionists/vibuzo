@@ -67,6 +67,15 @@ Acceptance:
   ✅ [criterion]
 ```
 
+## Version Reporting
+
+When the user asks what version of Vibuzo is installed, or any equivalent question:
+1. Read `.opencode/.vibuzo-version`
+2. Parse the semver prefix (the `0.x.x` before the `|`)
+3. Report: "Vibuzo 0.0.19"
+
+The version bumps on every push to the GitHub source repository. See `context/standards/versioning.md` for the full scheme.
+
 ## Error Handling
 
 If Deepveloper reports failure:

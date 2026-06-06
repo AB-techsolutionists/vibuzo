@@ -52,7 +52,7 @@ $Red = "Red"
 
 if ($Help) {
   Write-Host @"
-install.ps1 — Vibuzo Agentic Framework Installer
+install.ps1 — Vibuzo Agentic Framework Installer (0.0.19)
 
 Usage:
   pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
@@ -95,15 +95,19 @@ if ($Update) {
   }
 
   $CurrentVersion = Get-Content $VersionFile
-  $Parts = $CurrentVersion -split ' '
-  $InstalledDate = $Parts[0]
-  $InstalledTime = $Parts[1]
-  $InstalledCommit = $Parts[2]
-  $InstalledMode = $Parts[3]
+  # Format: 0.0.19 | 2026-06-07 00:42 04638cc local
+  $VersionAndRest = $CurrentVersion -split ' \| '
+  $Version = $VersionAndRest[0]
+  $OldParts = $VersionAndRest[1] -split ' '
+  $InstalledDate = $OldParts[0]
+  $InstalledTime = $OldParts[1]
+  $InstalledCommit = $OldParts[2]
+  $InstalledMode = $OldParts[3]
 
   Write-Host "🔍 Checking for updates..." -ForegroundColor $Yellow
   Write-Host ""
   Write-Host "  Current install:" -ForegroundColor $Cyan
+  Write-Host "    Version: $Version"
   Write-Host "    Date:   $InstalledDate at $InstalledTime"
   Write-Host "    Commit: $InstalledCommit"
   Write-Host "    Mode:   $InstalledMode"
@@ -118,10 +122,10 @@ if ($Update) {
       Write-Host ""
       Write-Host "╭──────────────────────────────────────────────────────────────╮"
       Write-Host "│                                                              │"
-      Write-Host "│              ✅ Vibuzo is already up to date!                 │" -ForegroundColor $Green
+      Write-Host "│              ✅ Vibuzo $Version is up to date!                │" -ForegroundColor $Green
       Write-Host "│                                                              │"
-      Write-Host "│  Installed: $InstalledDate at $InstalledTime ($InstalledCommit)  │"
-      Write-Host "│  Location:  $InstallTarget                                       │"
+      Write-Host "│  Installed: $Version — $InstalledDate at $InstalledTime ($InstalledCommit)  │"
+      Write-Host "│  Location:  $InstallTarget                                              │"
       Write-Host "│                                                              │"
       Write-Host "╰──────────────────────────────────────────────────────────────╯"
       exit 0
@@ -146,10 +150,10 @@ if ($Update) {
   }
 
   Write-Host ""
-  Write-Host "⬆️  Updating Vibuzo ($InstallTarget)..." -ForegroundColor $Yellow
+  Write-Host "⬆️  Updating Vibuzo 0.0.19 ($InstallTarget)..." -ForegroundColor $Yellow
 } else {
   Write-Host ""
-  Write-Host "🔧 Installing Vibuzo ($InstallTarget)..." -ForegroundColor $Cyan
+  Write-Host "🔧 Installing Vibuzo 0.0.19 ($InstallTarget)..." -ForegroundColor $Cyan
 }
 
 # ─── Install / Update ────────────────────────────────────────────────────────
@@ -292,7 +296,7 @@ try {
 } catch {
   $Sha = "unknown"
 }
-"$Now $Sha $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
+"0.0.19 | $Now $Sha $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
 
 # ─── Tool Detection ──────────────────────────────────────────────────────────
 
@@ -314,9 +318,9 @@ Write-Host ""
 Write-Host "╭──────────────────────────────────────────────────────────────╮"
 Write-Host "│                                                              │"
 if ($Update) {
-  Write-Host "│              ✅ Vibuzo updated successfully!                 │" -ForegroundColor $Green
+  Write-Host "│              ✅ Vibuzo 0.0.19 updated successfully!            │" -ForegroundColor $Green
 } else {
-  Write-Host "│              ✅ Vibuzo installed successfully!                │" -ForegroundColor $Green
+  Write-Host "│              ✅ Vibuzo 0.0.19 installed successfully!           │" -ForegroundColor $Green
 }
 Write-Host "│                                                              │"
 Write-Host "│  Location: $InstallTarget                                             │"
