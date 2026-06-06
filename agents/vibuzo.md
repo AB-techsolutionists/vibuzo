@@ -79,7 +79,7 @@ When the user asks what version of Vibuzo is installed, or any equivalent questi
 When the user asks to check for updates, "is there a new version", or any equivalent question:
 
 1. **Read local version** — Read `.opencode/.vibuzo-version` and parse the semver + commit SHA + date + mode
-2. **Fetch remote version** — Use `webfetch` on `https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/.opencode/.vibuzo-version` to get the latest version info from GitHub
+2. **Fetch remote version** — Use `webfetch` on `https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh` and extract the `SCRIPT_VERSION="..."` value. Then also fetch `https://api.github.com/repos/AB-techsolutionists/vibuzo/commits/main` to get the latest commit SHA.
 3. **Compare** — Parse the remote semver and compare against the local version
 4. **Render a comparison box** — Use this exact format rendered inside a code block:
 
