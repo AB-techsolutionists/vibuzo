@@ -196,17 +196,78 @@ Write-Host ""
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if (-not $Global) {
+  # ─── Check AGENTS.md status and explain to user ────────────────
+  $ExistingContent = $null
+  $UserRules = $null
   if (Test-Path "AGENTS.md") {
+    $Lines = Get-Content "AGENTS.md"
+    $MarkerIndex = $Lines.IndexOf("─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───")
+    if ($MarkerIndex -ge 0) {
+      # Vibuzo file — save content below marker (user's custom rules)
+      if ($MarkerIndex -lt $Lines.Length - 1) {
+        $SavedContent = $Lines[($MarkerIndex + 1)..($Lines.Length - 1)] -join "`n"
+        if ($SavedContent.Trim() -ne "") {
+          $UserRules = $SavedContent
+        }
+      }
+      Write-Host ""
+      Write-Host "╭── AGENTS.md ─────────────────────────────────────────╮" -ForegroundColor $Cyan
+      Write-Host "│                                                     │" -ForegroundColor $Cyan
+      Write-Host "│  Vibuzo AGENTS.md found with custom rules below     │" -ForegroundColor $Cyan
+      if ($UserRules) {
+        Write-Host "│  the marker. These custom rules will be preserved   │" -ForegroundColor $Cyan
+      } else {
+        Write-Host "│  the marker. No custom rules found below marker.    │" -ForegroundColor $Cyan
+      }
+      Write-Host "│  The framework section (above ---) will be updated   │" -ForegroundColor $Cyan
+      Write-Host "│  to the latest version.                              │" -ForegroundColor $Cyan
+      Write-Host "│                                                     │" -ForegroundColor $Cyan
+      Write-Host "╰─────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
+    } else {
+      # User's own AGENTS.md — save entire content to prepend
+      $ExistingContent = $Lines -join "`n"
+      Write-Host ""
+      Write-Host "╭── AGENTS.md ─────────────────────────────────────────╮" -ForegroundColor $Cyan
+      Write-Host "│                                                     │" -ForegroundColor $Cyan
+      Write-Host "│  An existing AGENTS.md was found in your project.   │" -ForegroundColor $Cyan
+      Write-Host "│  Your current content will be preserved at the top. │" -ForegroundColor $Cyan
+      Write-Host "│  Vibuzo's framework content will be appended below  │" -ForegroundColor $Cyan
+      Write-Host "│  with a --- separator. Nothing will be overwritten. │" -ForegroundColor $Cyan
+      Write-Host "│                                                     │" -ForegroundColor $Cyan
+      Write-Host "╰─────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
+    }
+  } else {
     Write-Host ""
-    Write-Host "  ⚠️  AGENTS.md will be overwritten" -ForegroundColor $Yellow
-    Write-Host "  AGENTS.md is required for Vibuzo to work with 25+ AI tools."
-    Write-Host "  If you have custom rules in your current AGENTS.md,"
-    Write-Host "  copy them before continuing — they can be re-added"
-    Write-Host "  as context after installation via /add-context."
-    Write-Host ""
+    Write-Host "╭── AGENTS.md ─────────────────────────────────────────╮" -ForegroundColor $Cyan
+    Write-Host "│                                                     │" -ForegroundColor $Cyan
+    Write-Host "│  No existing AGENTS.md found. A fresh copy will be  │" -ForegroundColor $Cyan
+    Write-Host "│  downloaded and placed in your project root.        │" -ForegroundColor $Cyan
+    Write-Host "│                                                     │" -ForegroundColor $Cyan
+    Write-Host "╰─────────────────────────────────────────────────────╯" -ForegroundColor $Cyan
   }
+
+  $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
+  if ($Interactive) {
+    $Response = Read-Host "Proceed with AGENTS.md? (y/N)"
+    if ($Response -notin @('y', 'Y', 'yes', 'YES')) {
+      Write-Host "AGENTS.md skipped." -ForegroundColor $Yellow
+      return
+    }
+  } else {
+    Write-Host "(non-interactive shell — proceeding automatically)"
+  }
+
+  Write-Host ""
   Write-Host "   ✓ AGENTS.md       (project root)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "AGENTS.md"
+  if ($ExistingContent) {
+    # User had their own AGENTS.md — prepend it above Vibuzo content
+    $VibuzoContent = Get-Content "AGENTS.md" -Raw
+    Set-Content -Path "AGENTS.md" -Value "$ExistingContent`n`n---`n`n$VibuzoContent"
+  } elseif ($UserRules) {
+    # Vibuzo file with custom rules below marker — re-append them
+    Add-Content -Path "AGENTS.md" -Value "`n$UserRules"
+  }
 } else {
   Write-Host "   ✓ AGENTS.md       (opencode dir)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "$OpenCodeDir\AGENTS.md"
@@ -265,7 +326,6 @@ Write-Host "│  ── Next Steps ──                                       
 Write-Host "│                                                              │"
 Write-Host "│  1. Restart opencode to pick up Vibuzo                       │"
 Write-Host "│  2. Select Vibuzo from the agent dropdown                    │"
-Write-Host "│     or create opencode.json to set as default                │"
 Write-Host "│  3. Run /context init to scaffold project memory             │"
 Write-Host "│  4. Start building with /spec [feature description]          │"
 Write-Host "│                                                              │"

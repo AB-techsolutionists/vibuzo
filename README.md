@@ -71,25 +71,6 @@ cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsol
 
 5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Browse past reports with `/session view [session name or date..]` and `/session timeline`.
 
-## Setting Vibuzo as Your Default Agent
-
-By default, opencode opens the built-in **Build** agent. To have Vibuzo selected automatically every time you start a session:
-
-1. **Create `opencode.json`** in your project root:
-
-   ```json
-   {
-     "$schema": "https://opencode.ai/config.json",
-     "default_agent": "Vibuzo"
-   }
-   ```
-
-2. **For global installs** — place it in `~/.config/opencode/opencode.json` instead to make Vibuzo the default for all your projects.
-
-> ⚠️ `opencode.json` is a **personal/local preference** — add it to `.gitignore` and don't commit it. Each teammate should set their own default agent.
->
-> If the agent name doesn't exist or the config is invalid, opencode gracefully falls back to the built-in `"build"` agent.
-
 ## How Vibuzo Learns Over Time
 
 Vibuzo doesn't learn on its own — you teach it as you work. The more context you save, the smarter it gets across sessions.

@@ -183,17 +183,70 @@ echo ""
 
 # Download AGENTS.md to project root (if local) or to opencode dir (if global)
 if [ "$GLOBAL" = false ]; then
+    # ─── Check AGENTS.md status and explain to user ────────────────
+    EXISTING_CONTENT=""
+    USER_RULES=""
     if [ -f "AGENTS.md" ]; then
+        if grep -q "PASTE YOUR CUSTOM RULES BELOW THIS LINE" AGENTS.md 2>/dev/null; then
+            # Vibuzo file — save content below marker (user's custom rules)
+            USER_RULES=$(awk '/PASTE YOUR CUSTOM RULES BELOW THIS LINE/{found=1; next} found' AGENTS.md 2>/dev/null)
+            echo ""
+            printf "${CYAN}╭── AGENTS.md ─────────────────────────────────────────╮${NC}\n"
+            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  Vibuzo AGENTS.md found with custom rules below     ${CYAN}│${NC}\n"
+            if [ -n "$USER_RULES" ]; then
+                printf "${CYAN}│${NC}  the marker. These custom rules will be preserved   ${CYAN}│${NC}\n"
+            else
+                printf "${CYAN}│${NC}  the marker. No custom rules found below marker.    ${CYAN}│${NC}\n"
+            fi
+            printf "${CYAN}│${NC}  The framework section (above ---) will be updated   ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  to the latest version.                              ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
+            printf "${CYAN}╰─────────────────────────────────────────────────────╯${NC}\n"
+        else
+            # User's own AGENTS.md — save entire content to prepend
+            EXISTING_CONTENT=$(cat AGENTS.md)
+            echo ""
+            printf "${CYAN}╭── AGENTS.md ─────────────────────────────────────────╮${NC}\n"
+            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  An existing AGENTS.md was found in your project.   ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  Your current content will be preserved at the top. ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  Vibuzo's framework content will be appended below  ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}  with a --- separator. Nothing will be overwritten. ${CYAN}│${NC}\n"
+            printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
+            printf "${CYAN}╰─────────────────────────────────────────────────────╯${NC}\n"
+        fi
+    else
         echo ""
-        printf "${YELLOW}  ⚠️  AGENTS.md will be overwritten${NC}\n"
-        printf "  AGENTS.md is required for Vibuzo to work with 25+ AI tools.\n"
-        printf "  If you have custom rules in your current AGENTS.md,\n"
-        printf "  copy them before continuing — they can be re-added\n"
-        printf "  as context after installation via /add-context.\n"
-        echo ""
+        printf "${CYAN}╭── AGENTS.md ─────────────────────────────────────────╮${NC}\n"
+        printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
+        printf "${CYAN}│${NC}  No existing AGENTS.md found. A fresh copy will be  ${CYAN}│${NC}\n"
+        printf "${CYAN}│${NC}  downloaded and placed in your project root.        ${CYAN}│${NC}\n"
+        printf "${CYAN}│${NC}                                                     ${CYAN}│${NC}\n"
+        printf "${CYAN}╰─────────────────────────────────────────────────────╯${NC}\n"
     fi
+
+    if [ -t 0 ]; then
+        printf "\nProceed with AGENTS.md? (y/N): "
+        read -r RESPONSE
+        if [ "$RESPONSE" != "y" ] && [ "$RESPONSE" != "Y" ] && [ "$RESPONSE" != "yes" ] && [ "$RESPONSE" != "YES" ]; then
+            printf "${YELLOW}AGENTS.md skipped.${NC}\n"
+            return
+        fi
+    else
+        echo "(non-interactive shell — proceeding automatically)"
+    fi
+
     printf "   ${GREEN}✓ AGENTS.md       (project root)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o AGENTS.md
+    if [ -n "$EXISTING_CONTENT" ]; then
+        # User had their own AGENTS.md — prepend it above Vibuzo content
+        VIBUZO_CONTENT=$(cat AGENTS.md)
+        printf "%s\n\n---\n\n%s" "$EXISTING_CONTENT" "$VIBUZO_CONTENT" > AGENTS.md
+    elif [ -n "$USER_RULES" ]; then
+        # Vibuzo file with custom rules below marker — re-append them
+        printf "\n%s" "$USER_RULES" >> AGENTS.md
+    fi
 else
     printf "   ${GREEN}✓ AGENTS.md       (opencode dir)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o "$OPENCODE_DIR/AGENTS.md"
@@ -266,7 +319,6 @@ echo "│  ── Next Steps ──                                             
 echo "│                                                              │"
 echo "│  1. Restart opencode to pick up Vibuzo                       │"
 echo "│  2. Select Vibuzo from the agent dropdown                    │"
-echo "│     or create opencode.json to set as default                │"
 echo "│  3. Run /context init to scaffold project memory             │"
 echo "│  4. Start building with /spec [feature description]          │"
 echo "│                                                              │"
