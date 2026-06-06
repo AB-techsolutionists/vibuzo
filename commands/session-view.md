@@ -13,7 +13,7 @@ Parse the `<ref>` after "view" and do ONE of:
 - **Date only** (e.g., `2026-06-04`) → list all summaries for that date with one-line summaries. Include legacy `YYYY-MM-DD.md` files too.
 - **`yesterday`** → same as date-only with yesterday's date
 - **`today`** → same as date-only with today's date
-- **`last`** → find the most recent summary file (sort by filename descending) and print it
+- **`last`** → read `context/sessions/index.md`, find the last (bottom-most) entry in the timeline table, and read/print that file
 - **`recent`** → find the 3 most recent summary files and print summaries
 - **`all`** → list every summary across all dates with one-line summaries
 - **Empty** → show the timeline and offer to pick one
