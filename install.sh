@@ -23,7 +23,7 @@ RAW_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
 
 # ─── Version ─────────────────────────────────────────────────────────────────
 
-SCRIPT_VERSION="0.1.0"
+SCRIPT_VERSION="0.1.1"
 
 # ─── File Arrays ──────────────────────────────────────────────────────────────
 
@@ -116,46 +116,39 @@ print_box() {
     shift
     local lines=("$@")
     local max_len=0
-    local line
 
-    # Find the longest content line
     for line in "${lines[@]}"; do
         if [ ${#line} -gt $max_len ]; then
             max_len=${#line}
         fi
     done
 
-    local content_width=$max_len
-    local title_len=${#title}
-    if [ $((title_len + 2)) -gt $content_width ]; then
-        content_width=$((title_len + 2))
-    fi
-    local total_width=$((content_width + 4))
+    # Total width: left border (1) + space (1) + content + space (1) + right border (1)
+    local total=$((max_len + 4))
 
-    # Top border with title
+    # Top border: left + dashes + title + dashes + right
     local title_section=" $title "
-    local side_dashes=$(((total_width - ${#title_section}) / 2))
-    local top="╭"
-    for ((i=0; i<side_dashes; i++)); do top="${top}─"; done
-    top="${top}${title_section}"
-    local right_dashes=$((total_width - ${#top} + 1))
-    for ((i=0; i<right_dashes; i++)); do top="${top}─"; done
-    top="${top}╮"
-    printf "${CYAN}%s${NC}\n" "$top"
+    local title_len=${#title_section}
+    local left_dashes=$(((total - 2 - title_len) / 2))
+    local right_dashes=$((total - 2 - title_len - left_dashes))
+    printf "${CYAN}╭"
+    for ((i=0; i<left_dashes; i++)); do printf "─"; done
+    printf "%s" "$title_section"
+    for ((i=0; i<right_dashes; i++)); do printf "─"; done
+    printf "╮${NC}\n"
 
     # Content lines
     for line in "${lines[@]}"; do
-        local padded="$line"
-        local pad_len=$((content_width - ${#line}))
-        for ((i=0; i<pad_len; i++)); do padded="${padded} "; done
-        printf "${CYAN}│${NC} %s ${CYAN}│${NC}\n" "$padded"
+        local pad_len=$((max_len - ${#line}))
+        printf "${CYAN}│${NC} %s" "$line"
+        for ((i=0; i<pad_len; i++)); do printf " "; done
+        printf " ${CYAN}│${NC}\n"
     done
 
-    # Bottom border
-    local bottom="╰"
-    for ((i=0; i<total_width; i++)); do bottom="${bottom}─"; done
-    bottom="${bottom}╯"
-    printf "${CYAN}%s${NC}\n" "$bottom"
+    # Bottom border: left + dashes + right
+    printf "${CYAN}╰"
+    for ((i=0; i<total - 2; i++)); do printf "─"; done
+    printf "╯${NC}\n"
 }
 
 # ─── Banner ──────────────────────────────────────────────────────────────────
@@ -164,14 +157,14 @@ printf "${CYAN}"
 cat << 'EOF'
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗          ║
-║   ██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗         ║
-║   ██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║         ║
-║   ╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║         ║
-║    ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝         ║
-║     ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝          ║
+║   ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗           ║
+║   ██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗          ║
+║   ██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║          ║
+║   ╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║          ║
+║    ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝          ║
+║     ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝           ║
 ║                                                           ║
-║               Agentic Framework                           ║
+║           Agentic Framework for Ai coding                 ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 EOF
@@ -222,10 +215,8 @@ if [ "$UPDATE" = true ]; then
 
     # Build and display the update check box
     BOX_LINES=()
-    BOX_LINES+=("Current:  $VERSION  ($INSTALLED_COMMIT)")
-    if [ -n "$LATEST_COMMIT" ]; then
-        BOX_LINES+=("Latest:   $SCRIPT_VERSION  ($LATEST_COMMIT)")
-    fi
+    BOX_LINES+=("Current:  $VERSION")
+    BOX_LINES+=("Latest:   $SCRIPT_VERSION")
     BOX_LINES+=("Status:   $STATUS")
     BOX_LINES+=("")
     BOX_LINES+=("Installed: $INSTALLED_FULL")
@@ -377,61 +368,13 @@ else
     ACTION="installed"
 fi
 
-STATUS_LINE="✅ Vibuzo ${SCRIPT_VERSION} ${ACTION} successfully!"
-
-# Build content lines (compact box)
-BOX_LINES=()
-if [ "$UPDATE" = true ]; then
-    BOX_LINES+=("")
-    BOX_LINES+=("Location:  $INSTALL_TARGET")
-    BOX_LINES+=("")
-else
-    BOX_LINES+=("Location:  $INSTALL_TARGET")
-    BOX_LINES+=("")
-    BOX_LINES+=("── Next Steps ──")
-    BOX_LINES+=("1. Restart opencode → select Vibuzo")
-    BOX_LINES+=("2. Run /context init to scaffold project memory")
-    BOX_LINES+=("3. Start building with /spec [feature description]")
-    BOX_LINES+=("💡 github.com/AB-techsolutionists/vibuzo")
-fi
-
-# Calculate box width from content
-MAX_LEN=${#STATUS_LINE}
-MAX_LEN=$((MAX_LEN + 2))
-for line in "${BOX_LINES[@]}"; do
-    if [ ${#line} -gt $MAX_LEN ]; then
-        MAX_LEN=${#line}
-    fi
-done
-INNER_WIDTH=$((MAX_LEN + 4))
-
 echo ""
-# Top border with title
-TITLE_SECTION=" $STATUS_LINE "
-SIDE_DASHES=$(((INNER_WIDTH - ${#TITLE_SECTION}) / 2))
-TOP="╭"
-for ((i=0; i<SIDE_DASHES; i++)); do TOP="${TOP}─"; done
-TOP="${TOP}${TITLE_SECTION}"
-RIGHT_DASHES=$((INNER_WIDTH - ${#TOP} + 1))
-for ((i=0; i<RIGHT_DASHES; i++)); do TOP="${TOP}─"; done
-TOP="${TOP}╮"
-printf "%s\n" "$TOP"
-# Content lines
-for line in "${BOX_LINES[@]}"; do
-    if [ -z "$line" ]; then
-        PAD=""
-        for ((i=0; i<INNER_WIDTH; i++)); do PAD="${PAD} "; done
-        printf "│${PAD}│\n"
-    else
-        PAD=""
-        PAD_LEN=$((INNER_WIDTH - 2 - ${#line}))
-        for ((i=0; i<PAD_LEN; i++)); do PAD="${PAD} "; done
-        printf "│ ${line}${PAD} │\n"
-    fi
-done
-# Bottom border
-BOTTOM="╰"
-for ((i=0; i<INNER_WIDTH; i++)); do BOTTOM="${BOTTOM}─"; done
-BOTTOM="${BOTTOM}╯"
-printf "%s\n" "$BOTTOM"
+print_box "✅ Vibuzo ${SCRIPT_VERSION} ${ACTION} successfully!" \
+    "Location:  $INSTALL_TARGET" \
+    "" \
+    "── Next Steps ──" \
+    "1. Restart opencode → select Vibuzo" \
+    "2. Run /context init to scaffold project memory" \
+    "3. Start building with /spec [feature description]" \
+    "💡 github.com/AB-techsolutionists/vibuzo"
 echo ""

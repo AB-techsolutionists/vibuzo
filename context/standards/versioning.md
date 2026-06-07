@@ -31,7 +31,9 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
-**0.1.0** — The first post-dev refinement release. Minor version 1, patch 0. The 0.0.x development phase is complete. Future bumps are patch increments (0.1.0 → 0.1.1...) until the next minor or major rollover.
+**0.1.1** — this version introduced a redesign the visual output of `install.ps1` and `install.sh` (mirrored implementations) to be simpler, prettier, and more compact. The redesign covers the install flow, update flow, and the "up to date" case. Both installers must remain visually identical.
+
+This is purely a visual/cosmetic change. No functional changes to what gets installed, how files are downloaded, or how version checking works.
 
 ## Bump Rules
 

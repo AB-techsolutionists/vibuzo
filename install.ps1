@@ -43,7 +43,7 @@ $VersionFile = "$OpenCodeDir\.vibuzo-version"
 
 # ─── Version ─────────────────────────────────────────────────────────────────
 
-$ScriptVersion = "0.1.0"
+$ScriptVersion = "0.1.1"
 
 # ─── File Arrays ──────────────────────────────────────────────────────────────
 
@@ -121,7 +121,7 @@ function Write-Box {
     }
 
     # Bottom border
-    Write-Host ("╰" + "─" * $totalWidth + "╯") -ForegroundColor $Color
+    Write-Host ("╰" + "─" * ($totalWidth - 2) + "╯") -ForegroundColor $Color
 }
 
 # ─── Help ────────────────────────────────────────────────────────────────────
@@ -148,14 +148,14 @@ Options:
 $Banner = @'
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗          ║
-║   ██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗         ║
-║   ██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║         ║
-║   ╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║         ║
-║    ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝         ║
-║     ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝          ║
+║   ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗           ║
+║   ██║   ██║██║██╔══██╗██║   ██║╚══███╔╝██╔═══██╗          ║
+║   ██║   ██║██║██████╔╝██║   ██║  ███╔╝ ██║   ██║          ║
+║   ╚██╗ ██╔╝██║██╔══██╗██║   ██║ ███╔╝  ██║   ██║          ║
+║    ╚████╔╝ ██║██████╔╝╚██████╔╝███████╗╚██████╔╝          ║
+║     ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝           ║
 ║                                                           ║
-║               Agentic Framework                           ║
+║          Agentic Framework for Ai coding                  ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 '@
@@ -200,10 +200,8 @@ if ($Update) {
 
   # Build and display the update check box
   $BoxLines = @()
-  $BoxLines += "Current:  $Version  ($InstalledCommit)"
-  if ($LatestCommit) {
-    $BoxLines += "Latest:   $ScriptVersion  ($LatestCommit)"
-  }
+  $BoxLines += "Current:  $Version"
+  $BoxLines += "Latest:   $ScriptVersion"
   $BoxLines += "Status:   $Status"
   $BoxLines += ""
   $BoxLines += "Installed: $InstalledFull"
@@ -345,17 +343,12 @@ if (Get-Command "claude" -ErrorAction SilentlyContinue) {
 # ─── Done ────────────────────────────────────────────────────────────────────
 
 $Action = if ($Update) { "updated" } else { "installed" }
-$StatusLine = "✅ Vibuzo $ScriptVersion ${Action} successfully!"
 
-# Build content lines (compact box)
-$BoxLines = @()
-if ($Update) {
-    $BoxLines += ""
-    $BoxLines += "Location:  $InstallTarget"
-    $BoxLines += ""
-} else {
-    $BoxLines += "Location:  $InstallTarget"
-    $BoxLines += ""
+$BoxLines = @(
+    "Location:  $InstallTarget"
+    ""
+)
+if (-not $Update) {
     $BoxLines += "── Next Steps ──"
     $BoxLines += "1. Restart opencode → select Vibuzo"
     $BoxLines += "2. Run /context init to scaffold project memory"
@@ -363,24 +356,6 @@ if ($Update) {
     $BoxLines += "💡 github.com/AB-techsolutionists/vibuzo"
 }
 
-# Calculate box width from content
-$maxLineLen = $StatusLine.Length + 2
-foreach ($l in $BoxLines) { if ($l.Length -gt $maxLineLen) { $maxLineLen = $l.Length } }
-$innerWidth = $maxLineLen + 4
-
 Write-Host ""
-# Top border with title
-$titleSection = " $StatusLine "
-$sideDashes = ($innerWidth - $titleSection.Length) / 2
-Write-Host ("╭" + "─" * [Math]::Floor($sideDashes) + $titleSection + "─" * [Math]::Ceiling($sideDashes) + "╮")
-# Content lines
-foreach ($l in $BoxLines) {
-    if ($l -eq "") {
-        Write-Host ("│" + "".PadRight($innerWidth) + "│")
-    } else {
-        Write-Host ("│ " + $l.PadRight($innerWidth - 2) + " │")
-    }
-}
-# Bottom border
-Write-Host ("╰" + "─" * $innerWidth + "╯")
+Write-Box "✅ Vibuzo $ScriptVersion ${Action} successfully!" $BoxLines
 Write-Host ""
