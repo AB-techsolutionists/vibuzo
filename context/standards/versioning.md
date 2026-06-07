@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.2.2** — Fixed missing `agents/deepsearcher.md` causing installer 404; added deepsearcher to path-rewriting and Claude Code copy in both installers (2026-06-07).
 **0.2.1** — Enhance context system with YAML frontmatter, semantic search, and auto-pattern scanning (2026-06-07).
 **0.2.0** — New `/commit` command: full pipeline (spec → plan → tasks → implementation → review) creating a 13-step command for version bump → release notes → structured commit → no-push report. Fixed `/spec` feature naming (short kebab-case names). Saved 4 context files (installer-visual-language, feature-naming-convention, structured-commit-body-convention, commit-workflow-pattern).
 **0.1.5** — Box renderer double-line borders: all installer boxes (`Write-Box`/`print_box`) now use `╔═╗║╚═╝` matching the VIBUZO banner style, fixed at 59-char total width, status lines wrapped in header boxes.
@@ -59,7 +60,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 The single source of truth for the version is the **`VERSION` file at the repo root**. Both installers fetch this file from GitHub at runtime:
 
 ```
-0.2.1
+0.2.2
 ```
 
 Installers write a local copy to **`.opencode/.vibuzo-version`** with install metadata:
@@ -87,9 +88,10 @@ Installers write a local copy to **`.opencode/.vibuzo-version`** with install me
 
 1. Edit the `VERSION` file at the repo root — change the `0.x.x` value
 2. Update `context/standards/versioning.md` — update the "Current Version" section
-3. Commit and push to GitHub
+3. Update `README.md` — add a row to the "Version History" table
+4. Commit and push to GitHub
 
-**That's 2 spots total.** Installers fetch dynamically — no manual installer changes needed for a version bump.
+**That's 3 spots total.** Installers fetch dynamically — no manual installer changes needed for a version bump.
 
 ## Related
 

@@ -126,6 +126,8 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.2** | Fixed missing `agents/deepsearcher.md` causing installer 404; added deepsearcher to path-rewriting and Claude Code copy in both installers. |
+| **0.2.1** | Context system enhancement: YAML frontmatter (tags/scope/when) on all 27 context files, 3-factor semantic search, auto-pattern scanning after sessions, and Context Auto-Query before implementations. |
 | **0.2.0** | New `/commit` command — 13-step automation for version bump → release notes → structured commit → no-push report. Fixed `/spec` feature naming (short kebab-case extraction). Saved 4 context files (3 new standards + commit workflow pattern). |
 | **0.1.5** | Box renderer double-line borders — all installer boxes now use `╔═╗║╚═╝` matching the VIBUZO banner, fixed 59-char width, status lines wrapped in header boxes, emoji icons removed from update status. |
 | **0.1.4** | Box renderer emoji width fix — `Write-Box` and `print_box` handle emoji double-width rendering (U+2700–U+27BF), right border alignment fixed in both installers. |
