@@ -257,11 +257,13 @@ foreach ($file in $CommandFiles) {
     Invoke-WebRequest -Uri "$RawUrl/commands/$file.md" -OutFile "$CommandsDir\$file.md"
 }
 
-Write-Host ""
-Write-Host "  ─── Project ─────────────────────────────" -ForegroundColor $Cyan
+# AGENTS.md is skipped during updates — user's file is preserved as-is
+# On fresh install, download with preservation logic
+if (-not $Update) {
+  Write-Host ""
+  Write-Host "  ─── Project ─────────────────────────────" -ForegroundColor $Cyan
 
-# Download AGENTS.md to project root (if local) or to opencode dir (if global)
-if (-not $Global) {
+  if (-not $Global) {
   # ─── Check AGENTS.md status ────────────────────────────────────
   $ExistingContent = $null
   $UserRules = $null
@@ -310,7 +312,7 @@ if (-not $Global) {
 } else {
   Write-Host "  ✓ AGENTS.md (fresh copy)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "$OpenCodeDir\AGENTS.md"
-}
+} }
 
 # ─── Path Rewriting (global install only) ────────────────────────────────────
 

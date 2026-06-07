@@ -266,11 +266,13 @@ for f in "${COMMAND_FILES[@]}"; do
     curl -fsSL "$RAW_URL/commands/$f.md" -o "$COMMANDS_DIR/$f.md"
 done
 
-echo ""
-printf "  ${CYAN}─── Project ─────────────────────────────${NC}\n"
+# AGENTS.md is skipped during updates — user's file is preserved as-is
+# On fresh install, download with preservation logic
+if [ "$UPDATE" = false ]; then
+    echo ""
+    printf "  ${CYAN}─── Project ─────────────────────────────${NC}\n"
 
-# Download AGENTS.md to project root (if local) or to opencode dir (if global)
-if [ "$GLOBAL" = false ]; then
+    if [ "$GLOBAL" = false ]; then
     # ─── Check AGENTS.md status ────────────────────────────────────
     EXISTING_CONTENT=""
     USER_RULES=""
@@ -314,6 +316,7 @@ if [ "$GLOBAL" = false ]; then
 else
     printf "  ${GREEN}✓ AGENTS.md (fresh copy)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o "$OPENCODE_DIR/AGENTS.md"
+fi
 fi
 
 # ─── Path Rewriting (global install only) ────────────────────────────────────
