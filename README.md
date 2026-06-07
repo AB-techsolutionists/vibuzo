@@ -89,12 +89,21 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 ```
 your-project/
-├── AGENTS.md                     ← Read by 25+ tools (commit this)
+├── AGENTS.md                     ← Universal agent manifest (commit this!)
 └── .opencode/
-    ├── agent/core/vibuzo.md      ← Main agent (pick this from dropdown)
-    ├── agent/core/deepveloper.md  ← Subtask agent (/spec)
-    └── commands/                  ← 9 command files (spec, context*, session*)
+    ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
+    ├── agent/core/deepveloper.md ← Subtask agent (used by /spec)
+    └── commands/                 ← 9 command templates
 ```
+
+**Key file: `AGENTS.md`**
+
+This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) where to find your agents and their instructions. It's read by your editor's agent system at startup.
+
+- **After installation**, restart your editor
+- **In the agent dropdown**, you'll see **Vibuzo** — select it
+- **AGENTS.md is already set up**, no manual edits needed (unless you customize agents later)
+- **Always commit AGENTS.md** to your repo so all agents use the same setup
 
 ## Commands
 

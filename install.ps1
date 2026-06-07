@@ -110,7 +110,12 @@ function Write-Box {
     foreach ($line in $Lines) {
         if ($line.Length -gt $maxLen) { $maxLen = $line.Length }
     }
-    $contentWidth = [Math]::Max($maxLen, $Title.Length + 2)
+    
+    # Ensure box is at least as wide as title
+    $titleDisplayLen = $Title.Length + 2
+    if ($titleDisplayLen -gt $maxLen) { $maxLen = $titleDisplayLen }
+    
+    $contentWidth = $maxLen
     $totalWidth = $contentWidth + 4  # 2 spaces padding each side
 
     # Top border with title
@@ -126,7 +131,7 @@ function Write-Box {
         Write-Host ("│ " + $line.PadRight($contentWidth) + " │") -ForegroundColor $Color
     }
 
-    # Bottom border
+    # Bottom border: exact width
     Write-Host ("╰" + "─" * ($totalWidth - 2) + "╯") -ForegroundColor $Color
 }
 
@@ -342,14 +347,20 @@ $Action = if ($Update) { "updated" } else { "installed" }
 $BoxLines = @(
     "Location:  $InstallTarget"
     ""
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    ""
+    "→ Restart opencode and select Vibuzo"
+    "  from the agent dropdown."
+    ""
+    "→ First time? Run /context init"
+    "  to set up project memory."
+    ""
+    "→ Start building with:"
+    "  /spec [feature description]"
+    ""
+    "💡 Learn more:"
+    "   github.com/AB-techsolutionists/vibuzo"
 )
-if (-not $Update) {
-    $BoxLines += "── Next Steps ──"
-    $BoxLines += "1. Restart opencode → select Vibuzo"
-    $BoxLines += "2. Run /context init to scaffold project memory"
-    $BoxLines += "3. Start building with /spec [feature description]"
-    $BoxLines += "💡 github.com/AB-techsolutionists/vibuzo"
-}
 
 Write-Host ""
 Write-Box "✅ Vibuzo $ScriptVersion ${Action} successfully!" $BoxLines

@@ -366,9 +366,17 @@ echo ""
 print_box "✅ Vibuzo ${SCRIPT_VERSION} ${ACTION} successfully!" \
     "Location:  $INSTALL_TARGET" \
     "" \
-    "── Next Steps ──" \
-    "1. Restart opencode → select Vibuzo" \
-    "2. Run /context init to scaffold project memory" \
-    "3. Start building with /spec [feature description]" \
-    "💡 github.com/AB-techsolutionists/vibuzo"
+    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" \
+    "" \
+    "→ Restart opencode and select Vibuzo" \
+    "  from the agent dropdown." \
+    "" \
+    "→ First time? Run /context init" \
+    "  to set up project memory." \
+    "" \
+    "→ Start building with:" \
+    "  /spec [feature description]" \
+    "" \
+    "💡 Learn more:" \
+    "   github.com/AB-techsolutionists/vibuzo"
 echo ""
