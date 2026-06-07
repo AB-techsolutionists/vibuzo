@@ -50,6 +50,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/session-workflow-discipline.md` — Pattern for session workflow discipline: trigger points, anti-patterns, and rules for preventing information loss and session file overlap
 - `patterns/large-document-size-gate.md` — Pattern for gating large generated documents with size preview and user approval before writing
 - `patterns/commit-workflow-pattern.md` — Pattern for the 3-gate commit workflow (action preview → execute → commit preview → git commit → report with no push)
+- `patterns/installer-content-preservation-dedup.md` — Pattern for checking fresh download content before appending preserved user content to prevent duplication on re-install
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
