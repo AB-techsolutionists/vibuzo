@@ -26,7 +26,7 @@ All Vibuzo command parameters use `[descriptive prompts]` inside square brackets
 | `/context find` | `/context find [type your search..]` |
 | `/context append` | `/context append [enter context]` |
 | `/add-context` | `/add-context [enter statement]` |
-| `/session-view` | `/session-view [enter topic, type your search..]` |
+| `/session init` | `/session init` |
 
 ## Rules
 

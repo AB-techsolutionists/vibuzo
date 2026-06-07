@@ -1,9 +1,17 @@
 ---
-description: Generate a comprehensive session summary capturing every action, change, and decision
+description: Generate a session report or initialize agent context
 agent: Vibuzo
 ---
 
-## RUN: `/session` summary
+## Mode Routing
+
+Read `$ARGUMENTS` to determine the mode:
+
+- **Empty or `report`** → Execute `## Report Mode` below
+- **`init`** → Execute `## Init Mode` below
+- **Anything else** → Print: "Usage: /session (generate report) or /session init (initialize agent context)"
+
+## Report Mode
 
 Do these steps NOW:
 
@@ -11,7 +19,27 @@ Do these steps NOW:
 
 2. **Generate a title** — extract 2-4 key words from the session, convert to kebab-case. Check `context/sessions/` for existing files with the same title today. If collision, append `-2`, `-3`, etc.
 
-3. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — use the template below. Fill **EVERY section** (except Session Compaction — leave it as a placeholder for `/compact` paste). If a section has no entries, write "None" explicitly.
+3. **Generate YAML frontmatter** — before writing the file, construct a frontmatter block with:
+
+    - `title:` — the kebab-case title from step 2 (same as the filename)
+    - `date:` — today's date in YYYY-MM-DD format
+    - `tags:` — derive from the session content: include file types changed, keywords from summaries, and common vibuzo tags (versioning, commands, context, installer, docs, sessions, compaction, agent, spec). Pick 3-6 relevant tags.
+    - `status:` — `complete` (always, since this runs at session end)
+
+    The frontmatter block looks like:
+    ```yaml
+    ---
+    title: <kebab-case-title>
+    date: YYYY-MM-DD
+    tags:
+      - <tag1>
+      - <tag2>
+      - <tag3>
+    status: complete
+    ---
+    ```
+
+4. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — prepend the frontmatter block from step 3 above the template below, with a blank line separating them. Fill **EVERY section** (except Session Compaction — leave it as a placeholder for `/compact` paste). If a section has no entries, write "None" explicitly.
 
     ```markdown
     # <title>
@@ -74,7 +102,7 @@ Do these steps NOW:
     > Paste `/compact` output here. This replaces Chronological Log, File Manifest, Commands Invoked, and State — compaction captures those better. Everything above covers what compaction misses: intent, constraints, categorized progress, forward decisions, forward context, and hot files.
     ```
 
-4. **Update the timeline** at `context/sessions/index.md` — if it doesn't exist, create it with:
+5. **Update the timeline** at `context/sessions/index.md` — if it doesn't exist, create it with:
     ```
     # Session Timeline
 
@@ -88,7 +116,7 @@ Do these steps NOW:
     | YYYY-MM-DD | HH:MM | `<title>` | <one-line summary> |
     ```
 
-5. **Print this status box**:
+6. **Print this status box**:
     ```
     ── SESSION ──────────────────────────────────────
     Saved:   context/sessions/YYYY-MM-DD-<title>.md
@@ -98,7 +126,27 @@ Do these steps NOW:
     ────────────────────────────────────────────────
     ```
 
-6. **Scan for patterns and save candidates** — using the session file and conversation history, scan for knowledge worth preserving permanently:
+7. **Check for previous session compaction content** — after the new session file is saved, check if the previous latest session has real compaction content:
+
+    a. Find the session file that was latest BEFORE this new one — query `context/sessions/index.md` for the last entry in the timeline that is NOT the one just added. Get the file name from that entry.
+
+    b. If a previous session exists, read it and search for a `## Session Compaction` section.
+
+    c. If found, check if the content below that heading is real (not the default placeholder text `> Paste \`/compact\` output here...`). A simple check: if the content contains more than just placeholder text, it has real compaction.
+
+    d. If real compaction content is found, present this hint:
+    ```
+    ── SESSION HINT ────────────────────────
+    Previous session compaction content found.
+    Load it as working context? (y/N):
+    ────────────────────────────────────────
+    ```
+
+    e. If "y": instruct the user: "Copy the Session Compaction block from <filename> and paste it as starting context for your next session."
+
+    f. If "N" or anything else: skip silently. No hint is shown if there's no previous session or no real compaction content.
+
+8. **Scan for patterns and save candidates** — using the session file and conversation history, scan for knowledge worth preserving permanently:
 
     - Read the **Forward Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
     - Read the **Session Summary** and **Progress** — any workaround, trick, or insight that isn't documented elsewhere
@@ -131,7 +179,7 @@ Do these steps NOW:
     - If "N" (or anything else): skip to next candidate
     - After all candidates are processed, append a `## Patterns Detected` section to the session file listing all candidates and whether they were saved or skipped
 
-7. **Instruct the user on the workflow** — after the status box, print:
+9. **Instruct the user on the workflow** — after the pattern scan, print:
 
     ```
     ── NEXT STEPS ──────────────────────────
@@ -153,3 +201,41 @@ Do these steps NOW:
     - Paste as starting context
     ─────────────────────────────────────────
     ```
+
+## Init Mode
+
+Do these steps NOW:
+
+1. **Read `context/index.md`** — parse the ## Files section to discover all available context files. Count how many files exist under architecture/, standards/, patterns/, and sessions/.
+
+2. **Verify context directories** — use `Test-Path` to check each directory exists:
+   - `context/architecture/`
+   - `context/standards/`
+   - `context/patterns/`
+   - `context/sessions/`
+
+3. **Scaffold missing directories** — for any directory that doesn't exist, run:
+   ```
+   New-Item -ItemType Directory -Path "context/<name>" -Force
+   ```
+   Then create a `.gitkeep` file inside it to preserve it in git.
+
+4. **Read the session timeline** — read `context/sessions/index.md`. If it exists, find the last (bottom-most) row in the timeline table to identify the latest session file. Collect:
+   - Total number of sessions listed
+   - Latest session date and file name
+
+5. **Read the latest session summary** — locate and read the most recent session file from step 4. If no sessions exist yet, report "No previous sessions found".
+
+6. **Check for compaction content** — in the latest session file (if it exists), search for a `## Session Compaction` section. Check if the content beneath it is real content (not the default placeholder text referencing `/compact`). If real compaction content exists, note it for the report.
+
+7. **Report what was loaded** — print a concise summary:
+   ```
+   ── SESSION INIT ──────────────────────
+   Context files:  <N> total across all directories
+   Sessions:       <N> total, latest: YYYY-MM-DD-<title>.md
+   Dirs scaffolded: <list any that were missing>
+   Compaction:     <found | not found | no previous session>
+   ──────────────────────────────────────
+   ```
+
+8. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.

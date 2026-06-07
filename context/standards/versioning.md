@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.2.7** — Session management enhancement: restructured session.md (report + init only), deleted session-view/timeline, updated installers and docs, added YAML frontmatter to reports, synced context standards (2026-06-07).
 **0.2.6** — Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19) (2026-06-07).
 **0.2.5** — Finalize session documentation and save installer-content-preservation-dedup pattern (2026-06-07).
 **0.2.4** — Fixed installer AGENTS.md rules duplication: added dedup guard to both installers; cleaned up duplicate rule in AGENTS.md (2026-06-07).

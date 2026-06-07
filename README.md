@@ -9,13 +9,13 @@
   ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ 
 ```
 
-Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory, with approval gates including on each step.
+Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates between every phase.
 
 | Mechanism | What it does |
 |-----------|-------------|
 | **Full engineering pipeline** | Plan before touching code, delegate complex features via `/spec` with approval gates between every phase, and commit with structured messages. |
 | **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. Sessions auto-load, auto-query, search (`/context find`), scan conversations (`/context append`), and mine summaries (`/context harvest`). |
-| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available via `/session view` and `/session timeline`. |
+| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available for review. `/session init` initializes agent context at session start. |
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
 
@@ -67,7 +67,7 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
 
 4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
 
-5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Browse past reports with `/session view [session name or date..]` and `/session timeline`.
+5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Run `/session init` at the start of a new session to load agent context.
 
 ## How Vibuzo Learns Over Time
 
@@ -92,7 +92,7 @@ your-project/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Implementation sub-agent (used by /spec)
     ├── agent/core/deepsearcher.md← Research sub-agent (used by /research, @deepsearcher)
-    └── commands/                 ← 10 command templates
+    └── commands/                 ← 8 command templates
 ```
 
 **Key file: `AGENTS.md`**
@@ -115,14 +115,14 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | `/context append` | Scan current conversation for knowledge to save | `/context append` |
 | `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context We use pnpm not npm` |
 | `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
-| `/session` | Generate a full session report | `/session` |
-| `/session view` | Browse past session reports | `/session view dark-mode` or `/session view 2026-06-05` |
-| `/session timeline` | Show all session reports chronologically | `/session timeline` |
+| `/session` | Generate a comprehensive session summary capturing every action, change, and decision | `/session` |
+| `/session init` | Initialize agent context (read-only, no file created) | `/session init` |
 
 ## Version History
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.7** | Session management enhancement: restructured session.md (report + init only), deleted session-view/timeline, updated installers and docs, added YAML frontmatter to reports. |
 | **0.2.6** | Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19). |
 | **0.2.5** | Finalize session documentation and save installer-content-preservation-dedup pattern. |
 | **0.2.4** | Fixed installer AGENTS.md rules duplication: added dedup guard to both installers; cleaned up duplicate rule in AGENTS.md. |

@@ -36,7 +36,6 @@ AGENT_FILES=(
 COMMAND_FILES=(
     "spec" "add-context" "context-init" "context-find"
     "context-harvest" "context-append" "research" "session"
-    "session-view" "session-timeline"
 )
 
 # ─── Arg Parsing ─────────────────────────────────────────────────────────────

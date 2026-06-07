@@ -18,7 +18,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
-│   ├── commands/                 ← 10 command files (research, spec, context*, session*)
+│   ├── commands/                 ← 9 command files (research, spec, context*, session)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
@@ -89,7 +89,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Commands
 
-Vibuzo ships with **10 commands** — one `.md` file per command. Each has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
+Vibuzo ships with **8 `.md` command files** (one file per command, plus `@deepsearcher` inline and `/session init` as part of `session.md`) — 10 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
 
 | Command | Purpose | Runs |
 |---------|---------|------|
@@ -101,9 +101,8 @@ Vibuzo ships with **10 commands** — one `.md` file per command. Each has a YAM
 | `/context append` | Scan conversation for context-worthy patterns, present candidates | main |
 | `/context harvest` | Mine session summaries for patterns to promote to permanent context | main |
 | `/context find <topic>` | Search context files by semantic relevance | main |
-| `/session` | Generate comprehensive session summary, then scan for patterns | main |
-| `/session view <ref>` | Browse past summaries by name or date | main |
-| `/session timeline [month]` | Show all summaries chronologically | main |
+| `/session` | Generate a comprehensive session summary capturing every action, change, and decision | main |
+| `/session init` | Initialize agent context (read-only, no file created) | main |
 
 **How they work:** Each file is an `.md` with YAML frontmatter. The `Do these steps NOW:` block is the imperative instruction. `$ARGUMENTS` is replaced with the user's text after the command. Commands with `subtask: true` run in the background; others run in the main session with full conversation history.
 
@@ -164,10 +163,9 @@ At natural breakpoints:
 
 **Golden workflow:** `/session → /compact → paste into Session Compaction → /new` in that order. After `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it into the Session Compaction section in the session file. When starting a new session, copy that block as your starting context. Never `/compact` without `/session` first.
 
-**Session sub-commands:**
-- `/session` — generate and save a comprehensive summary
-- `/session view [session name or date..]` — browse past summaries
-- `/session timeline` — show all summaries chronologically
+**Session commands:**
+- `/session` — generate and save a comprehensive session summary
+- `/session init` — initialize agent context (read-only, no file created)
 
 ## Approval Gates
 

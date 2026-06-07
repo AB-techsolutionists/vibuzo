@@ -59,8 +59,7 @@ $AgentFiles = @(
 
 $CommandFiles = @(
     "spec", "add-context", "context-init", "context-find",
-    "context-harvest", "context-append", "research", "session",
-    "session-view", "session-timeline"
+    "context-harvest", "context-append", "research", "session"
 )
 
 # ─── Terminal Colors ─────────────────────────────────────────────────────────
