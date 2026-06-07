@@ -43,7 +43,11 @@ $VersionFile = "$OpenCodeDir\.vibuzo-version"
 
 # ─── Version ─────────────────────────────────────────────────────────────────
 
-$ScriptVersion = "0.1.1"
+try {
+  $ScriptVersion = (Invoke-RestMethod -Uri "$RawUrl/VERSION" -ErrorAction Stop).Trim()
+} catch {
+  $ScriptVersion = "unknown"
+}
 
 # ─── File Arrays ──────────────────────────────────────────────────────────────
 
@@ -111,8 +115,10 @@ function Write-Box {
 
     # Top border with title
     $titleSection = " $Title "
-    $sideDashes = ($totalWidth - $titleSection.Length) / 2
-    $top = "╭" + "─" * [Math]::Floor($sideDashes) + $titleSection + "─" * [Math]::Ceiling($sideDashes) + "╮"
+    $dashSpace = $totalWidth - 2 - $titleSection.Length
+    $leftDashes = [Math]::Floor($dashSpace / 2)
+    $rightDashes = $dashSpace - $leftDashes
+    $top = "╭" + "─" * $leftDashes + $titleSection + "─" * $rightDashes + "╮"
     Write-Host $top -ForegroundColor $Color
 
     # Content lines
@@ -171,30 +177,25 @@ if ($Update) {
   }
 
   $CurrentVersion = Get-Content $VersionFile
-  # Format: 0.x.x | yyyy-MM-dd HH:mm sssssss mode
+  # Format: 0.x.x | yyyy-MM-dd HH:mm mode
   $VersionAndRest = $CurrentVersion -split ' \| '
   $Version = $VersionAndRest[0]
   $OldParts = $VersionAndRest[1] -split ' '
   $InstalledDate = $OldParts[0]
   $InstalledTime = $OldParts[1]
-  $InstalledCommit = $OldParts[2]
-  $InstalledMode = $OldParts[3]
+  $InstalledMode = $OldParts[2]
 
   # Format date for display: "Jun 07 at 00:42"
   $InstalledFull = Get-Date "$InstalledDate $InstalledTime" -Format "MMM dd 'at' HH:mm"
 
-  # Try to fetch latest commit SHA from GitHub API (best-effort)
-  $LatestCommit = ""
+  # Compare versions
   $UpToDate = $false
-  try {
-    $LatestCommit = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
-    if ($LatestCommit -eq $InstalledCommit) {
-      $Status = "✅ Up to date"
-      $UpToDate = $true
-    } else {
-      $Status = "⬆️ Update available"
-    }
-  } catch {
+  if ($Version -eq $ScriptVersion) {
+    $Status = "✅ Up to date"
+    $UpToDate = $true
+  } elseif ($ScriptVersion -ne "unknown") {
+    $Status = "⬆️ Update available"
+  } else {
     $Status = "⚠️ Could not check"
   }
 
@@ -319,13 +320,7 @@ if ($Global) {
 
 $Now = Get-Date -Format "yyyy-MM-dd HH:mm"
 $Mode = if ($Global) { "global" } else { "local" }
-# Try to get the latest commit SHA (best-effort)
-try {
-  $Sha = (Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/commits/$Branch" -ErrorAction Stop).sha.Substring(0,7)
-} catch {
-  $Sha = "unknown"
-}
-"$ScriptVersion | $Now $Sha $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
+"$ScriptVersion | $Now $Mode" | Out-File -FilePath $VersionFile -Encoding ASCII
 
 # ─── Tool Detection ──────────────────────────────────────────────────────────
 

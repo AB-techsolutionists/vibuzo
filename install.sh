@@ -23,7 +23,7 @@ RAW_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
 
 # ─── Version ─────────────────────────────────────────────────────────────────
 
-SCRIPT_VERSION="0.1.1"
+SCRIPT_VERSION=$(curl -fsSL "$RAW_URL/VERSION" 2>/dev/null || echo "unknown")
 
 # ─── File Arrays ──────────────────────────────────────────────────────────────
 
@@ -123,14 +123,19 @@ print_box() {
         fi
     done
 
-    # Total width: left border (1) + space (1) + content + space (1) + right border (1)
+    # Total width: left border + space + content + space + right border
     local total=$((max_len + 4))
-
-    # Top border: left + dashes + title + dashes + right
+    
+    # Title section with spaces
     local title_section=" $title "
     local title_len=${#title_section}
-    local left_dashes=$(((total - 2 - title_len) / 2))
-    local right_dashes=$((total - 2 - title_len - left_dashes))
+    
+    # Dashes: (total - 2 corners - title) split evenly
+    local dash_space=$((total - 2 - title_len))
+    local left_dashes=$((dash_space / 2))
+    local right_dashes=$((dash_space - left_dashes))
+    
+    # Top border
     printf "${CYAN}╭"
     for ((i=0; i<left_dashes; i++)); do printf "─"; done
     printf "%s" "$title_section"
@@ -145,7 +150,7 @@ print_box() {
         printf " ${CYAN}│${NC}\n"
     done
 
-    # Bottom border: left + dashes + right
+    # Bottom border
     printf "${CYAN}╰"
     for ((i=0; i<total - 2; i++)); do printf "─"; done
     printf "╯${NC}\n"
@@ -180,10 +185,10 @@ if [ "$UPDATE" = true ]; then
     fi
 
     read -r CURRENT_VERSION_LINE < "$VERSION_FILE"
-    # Format: 0.x.x | yyyy-MM-dd HH:mm sssssss mode
+    # Format: 0.x.x | yyyy-MM-dd HH:mm mode
     VERSION="${CURRENT_VERSION_LINE%% | *}"
     REST="${CURRENT_VERSION_LINE#* | }"
-    read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_COMMIT INSTALLED_MODE <<< "$REST"
+    read -r INSTALLED_DATE INSTALLED_TIME INSTALLED_MODE <<< "$REST"
 
     # Format date for display: "Jun 07 at 00:42"
     MONTH_NUM="${INSTALLED_DATE#*-}"; MONTH_NUM="${MONTH_NUM%%-*}"
@@ -197,18 +202,13 @@ if [ "$UPDATE" = true ]; then
     DAY=$((10#$DAY))
     INSTALLED_FULL="$MONTH $DAY at $INSTALLED_TIME"
 
-    # Try to fetch latest commit SHA from GitHub API (best-effort)
-    LATEST_COMMIT=""
+    # Compare versions
     UP_TO_DATE=false
-    LATEST_COMMIT=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/null \
-        | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4 | cut -c1-7 || true)
-    if [ -n "$LATEST_COMMIT" ]; then
-        if [ "$LATEST_COMMIT" = "$INSTALLED_COMMIT" ]; then
-            STATUS="✅ Up to date"
-            UP_TO_DATE=true
-        else
-            STATUS="⬆️ Update available"
-        fi
+    if [ "$VERSION" = "$SCRIPT_VERSION" ]; then
+        STATUS="✅ Up to date"
+        UP_TO_DATE=true
+    elif [ "$SCRIPT_VERSION" != "unknown" ]; then
+        STATUS="⬆️ Update available"
     else
         STATUS="⚠️ Could not check"
     fi
@@ -344,13 +344,7 @@ SHA=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/nul
     | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4 | cut -c1-7 || true)
 if [ -z "$SHA" ]; then
     SHA="unknown"
-fi
-echo "${SCRIPT_VERSION} | $NOW $SHA $MODE" > "$VERSION_FILE"
-
-# ─── Tool Detection ──────────────────────────────────────────────────────────
-
-# Claude Code
-if command -v claude &>/dev/null; then
+echo "${SCRIPT_VERSION} | $NOWhen
     echo ""
     printf "  ${CYAN}─── Integrations ─────────────────────────${NC}\n"
     echo ""
