@@ -48,7 +48,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 The single source of truth for the version is the **`VERSION` file at the repo root**. Both installers fetch this file from GitHub at runtime:
 
 ```
-0.1.2
+0.2.0
 ```
 
 Installers write a local copy to **`.opencode/.vibuzo-version`** with install metadata:

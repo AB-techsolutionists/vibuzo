@@ -67,7 +67,7 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
    ```
    Search later with `/context find [type your search..]`.
 
-4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
+4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase. When you're ready to commit, use `/commit` to bump the version, generate release notes, and write a structured commit message automatically.
 
 5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Browse past reports with `/session view [session name or date..]` and `/session timeline`.
 
@@ -93,7 +93,7 @@ your-project/
 └── .opencode/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Subtask agent (used by /spec)
-    └── commands/                 ← 9 command templates
+    └── commands/                 ← 10 command templates
 ```
 
 **Key file: `AGENTS.md`**
@@ -110,6 +110,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | Command | What it does | Example |
 |---------|-------------|---------|
 | `/spec` | 5-phase feature pipeline with approval gates | `/spec dark mode toggle` |
+| `/commit` | Bump version, update release notes, commit with structured message (no push) | `/commit "feat: add dark mode"` |
 | `/context init` | Scaffold context directory structure | `/context init` |
 | `/context find` | Search saved project knowledge | `/context find naming conventions` |
 | `/context harvest` | Mine session summaries for patterns to promote | `/context harvest` |
@@ -123,6 +124,9 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.0** | New `/commit` command — 13-step automation for version bump → release notes → structured commit → no-push report. Fixed `/spec` feature naming (short kebab-case extraction). Saved 4 context files (3 new standards + commit workflow pattern). |
+| **0.1.5** | Box renderer double-line borders — all installer boxes now use `╔═╗║╚═╝` matching the VIBUZO banner, fixed 59-char width, status lines wrapped in header boxes, emoji icons removed from update status. |
+| **0.1.4** | Box renderer emoji width fix — `Write-Box` and `print_box` handle emoji double-width rendering (U+2700–U+27BF), right border alignment fixed in both installers. |
 | **0.1.3** | Documentation sync: version history in README, fixed `install.sh` syntax corruption, updated agent version check. |
 | **0.1.2** | Dynamic version fetching from `VERSION` file on GitHub. Removed commit SHA tracking and 7 wrapper scripts. Fixed PowerShell command syntax. Enhanced success messages with arrow-bulleted guidance. |
 | **0.1.1** | Complete installer visual redesign: grouped comma-separated file lists, compact update check box, compact success box, single-line AGENTS.md status, consistent rounded box style. |
