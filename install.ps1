@@ -305,7 +305,14 @@ if (-not $Global) {
     Set-Content -Path "AGENTS.md" -Value "$ExistingContent`n`n---`n`n$VibuzoContent"
   } elseif ($UserRules) {
     # Vibuzo file with custom rules below marker — re-append them
-    Add-Content -Path "AGENTS.md" -Value "`n$UserRules"
+    # First check if the fresh download already has content below the marker
+    $FreshLines = Get-Content "AGENTS.md"
+    $FreshMarker = $FreshLines.IndexOf("─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───")
+    $HasExistingRules = $FreshMarker -ge 0 -and $FreshMarker -lt $FreshLines.Length - 1 -and
+                        ($FreshLines[($FreshMarker + 1)..($FreshLines.Length - 1)] -join "`n").Trim() -ne ""
+    if (-not $HasExistingRules) {
+      Add-Content -Path "AGENTS.md" -Value "`n$UserRules"
+    }
   }
 } else {
   Write-Host "  ✓ AGENTS.md (fresh copy)" -ForegroundColor $Green

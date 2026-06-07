@@ -309,7 +309,11 @@ if [ "$GLOBAL" = false ]; then
         printf "%s\n\n---\n\n%s" "$EXISTING_CONTENT" "$VIBUZO_CONTENT" > AGENTS.md
     elif [ -n "$USER_RULES" ]; then
         # Vibuzo file with custom rules below marker — re-append them
-        printf "\n%s" "$USER_RULES" >> AGENTS.md
+        # First check if the fresh download already has content below the marker
+        FRESH_AFTER_MARKER=$(awk '/PASTE YOUR CUSTOM RULES BELOW THIS LINE/{found=1; next} found' AGENTS.md 2>/dev/null)
+        if [ -z "$(echo "$FRESH_AFTER_MARKER" | tr -d '[:space:]')" ]; then
+            printf "\n%s" "$USER_RULES" >> AGENTS.md
+        fi
     fi
 else
     printf "  ${GREEN}✓ AGENTS.md (fresh copy)${NC}\n"
