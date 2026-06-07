@@ -20,7 +20,11 @@ Internal commands MUST be:
 
 1. **Kept in `commands/`** — the file stays in the repo for maintainer use
 2. **Excluded from installer arrays** — not listed in `$CommandFiles` (PowerShell) or `COMMAND_FILES` (Bash)
-3. **Excluded from `.opencode/commands/`** — not synced to the installer-managed user directory
+3. **Manually synced to `.opencode/commands/`** — opencode loads commands from `.opencode/commands/`, so internal dev commands must be copied manually to be accessible. Use:
+   ```powershell
+   Copy-Item "commands\<name>.md" ".opencode\commands\<name>.md"
+   ```
+   The installer will NOT overwrite it (excluded from its array), so the manual copy persists.
 4. **Excluded from user-facing docs** — not listed in AGENTS.md commands table, README.md commands table, or any command count
 5. **Marked in the tree** — the `commands/` directory count in user docs reflects user-facing files only, not the repo total
 
@@ -33,5 +37,5 @@ The repo's `commands/` directory will have more files than the user-facing count
 `commands/new-release.md` is an internal command:
 - Present in `commands/` (11 files) but user-facing count is 10
 - Not in `$CommandFiles` / `COMMAND_FILES` arrays
-- Not in `.opencode/commands/`
+- Manually copied to `.opencode/commands/` for maintainer use
 - Not in AGENTS.md or README.md command tables
