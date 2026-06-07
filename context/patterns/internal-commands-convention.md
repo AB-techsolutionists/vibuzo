@@ -1,0 +1,37 @@
+---
+tags:
+  - commands
+  - internal
+  - installer
+  - dev-tools
+scope: How to handle commands that are for Vibuzo development only (not user-facing)
+when: Creating a command that modifies Vibuzo's own files (VERSION, versioning.md, README.md)
+---
+
+# Internal Commands Convention
+
+> Commands for Vibuzo maintainer use only stay in `commands/` but are excluded from user-facing installation and documentation.
+
+## Rule
+
+If a command modifies Vibuzo's own framework files (VERSION, versioning.md, README.md, installer files), it is an **internal command** — useful only to Vibuzo maintainers developing the framework itself. End users have no use for it.
+
+Internal commands MUST be:
+
+1. **Kept in `commands/`** — the file stays in the repo for maintainer use
+2. **Excluded from installer arrays** — not listed in `$CommandFiles` (PowerShell) or `COMMAND_FILES` (Bash)
+3. **Excluded from `.opencode/commands/`** — not synced to the installer-managed user directory
+4. **Excluded from user-facing docs** — not listed in AGENTS.md commands table, README.md commands table, or any command count
+5. **Marked in the tree** — the `commands/` directory count in user docs reflects user-facing files only, not the repo total
+
+## Impact on Counts
+
+The repo's `commands/` directory will have more files than the user-facing count in AGENTS.md and README.md. This is intentional — the count reflects what users get after installation.
+
+## Example
+
+`commands/new-release.md` is an internal command:
+- Present in `commands/` (11 files) but user-facing count is 10
+- Not in `$CommandFiles` / `COMMAND_FILES` arrays
+- Not in `.opencode/commands/`
+- Not in AGENTS.md or README.md command tables

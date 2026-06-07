@@ -58,7 +58,7 @@ $AgentFiles = @(
 )
 
 $CommandFiles = @(
-    "spec", "commit", "add-context", "context-init", "context-find",
+    "spec", "add-context", "context-init", "context-find",
     "context-harvest", "context-append", "research", "session",
     "session-view", "session-timeline"
 )

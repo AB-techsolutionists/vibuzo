@@ -9,15 +9,13 @@
   ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ 
 ```
 
-**Vibuzo is an agentic framework for AI coding agents.** AI agents make two common mistakes: they plan and execute at the same time (leading to half-baked solutions), and they forget everything between sessions (leading to repeated explanations). Vibuzo solves both.
+Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
 
-**How it works:**
-
-1. **Planning-first workflow** — Vibuzo always proposes a plan before touching code. You review and approve each step. Complex features are delegated to a dedicated implementation agent (Deepveloper) via `/spec`, with approval gates between every phase.
-
-2. **Persistent context system** — your project's conventions, architecture decisions, and patterns are saved to `context/` via `/add-context`. Every new session and every agent automatically reads them at startup — no more re-explaining your stack.
-
-3. **Session reports** — at natural breakpoints, `/session` generates a full markdown report of everything that happened: what was requested, what was built, every file changed, every decision made, and why. These reports live in `context/sessions/` and are available to future sessions and any agent via `/session view` and `/session timeline`.
+| Mechanism | What it does |
+|-----------|-------------|
+| **Full engineering pipeline** | Plan before touching code, delegate complex features via `/spec` with approval gates between every phase, and commit with structured messages. |
+| **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. Sessions auto-load, auto-query, search (`/context find`), scan conversations (`/context append`), and mine summaries (`/context harvest`). |
+| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available via `/session view` and `/session timeline`. |
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
 
@@ -67,7 +65,7 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
    ```
    Search later with `/context find [type your search..]`.
 
-4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase. When you're ready to commit, use `/commit` to bump the version, generate release notes, and write a structured commit message automatically.
+4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
 
 5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Browse past reports with `/session view [session name or date..]` and `/session timeline`.
 
@@ -94,7 +92,7 @@ your-project/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Implementation sub-agent (used by /spec)
     ├── agent/core/deepsearcher.md← Research sub-agent (used by /research, @deepsearcher)
-    └── commands/                 ← 11 command templates
+    └── commands/                 ← 10 command templates
 ```
 
 **Key file: `AGENTS.md`**
@@ -111,7 +109,6 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | Command | What it does | Example |
 |---------|-------------|---------|
 | `/spec` | 5-phase feature pipeline with approval gates | `/spec dark mode toggle` |
-| `/commit` | Bump version, update release notes, commit with structured message (no push) | `/commit "feat: add dark mode"` |
 | `/context init` | Scaffold context directory structure | `/context init` |
 | `/context find` | Search saved project knowledge | `/context find naming conventions` |
 | `/context harvest` | Mine session summaries for patterns to promote | `/context harvest` |
@@ -126,6 +123,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.6** | Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19). |
 | **0.2.5** | Finalize session documentation and save installer-content-preservation-dedup pattern. |
 | **0.2.4** | Fixed installer AGENTS.md rules duplication: added dedup guard to both installers; cleaned up duplicate rule in AGENTS.md. |
 | **0.2.3** | Restructured AGENTS.md with updated tagline, tree, and commands section; added README step to `/commit` bump workflow; added command execution instructions. |

@@ -18,7 +18,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
-│   ├── commands/                 ← 11 command files (commit, research, spec, context*, session*)
+│   ├── commands/                 ← 10 command files (research, spec, context*, session*)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
@@ -89,7 +89,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Commands
 
-Vibuzo ships with **11 commands** — one `.md` file per command. Each has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
+Vibuzo ships with **10 commands** — one `.md` file per command. Each has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
 
 | Command | Purpose | Runs |
 |---------|---------|------|
@@ -104,7 +104,6 @@ Vibuzo ships with **11 commands** — one `.md` file per command. Each has a YAM
 | `/session` | Generate comprehensive session summary, then scan for patterns | main |
 | `/session view <ref>` | Browse past summaries by name or date | main |
 | `/session timeline [month]` | Show all summaries chronologically | main |
-| `/commit [description]` | Bump version, update release notes, structured commit (no push) | main |
 
 **How they work:** Each file is an `.md` with YAML frontmatter. The `Do these steps NOW:` block is the imperative instruction. `$ARGUMENTS` is replaced with the user's text after the command. Commands with `subtask: true` run in the background; others run in the main session with full conversation history.
 

@@ -25,22 +25,23 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 | Position | Name | Counts | Max | Rollover To |
 |----------|------|--------|-----|-------------|
-| 3rd | Patch | 0 → 19 | 19 | Next minor |
-| 2nd | Minor | 0 → 9 | 9 | 1.0.0 |
+| 3rd | Patch | 0 → 9 | 9 | Next minor |
+| 2nd | Minor | 0 → 19 | 19 | 1.0.0 |
 | 1st | Major | 0 | — | 1.0.0 at minor rollover |
 
 ### Example Progression
 
 ```
-0.0.0  through 0.0.19   ← development (patch 0→19)
-0.1.0  through 0.1.19   ← post-dev refinement (minor 1, patch 0→19)
+0.0.0  through 0.0.9    ← development (patch 0→9)
+0.1.0  through 0.1.9    ← post-dev refinement (minor 1, patch 0→9)
 ...
-0.9.0  through 0.9.19   ← post-dev refinement (minor 9 max)
+0.19.0 through 0.19.9   ← post-dev refinement (minor 19 max)
 1.0.0                    ← first major live release
 ```
 
 ### Current Version
 
+**0.2.6** — Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19) (2026-06-07).
 **0.2.5** — Finalize session documentation and save installer-content-preservation-dedup pattern (2026-06-07).
 **0.2.4** — Fixed installer AGENTS.md rules duplication: added dedup guard to both installers; cleaned up duplicate rule in AGENTS.md (2026-06-07).
 **0.2.3** — Update AGENTS.md structure, tagline, and commands section; update commit command to include README in bump workflow; add execution instructions for commands (2026-06-07).
@@ -55,8 +56,8 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 - **Bump trigger:** Every push to the GitHub source repository (`origin/main`), not individual file changes.
 - **Patch bump:** Refinements, bug fixes, documentation updates, small changes between pushes.
-- **Minor bump:** Significant changes, new features, command additions, agent changes. Can also trigger from a patch rollover (19 → 0, minor +1).
-- **Major bump:** When minor reaches 9 and rolls over → `1.0.0` (first live release).
+- **Minor bump:** Significant changes, new features, command additions, agent changes. Can also trigger from a patch rollover (9 → 0, minor +1).
+- **Major bump:** When minor reaches 19 and rolls over → `1.0.0` (first live release).
 
 ## Canonical Source
 

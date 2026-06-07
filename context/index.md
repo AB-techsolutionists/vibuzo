@@ -51,6 +51,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/large-document-size-gate.md` — Pattern for gating large generated documents with size preview and user approval before writing
 - `patterns/commit-workflow-pattern.md` — Pattern for the 3-gate commit workflow (action preview → execute → commit preview → git commit → report with no push)
 - `patterns/installer-content-preservation-dedup.md` — Pattern for checking fresh download content before appending preserved user content to prevent duplication on re-install
+- `patterns/internal-commands-convention.md` — Pattern for commands that live in commands/ but are excluded from installer and user-facing docs (Vibuzo dev-only)
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
