@@ -1,3 +1,13 @@
+---
+tags:
+  - deepsearcher
+  - research
+  - invocation-modes
+  - subagent
+scope: Using Deepsearcher for web research in various modes
+when: Deciding how to invoke Deepsearcher or documenting its invocation behavior
+---
+
 # Deepsearcher Invocation Modes
 
 **Date:** 2026-06-06

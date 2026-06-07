@@ -1,3 +1,14 @@
+---
+tags:
+  - session
+  - workflow
+  - compaction
+  - golden-path
+  - lifecycle
+scope: Session management lifecycle and compaction workflow
+when: Managing session lifecycle, running /session, or preparing for /compact
+---
+
 # Session Workflow: `/session → /compact → paste into Session Compaction → /new`
 
 A reliable pattern for preserving session state across compaction and new-session cycles using the Session Compaction placeholder in every session file.

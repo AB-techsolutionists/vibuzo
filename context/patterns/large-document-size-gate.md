@@ -1,3 +1,13 @@
+---
+tags:
+  - large-documents
+  - size-gate
+  - approval
+  - chunking
+scope: Generating large files or documents exceeding ~100 lines
+when: About to generate or write a file that will exceed approximately 100 lines
+---
+
 # Large Document Size Gate
 
 When generating large documents (e.g., a comprehensive README, full framework guide, or extensive documentation), always check with the user about size before writing.

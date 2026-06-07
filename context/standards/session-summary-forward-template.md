@@ -1,3 +1,14 @@
+---
+tags:
+  - session
+  - summary
+  - template
+  - compaction
+  - forward-planning
+scope: Generating session summaries via the /session command
+when: Writing or reviewing the session summary file format
+---
+
 # Session Summary Forward Template
 
 The session summary file (`context/sessions/YYYY-MM-DD-<title>.md`) uses a forward-looking 7-section template designed to complement `/compact` output — never duplicate it.

@@ -30,11 +30,12 @@ SCRIPT_VERSION=$(curl -fsSL "$RAW_URL/VERSION" 2>/dev/null || echo "unknown")
 AGENT_FILES=(
     "vibuzo.md"
     "deepveloper.md"
+    "deepsearcher.md"
 )
 
 COMMAND_FILES=(
     "spec" "commit" "add-context" "context-init" "context-find"
-    "context-harvest" "context-append" "session"
+    "context-harvest" "context-append" "research" "session"
     "session-view" "session-timeline"
 )
 

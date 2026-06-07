@@ -1,3 +1,14 @@
+---
+tags:
+  - architecture
+  - commands
+  - split-files
+  - routing
+  - execution-mode
+scope: Command file structure, routing, and execution mode design
+when: Creating new commands or modifying command file architecture
+---
+
 # Split-File Command Pattern
 
 > Commands with subcommands should use standalone sub-files, not a monolithic file with multiple `## RUN:` sections, and not a routing-only main file.

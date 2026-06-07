@@ -98,28 +98,38 @@ Do these steps NOW:
     ────────────────────────────────────────────────
     ```
 
-6. **Extract context candidates from the new session file** — using the file you just created, scan for knowledge worth preserving permanently:
+6. **Scan for patterns and save candidates** — using the session file and conversation history, scan for knowledge worth preserving permanently:
 
     - Read the **Forward Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
     - Read the **Session Summary** and **Progress** — any workaround, trick, or insight that isn't documented elsewhere
     - Check if any **Hot Files** were newly created context files — already saved; skip. But if a new pattern emerged from modifications, it may be candidate material
+    - Also scan the conversation for:
+      - New conventions established (e.g., "we use pnpm not npm")
+      - Architecture decisions made
+      - Repeated code patterns
+      - Tooling preferences discovered
 
-    Then present candidates in this format:
+    For each candidate, generate:
+    - Suggested file name (kebab-case, under `context/standards/` or `context/patterns/`)
+    - Suggested frontmatter (tags, scope, when)
+    - Brief content summary
+
+    Then present candidates **one at a time** in this format:
     ```
-    ── CONTEXT CANDIDATES ────────────────
-    From your session summary, I see these candidates for permanent context:
-
-    1. <title> — <1-2 sentence description>
-       → context/<type>/<filename>.md
-
-    2. <title> — <1-2 sentence description>
-       → context/<type>/<filename>.md
-
-    (0 = skip all)
-    ──────────────────────────────────────
+    ── PATTERN CANDIDATE ──────────────────
+    Candidate 1 of <N>
+    Name: <filename.md>
+    Tags: <tag1, tag2, tag3>
+    Scope: <description>
+    When: <trigger>
+    Content: <1-2 sentence summary>
+    ───────────────────────────────────────
+    Save this pattern? (y/N/edit):
     ```
-
-    Wait for the user to respond with numbers (e.g., "1", "1 2", "0") before saving anything. Do NOT save or create any files without explicit approval.
+    - If "y": save the file to the appropriate `context/` directory with generated frontmatter + content, update `context/index.md`
+    - If "edit": let the user modify name/tags/scope/when, then save
+    - If "N" (or anything else): skip to next candidate
+    - After all candidates are processed, append a `## Patterns Detected` section to the session file listing all candidates and whether they were saved or skipped
 
 7. **Instruct the user on the workflow** — after the status box, print:
 

@@ -1,3 +1,13 @@
+---
+tags:
+  - architecture
+  - installer
+  - update
+  - version-check
+scope: Installer update flow, version comparison, and file management
+when: Developing the installer or modifying the update mechanism
+---
+
 # Installer Update Mechanism
 
 The `--update` flag (`-Update` in PowerShell) provides a safe way to update an existing Vibuzo installation without blindly overwriting files.

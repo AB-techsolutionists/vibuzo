@@ -2,6 +2,8 @@
 
 This directory contains project-level context files that are automatically loaded at the start of every new session. Agents read this index to discover available knowledge.
 
+> **All context files now include structured YAML frontmatter** with `tags:`, `scope:`, and `when:` fields. This frontmatter enables semantic search (via `/context find`) and automatic context relevance scanning (via Context Auto-Query) for more accurate knowledge retrieval.
+
 **At session start, after reading this file, the agent MUST:**
 1. Read `sessions/index.md` to find the latest (last) entry
 2. Read that latest session summary file
@@ -24,8 +26,9 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 
 ## How to Add Context
 
-- **Manually**: Create a `.md` file in the appropriate directory
-- **Via command**: `/add-context <type> <name> <description>`
+- **Manually**: Create a `.md` file in the appropriate directory with YAML frontmatter (`tags:`, `scope:`, `when:`)
+- **Via command**: `/add-context <type> <name> <description>` — prompts for frontmatter fields automatically
+- **From sessions**: `/session` scans for patterns and presents save candidates with auto-generated frontmatter
 - **From sessions**: `/context harvest` promotes session patterns to permanent files
 
 ## Files

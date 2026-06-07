@@ -44,6 +44,31 @@ permission:
 5. **Review output** — after Deepveloper reports back, verify against acceptance criteria before summarizing to user.
 6. **Single task per handoff** — delegate one well-defined task at a time. No batched or ambiguous handoffs.
 
+## Context Auto-Query
+
+Before starting ANY implementation task (file creation, modification, deletion, or code generation), you MUST auto-scan the context system for relevant knowledge. This does NOT apply to simple queries, analysis-only requests, conversation, or `/` commands.
+
+### Auto-Scan Rules
+
+1. **Read context/index.md** to discover all available context files
+2. **For each file listed**, read its YAML frontmatter to extract `tags:`, `scope:`, `when:` fields
+3. **Score relevance** by counting keyword/tag overlap between the task description and each file's scope/tags/when:
+   - Each matching tag/keyword = +1 score point
+   - Matching scope description = +2 score points
+   - Matching when trigger = +2 score points
+4. **Act on score**:
+   - **>2 matches**: Load the full file content into working context. Present as:
+     ```
+     [Context] Found <N> relevant files: loading <file1>, <file2>...
+     ```
+   - **1-2 matches**: List as "Possibly relevant" with the file name and scope, allowing the user to opt-in
+   - **No matches** (>2 threshold): Still list the top 3 scoring candidates with their scope so the user knows what's available
+5. **Skip cases** — Do NOT trigger auto-scan for:
+   - Simple questions or analysis requests
+   - Conversation-only interactions
+   - `/` commands (context commands, session commands, spec, etc.)
+6. **Presentation** — Results are displayed inline without user prompting. The loaded context becomes part of the working session for the implementation task.
+
 ## When to Execute vs. Delegate
 
 | Situation | Action |

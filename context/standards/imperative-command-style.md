@@ -1,3 +1,13 @@
+---
+tags:
+  - commands
+  - imperative-style
+  - instructions
+  - command-files
+scope: Writing command files in the commands/ directory
+when: Creating or editing .md files in commands/ directory
+---
+
 # Imperative Command Style
 
 ## Rule

@@ -1,3 +1,13 @@
+---
+tags:
+  - feature-naming
+  - kebab-case
+  - spec
+  - naming
+scope: Running /spec command and creating feature specifications
+when: Running /spec to create a new feature from a description
+---
+
 # Feature Naming Convention
 
 **Date:** 2026-06-07

@@ -1,3 +1,13 @@
+---
+tags:
+  - agent-behavior
+  - reporting
+  - summary
+  - next-steps
+scope: All agent task completions and result reporting
+when: After completing any work, reporting results back to the user
+---
+
 # Agent Report Summary and Next Steps
 
 > Agents should always report summary and next steps at the end of their work.

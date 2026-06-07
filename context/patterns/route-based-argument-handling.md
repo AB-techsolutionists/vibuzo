@@ -1,3 +1,13 @@
+---
+tags:
+  - routing
+  - arguments
+  - failed-pattern
+  - command-design
+scope: Command file architecture and routing decisions
+when: Considering multi-section command files or routing-only dispatch files
+---
+
 # Route-Based Argument Handling — ⚠️ FAILED PATTERN
 
 > **This pattern does NOT work.** It is kept as a record of what was tried and why it failed.

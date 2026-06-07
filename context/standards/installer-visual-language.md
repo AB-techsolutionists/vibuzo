@@ -1,3 +1,15 @@
+---
+tags:
+  - installer
+  - visual-style
+  - terminal-output
+  - colors
+  - powershell
+  - bash
+scope: install.ps1 and install.sh visual output formatting
+when: Modifying installer script output or terminal formatting
+---
+
 # Installer Visual Language
 
 Both `install.ps1` and `install.sh` use a consistent visual language for terminal output. Any changes to the installers must maintain this scheme.

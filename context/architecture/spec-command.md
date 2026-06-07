@@ -1,3 +1,14 @@
+---
+tags:
+  - architecture
+  - spec
+  - pipeline
+  - phases
+  - feature-development
+scope: Feature development pipeline and the /spec command flow
+when: Running or modifying the /spec command pipeline
+---
+
 # `/spec` Command — Architecture Decision
 
 ## Date

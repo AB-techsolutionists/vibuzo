@@ -1,3 +1,14 @@
+---
+tags:
+  - commit
+  - git
+  - commit-message
+  - conventions
+  - natural-language
+scope: Auto-generating git commit bodies
+when: Generating commit messages via /commit or writing commit bodies manually
+---
+
 # Structured Commit Body Convention
 
 **Date:** 2026-06-07

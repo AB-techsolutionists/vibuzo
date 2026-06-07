@@ -1,3 +1,13 @@
+---
+tags:
+  - agents-md
+  - installer
+  - preservation
+  - custom-rules
+scope: AGENTS.md file management during installer updates
+when: Running installer update or modifying AGENTS.md preservation logic
+---
+
 # AGENTS.md Preservation Convention
 
 Standard for preserving user customizations to AGENTS.md across Vibuzo installer updates.

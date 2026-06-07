@@ -18,7 +18,7 @@ Vibuzo is an agentic framework for AI coding agents — it gives you a planning-
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
-│   ├── commands/                 ← 10 command files (research, spec, context*, session*)
+│   ├── commands/                 ← 11 command files (commit, research, spec, context*, session*)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
@@ -66,6 +66,31 @@ This chain ensures every new session automatically picks up where the last one l
 - **Mine sessions:** `/context harvest` — read all session summaries and present patterns worth promoting to permanent context
 - **Search:** `/context find <topic>` — exact match first, then broader keyword search
 - **Update index:** After creating, modifying, or deleting any file under `context/`, update `context/index.md` immediately
+
+## Context Auto-Query
+
+Before starting ANY implementation task (file creation, modification, deletion, or code generation), the agent MUST auto-scan the context system for relevant knowledge. This does NOT apply to simple queries, analysis-only requests, conversation, or `/` commands.
+
+### Auto-Scan Rules
+
+1. **Read context/index.md** to discover all available context files
+2. **For each file listed**, read its YAML frontmatter to extract `tags:`, `scope:`, `when:` fields
+3. **Score relevance** by counting keyword/tag overlap between the task description and each file's scope/tags/when:
+   - Each matching tag/keyword = +1 score point
+   - Matching scope description = +2 score points
+   - Matching when trigger = +2 score points
+4. **Act on score**:
+   - **>2 matches**: Load the full file content into working context. Present as:
+     ```
+     [Context] Found <N> relevant files: loading <file1>, <file2>...
+     ```
+   - **1-2 matches**: List as "Possibly relevant" with the file name and scope, allowing the user to opt-in
+   - **No matches** (>2 threshold): Still list the top 3 scoring candidates with their scope so the user knows what's available
+5. **Skip cases** — Do NOT trigger auto-scan for:
+   - Simple questions or analysis requests
+   - Conversation-only interactions
+   - `/` commands (context commands, session commands, spec, etc.)
+6. **Presentation** — Results are displayed inline without user prompting. The loaded context becomes part of the working session for the implementation task.
 
 ## Session Management
 

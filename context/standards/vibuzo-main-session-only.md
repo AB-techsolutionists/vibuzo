@@ -1,3 +1,13 @@
+---
+tags:
+  - vibuzo
+  - main-session
+  - subtask
+  - agent-orchestration
+scope: Agent configuration and command file frontmatter
+when: Creating or editing command files with agent YAML frontmatter
+---
+
 # Vibuzo Main-Session Only
 
 **Date:** 2026-06-06

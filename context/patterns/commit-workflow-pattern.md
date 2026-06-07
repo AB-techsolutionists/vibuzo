@@ -1,3 +1,14 @@
+---
+tags:
+  - commit
+  - git
+  - workflow
+  - approval-gates
+  - no-push
+scope: Multi-step state-mutating command workflows
+when: Designing commands that perform multiple state-mutating steps with user approval
+---
+
 # Commit Workflow Pattern
 
 **Date:** 2026-06-07

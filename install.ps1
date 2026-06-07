@@ -52,13 +52,14 @@ try {
 # ─── File Arrays ──────────────────────────────────────────────────────────────
 
 $AgentFiles = @(
-    @{ Name = "vibuzo.md";      Desc = "main agent" }
-    @{ Name = "deepveloper.md"; Desc = "execution specialist" }
+    @{ Name = "vibuzo.md";        Desc = "main agent" }
+    @{ Name = "deepveloper.md";   Desc = "execution specialist" }
+    @{ Name = "deepsearcher.md";  Desc = "research specialist" }
 )
 
 $CommandFiles = @(
     "spec", "commit", "add-context", "context-init", "context-find",
-    "context-harvest", "context-append", "session",
+    "context-harvest", "context-append", "research", "session",
     "session-view", "session-timeline"
 )
 

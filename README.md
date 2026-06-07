@@ -92,7 +92,8 @@ your-project/
 ├── AGENTS.md                     ← Universal agent manifest (commit this!)
 └── .opencode/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
-    ├── agent/core/deepveloper.md ← Subtask agent (used by /spec)
+    ├── agent/core/deepveloper.md ← Implementation sub-agent (used by /spec)
+    ├── agent/core/deepsearcher.md← Research sub-agent (used by /research, @deepsearcher)
     └── commands/                 ← 11 command templates
 ```
 
@@ -116,6 +117,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | `/context harvest` | Mine session summaries for patterns to promote | `/context harvest` |
 | `/context append` | Scan current conversation for knowledge to save | `/context append` |
 | `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context We use pnpm not npm` |
+| `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
 | `/session` | Generate a full session report | `/session` |
 | `/session view` | Browse past session reports | `/session view dark-mode` or `/session view 2026-06-05` |
 | `/session timeline` | Show all session reports chronologically | `/session timeline` |

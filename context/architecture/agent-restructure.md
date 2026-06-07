@@ -1,3 +1,14 @@
+---
+tags:
+  - architecture
+  - agents
+  - vibuzo
+  - deepveloper
+  - restructuring
+scope: System architecture and agent role definitions
+when: Understanding or modifying the agent system architecture
+---
+
 # Agent Restructure — Architecture Decision
 
 ## Date

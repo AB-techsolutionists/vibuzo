@@ -1,3 +1,14 @@
+---
+tags:
+  - architecture
+  - deepsearcher
+  - research
+  - spec-pipeline
+  - subagent
+scope: Research integration in the /spec pipeline and Deepsearcher agent
+when: Working with Deepsearcher agent or the /spec research stage
+---
+
 # Deepsearcher Research Stage
 
 **Date:** 2026-06-06

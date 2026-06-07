@@ -1,3 +1,13 @@
+---
+tags:
+  - opencode
+  - mirror-files
+  - installer
+  - source-of-truth
+scope: Management of .opencode/ directory files
+when: Needing to update files in the .opencode/ directory
+---
+
 # .opencode/ Mirror Files Integrity
 
 **Date:** 2026-06-07

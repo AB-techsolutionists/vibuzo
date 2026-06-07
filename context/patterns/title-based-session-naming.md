@@ -1,3 +1,13 @@
+---
+tags:
+  - session
+  - naming
+  - filenames
+  - kebab-case
+scope: Session summary file naming conventions
+when: Generating session summary filenames
+---
+
 # Title-Based Session Naming
 
 ## Pattern

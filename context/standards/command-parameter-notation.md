@@ -1,3 +1,13 @@
+---
+tags:
+  - parameters
+  - notation
+  - command-syntax
+  - documentation
+scope: All command files, README, and documentation referencing command parameters
+when: Writing command documentation or defining command parameters
+---
+
 # Command Parameter Notation
 
 All Vibuzo command parameters use `[descriptive prompts]` inside square brackets. This notation applies across every command file, README, and documentation reference.

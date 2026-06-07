@@ -1,3 +1,13 @@
+---
+tags:
+  - terminology
+  - renaming
+  - refactoring
+  - process
+scope: Renaming terms and identifiers across the codebase
+when: Deciding to rename a poorly chosen term or fix a naming inconsistency
+---
+
 # Terminology Change Process
 
 A repeatable process for renaming a term across the entire codebase without leaving stale references.

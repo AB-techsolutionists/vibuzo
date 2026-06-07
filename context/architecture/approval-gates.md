@@ -1,3 +1,14 @@
+---
+tags:
+  - architecture
+  - approval-gates
+  - permissions
+  - security
+  - levels
+scope: Approval gate configuration, levels, and behavior
+when: Configuring approval levels or understanding gate behavior rules
+---
+
 # Approval Gates — Architecture Decision
 
 ## Date

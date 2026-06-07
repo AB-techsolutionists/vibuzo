@@ -1,3 +1,13 @@
+---
+tags:
+  - arguments
+  - command-templates
+  - routing
+  - template-engine
+scope: Editing command template files that use $ARGUMENTS
+when: Creating or editing command template .md files that use $ARGUMENTS
+---
+
 # $ARGUMENTS Usage in Command Templates
 
 ## Rule

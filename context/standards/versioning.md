@@ -1,3 +1,13 @@
+---
+tags:
+  - versioning
+  - semver
+  - version-bump
+  - release
+scope: Version tracking, bumping, and release management
+when: Bumping version numbers or checking the version scheme
+---
+
 # Vibuzo Versioning
 
 **Date:** 2026-06-07
@@ -31,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.2.1** — Enhance context system with YAML frontmatter, semantic search, and auto-pattern scanning (2026-06-07).
 **0.2.0** — New `/commit` command: full pipeline (spec → plan → tasks → implementation → review) creating a 13-step command for version bump → release notes → structured commit → no-push report. Fixed `/spec` feature naming (short kebab-case names). Saved 4 context files (installer-visual-language, feature-naming-convention, structured-commit-body-convention, commit-workflow-pattern).
 **0.1.5** — Box renderer double-line borders: all installer boxes (`Write-Box`/`print_box`) now use `╔═╗║╚═╝` matching the VIBUZO banner style, fixed at 59-char total width, status lines wrapped in header boxes.
 **0.1.4** — Box renderer emoji width bug fix: `Write-Box` (PowerShell) and `print_box` (Bash) now account for emoji double-width rendering (U+2700–U+27BF characters count as 1 char but render as 2 terminal columns).
@@ -48,7 +59,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 The single source of truth for the version is the **`VERSION` file at the repo root**. Both installers fetch this file from GitHub at runtime:
 
 ```
-0.2.0
+0.2.1
 ```
 
 Installers write a local copy to **`.opencode/.vibuzo-version`** with install metadata:

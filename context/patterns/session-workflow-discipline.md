@@ -1,3 +1,14 @@
+---
+tags:
+  - session
+  - discipline
+  - anti-patterns
+  - workflow
+  - best-practices
+scope: Session management discipline, rules, and common mistakes
+when: Managing sessions and avoiding common workflow mistakes
+---
+
 # Session Workflow Discipline
 
 The correct workflow rhythm for session management to prevent information loss and file overlap.
