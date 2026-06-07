@@ -26,25 +26,25 @@ Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, G
 **macOS / Linux (bash):**
 ```bash
 # Local (per project)
-cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash
 
 # Global (all projects)
 curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --global
 
 # Update existing
-cd your-project && curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --update
+curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --update
 ```
 
 **Windows (PowerShell 7+):**
 ```powershell
 # Local (per project)
-cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
+irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1 | iex
 
 # Global (all projects)
-pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Global
+irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1 | iex -Global
 
 # Update existing
-cd your-project; pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }" -Update
+irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1 | iex -Update
 ```
 
 ## Quick Start
