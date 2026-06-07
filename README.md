@@ -38,13 +38,13 @@ curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/ins
 **Windows (PowerShell 7+):**
 ```powershell
 # Local (per project)
-irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1 | iex
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) }"
 
 # Global (all projects)
-irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1 | iex -Global
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Global"
 
 # Update existing
-irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1 | iex -Update
+pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Update"
 ```
 
 ## Quick Start
