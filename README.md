@@ -93,7 +93,7 @@ your-project/
 └── .opencode/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Subtask agent (used by /spec)
-    └── commands/                 ← 10 command templates
+    └── commands/                 ← 11 command templates
 ```
 
 **Key file: `AGENTS.md`**
