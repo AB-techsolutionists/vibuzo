@@ -66,7 +66,10 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/opencode-mirror-files-integrity.md` — Standard: never modify `.opencode/` files directly (installer-managed only)
 - `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
 - `standards/session-summary-forward-template.md` — Standard for the 7-section forward-looking session summary template: what each section covers, trim rules, naming convention, and how it complements /compact without duplication
+- `standards/context-auto-query.md` — Standard for when and how the agent auto-scans context before implementation tasks
+- `standards/semantic-context-search.md` — Standard for the 3-factor TF-IDF + Levenshtein + keyword scoring formula used by /context find
 - `standards/structured-commit-body-convention.md` — Standard for auto-generating natural-language commit bodies that explain every file change in present tense, imperative mood, for developers to read smoothly
+- `standards/yaml-frontmatter-convention.md` — Standard for YAML frontmatter structure (tags, scope, when) on all context files
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)
