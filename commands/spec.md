@@ -9,10 +9,10 @@ Run the full feature development pipeline for: $ARGUMENTS
 
 1. Parse `$ARGUMENTS` as the feature description.
 2. Derive the feature name:
-   - Take `$ARGUMENTS` (the full description) as the feature basis
-   - Convert the entire description to kebab-case (e.g., "dark mode toggle" → "dark-mode-toggle")
+   - Analyze `$ARGUMENTS` to extract the core feature intent — find the 2-4 key words that define what is being built
+   - Generate a short, meaningful kebab-case name (e.g., "add user authentication with JWT and refresh tokens" → "user-authentication", "i wanna introduce a new /commit command that bumps version" → "commit-command")
    - For single-word descriptions, use the word as-is (e.g., "auth" → "auth")
-   - Handle both quoted (`/spec "dark mode toggle"`) and unquoted (`/spec dark mode toggle`) input — in both cases, the full description is used
+   - Handle both quoted (`/spec "dark mode toggle"`) and unquoted (`/spec dark mode toggle`) input — in both cases, the full description is used for analysis, only the shortened name goes in the directory path
 3. Create `specs/<feature>/` directory if it doesn't exist.
 4. Check `approval_level` from Vibuzo's YAML frontmatter. If level ≥ 1, gates are active. If level is 0, skip all gates and auto-proceed.
 

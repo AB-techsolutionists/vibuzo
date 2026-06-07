@@ -46,6 +46,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/session-workflow.md` — Pattern for `/session → /compact → paste into Session Compaction → /new` golden workflow: session file includes a placeholder section for pasting opencode's `/compact` output, used as starting context for the next session
 - `patterns/session-workflow-discipline.md` — Pattern for session workflow discipline: trigger points, anti-patterns, and rules for preventing information loss and session file overlap
 - `patterns/large-document-size-gate.md` — Pattern for gating large generated documents with size preview and user approval before writing
+- `patterns/commit-workflow-pattern.md` — Pattern for the 3-gate commit workflow (action preview → execute → commit preview → git commit → report with no push)
 
 ### Standards
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
@@ -57,10 +58,12 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
 - `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
 - `standards/deepsearcher-invocation-modes.md` — Standard for the three Deepsearcher invocation modes (@Deepsearcher, /research, /spec Research stage) and their file-creation rules
+- `standards/feature-naming-convention.md` — Standard for deriving short meaningful kebab-case feature names from /spec descriptions (analyze → extract 2-4 key words → kebab-case)
 - `standards/vibuzo-main-session-only.md` — Vibuzo must never be spawned as a subtask; only Deepsearcher and Deepveloper use subtask: true
 - `standards/opencode-mirror-files-integrity.md` — Standard: never modify `.opencode/` files directly (installer-managed only)
 - `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
 - `standards/session-summary-forward-template.md` — Standard for the 7-section forward-looking session summary template: what each section covers, trim rules, naming convention, and how it complements /compact without duplication
+- `standards/structured-commit-body-convention.md` — Standard for auto-generating natural-language commit bodies that explain every file change in present tense, imperative mood, for developers to read smoothly
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)

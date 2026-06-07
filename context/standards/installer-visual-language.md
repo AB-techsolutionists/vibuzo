@@ -19,22 +19,22 @@ Both `install.ps1` and `install.sh` use a consistent visual language for termina
 - Always printed first, before any other output
 
 ### Install/Update Title
-- Single colored line: `🔧 Installing Vibuzo 0.x.x (local)...` (cyan) or `⬆️  Updating Vibuzo 0.x.x...` (yellow)
-- Version number always shown in the install/update title line
+- Wrapped in a header box using `Write-Box`/`print_box` with title "Installing" or "Updating"
+- Version number always shown in the content line inside the box
 
 ### Update Mode (if applicable)
-Single compact rounded box with version comparison:
+Single double-line box with version comparison, fixed 59-char width matching the banner:
 ```
-╭────── Vibuzo Update Check ──────╮
-│  Current:  0.0.19  (04638cc)    │
-│  Latest:   0.1.0   (bac3e89)    │
-│  Status:   ⬆️ Update available  │
-│                                  │
-│  Installed: Jun 07 at 00:42     │
-│  Location:  .opencode/           │
-╰──────────────────────────────────╯
+╔══════ Vibuzo Update Check ═══════════════════════════════╗
+║  Current:  0.1.4                                         ║
+║  Latest:   0.1.5                                         ║
+║  Status:   Update available                              ║
+║                                                           ║
+║  Installed: Jun 07 at 14:13                              ║
+║  Location:  .opencode                                    ║
+╚═══════════════════════════════════════════════════════════╝
 ```
-- Three status modes: `✅ Up to date`, `⬆️ Update available`, `⚠️ Could not check`
+- Three status modes: `Up to date`, `Update available`, `Could not check` (no emoji icons — removed for clean box alignment)
 - "Up to date" exits immediately after the box
 - "Could not check" only shows Current line (no Latest)
 - Date uses short format (`Mon DD at HH:MM`)
@@ -69,30 +69,37 @@ Three status messages:
 The interactive prompt (`Proceed with AGENTS.md? (y/N)`) appears after the status line without any decorative box.
 
 ### Success Box (Install)
-Compact rounded box, ~9 lines total:
+Double-line box, fixed 59-char width matching the banner:
 ```
-╭───── ✅ Vibuzo 0.1.0 installed successfully! ─────╮
-│  Location:  local (.opencode/)                      │
-│                                                     │
-│  ── Next Steps ──                                   │
-│  1. Restart opencode → select Vibuzo               │
-│  2. Run /context init to scaffold project memory    │
-│  3. Start building with /spec [feature description] │
-│  💡 github.com/AB-techsolutionists/vibuzo          │
-╰─────────────────────────────────────────────────────╯
+╔════ ✅ Vibuzo 0.1.5 installed successfully! ═════════════╗
+║  Location:  local (.opencode/)                           ║
+║                                                           ║
+║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                  ║
+║                                                           ║
+║  → Restart opencode and select Vibuzo                    ║
+║    from the agent dropdown.                              ║
+║                                                           ║
+║  → First time? Run /context init                         ║
+║    to set up project memory.                             ║
+║                                                           ║
+║  → Start building with:                                  ║
+║    /spec [feature description]                            ║
+║                                                           ║
+║  💡 Learn more:                                          ║
+║     github.com/AB-techsolutionists/vibuzo                ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
 ```
 
 ### Success Box (Update)
-Compact rounded box, ~5 lines total:
+Double-line box, fixed 59-char width matching the banner:
 ```
-╭───── ✅ Vibuzo 0.1.0 updated successfully! ──────╮
-│                                                     │
-│  Location:  local (.opencode/)                      │
-│                                                     │
-╰─────────────────────────────────────────────────────╯
+╔════ ✅ Vibuzo 0.1.5 updated successfully! ═══════════════╗
+║  Location:  local (.opencode/)                           ║
+╚═══════════════════════════════════════════════════════════╝
 ```
 - No "Next Steps" section for updates
-- Box dynamically sizes to fit content width
+- Box width is fixed at 59 chars (matching the VIBUZO banner), not dynamic
 
 ## Helper Functions
 
@@ -109,8 +116,9 @@ function Write-Section {
 ```powershell
 function Write-Box {
     param([string]$Title, [string[]]$Lines, [string]$Color = "Cyan")
-    # Renders a rounded box (╭╮╰╯) with title in top border
-    # Dynamically sizes width to content
+    # Renders a double-line box (╔╗╚╝║═) with title in top border
+    # Fixed width of 59 characters (matching the VIBUZO banner)
+    # Content area: 55 chars, emoji double-width compensated
 }
 ```
 
@@ -131,8 +139,9 @@ print_box() {
     local title="$1"
     shift
     local lines=("$@")
-    # Same rendering as Write-Box
+    # Same rendering as Write-Box (╔╗╚╝║═, 59-char fixed width)
     # Uses printf with ANSI color codes
+    # Emoji double-width: strips ✅❌ to compute padding
 }
 ```
 
@@ -162,4 +171,4 @@ Use `printf` (not `echo`) for ANSI-colored output. See `install.sh` for full imp
 4. **The banner must always appear first** — before any version checks or download output
 5. **Version always shown** — install/update lines, success box, and update-mode display must include the current semver (`0.x.x`)
 6. **Use arrays/loops** — file lists should be stored in arrays and processed with loops, not repeated `Write-Host`/`printf` + download pairs
-7. **Rounded corners everywhere** — all boxes use `╭╮╰╯` (rounded), never `╔╗╚╝` (double-line) or `┌┐└┘` (single-line) except the VIBUZO banner
+7. **Double-line borders everywhere** — all installer boxes use `╔╗╚╝║═` (double-line) matching the VIBUZO banner style at a fixed 59-char total width. Never use `╭╮╰╯│─` (rounded) or `┌┐└┘│─` (single-line).
