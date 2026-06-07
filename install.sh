@@ -266,13 +266,10 @@ for f in "${COMMAND_FILES[@]}"; do
     curl -fsSL "$RAW_URL/commands/$f.md" -o "$COMMANDS_DIR/$f.md"
 done
 
-# AGENTS.md is skipped during updates — user's file is preserved as-is
-# On fresh install, download with preservation logic
-if [ "$UPDATE" = false ]; then
-    echo ""
-    printf "  ${CYAN}─── Project ─────────────────────────────${NC}\n"
+echo ""
+printf "  ${CYAN}─── Project ─────────────────────────────${NC}\n"
 
-    if [ "$GLOBAL" = false ]; then
+if [ "$GLOBAL" = false ]; then
     # ─── Check AGENTS.md status ────────────────────────────────────
     EXISTING_CONTENT=""
     USER_RULES=""
@@ -293,15 +290,18 @@ if [ "$UPDATE" = false ]; then
 
     printf "  ${GREEN}✓ AGENTS.md ($AGENTS_STATUS)${NC}\n"
 
-    if [ -t 0 ]; then
-        printf "\nProceed with AGENTS.md? (y/N): "
-        read -r RESPONSE
-        if [ "$RESPONSE" != "y" ] && [ "$RESPONSE" != "Y" ] && [ "$RESPONSE" != "yes" ] && [ "$RESPONSE" != "YES" ]; then
-            printf "${YELLOW}AGENTS.md skipped.${NC}\n"
-            return
+    # Prompt only on fresh install — update auto-proceeds
+    if [ "$UPDATE" = false ]; then
+        if [ -t 0 ]; then
+            printf "\nProceed with AGENTS.md? (y/N): "
+            read -r RESPONSE
+            if [ "$RESPONSE" != "y" ] && [ "$RESPONSE" != "Y" ] && [ "$RESPONSE" != "yes" ] && [ "$RESPONSE" != "YES" ]; then
+                printf "${YELLOW}AGENTS.md skipped.${NC}\n"
+                return
+            fi
+        else
+            echo "(non-interactive shell — proceeding automatically)"
         fi
-    else
-        echo "(non-interactive shell — proceeding automatically)"
     fi
 
     curl -fsSL "$RAW_URL/AGENTS.md" -o AGENTS.md
@@ -316,7 +316,6 @@ if [ "$UPDATE" = false ]; then
 else
     printf "  ${GREEN}✓ AGENTS.md (fresh copy)${NC}\n"
     curl -fsSL "$RAW_URL/AGENTS.md" -o "$OPENCODE_DIR/AGENTS.md"
-fi
 fi
 
 # ─── Path Rewriting (global install only) ────────────────────────────────────

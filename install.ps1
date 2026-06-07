@@ -257,13 +257,10 @@ foreach ($file in $CommandFiles) {
     Invoke-WebRequest -Uri "$RawUrl/commands/$file.md" -OutFile "$CommandsDir\$file.md"
 }
 
-# AGENTS.md is skipped during updates — user's file is preserved as-is
-# On fresh install, download with preservation logic
-if (-not $Update) {
-  Write-Host ""
-  Write-Host "  ─── Project ─────────────────────────────" -ForegroundColor $Cyan
+Write-Host ""
+Write-Host "  ─── Project ─────────────────────────────" -ForegroundColor $Cyan
 
-  if (-not $Global) {
+if (-not $Global) {
   # ─── Check AGENTS.md status ────────────────────────────────────
   $ExistingContent = $null
   $UserRules = $null
@@ -289,15 +286,18 @@ if (-not $Update) {
 
   Write-Host "  ✓ AGENTS.md ($AgentsStatus)" -ForegroundColor $Green
 
-  $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
-  if ($Interactive) {
-    $Response = Read-Host "Proceed with AGENTS.md? (y/N)"
-    if ($Response -notin @('y', 'Y', 'yes', 'YES')) {
-      Write-Host "AGENTS.md skipped." -ForegroundColor $Yellow
-      return
+  # Prompt only on fresh install — update auto-proceeds
+  if (-not $Update) {
+    $Interactive = [Environment]::UserInteractive -and -not [Console]::IsInputRedirected
+    if ($Interactive) {
+      $Response = Read-Host "Proceed with AGENTS.md? (y/N)"
+      if ($Response -notin @('y', 'Y', 'yes', 'YES')) {
+        Write-Host "AGENTS.md skipped." -ForegroundColor $Yellow
+        return
+      }
+    } else {
+      Write-Host "(non-interactive shell — proceeding automatically)"
     }
-  } else {
-    Write-Host "(non-interactive shell — proceeding automatically)"
   }
 
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "AGENTS.md"
@@ -312,7 +312,7 @@ if (-not $Update) {
 } else {
   Write-Host "  ✓ AGENTS.md (fresh copy)" -ForegroundColor $Green
   Invoke-WebRequest -Uri "$RawUrl/AGENTS.md" -OutFile "$OpenCodeDir\AGENTS.md"
-} }
+}
 
 # ─── Path Rewriting (global install only) ────────────────────────────────────
 
