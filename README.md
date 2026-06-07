@@ -9,7 +9,7 @@
   ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ 
 ```
 
-Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
+Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory, with approval gates including on each step.
 
 | Mechanism | What it does |
 |-----------|-------------|

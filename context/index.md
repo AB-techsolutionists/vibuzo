@@ -54,6 +54,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/internal-commands-convention.md` — Pattern for commands that live in commands/ but are excluded from installer and user-facing docs (Vibuzo dev-only)
 
 ### Standards
+- `standards/commit-message-format.md` — Standard commit message format for "commit" commands: feat: prefix with ## section categories
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
 - `standards/naming.md` — Use camelCase for variables, functions, and methods
 - `standards/arguments-usage-in-command-templates.md` — $ARGUMENTS must only appear in first description line, never in section bodies
