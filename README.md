@@ -126,6 +126,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.5** | Finalize session documentation and save installer-content-preservation-dedup pattern. |
 | **0.2.4** | Fixed installer AGENTS.md rules duplication: added dedup guard to both installers; cleaned up duplicate rule in AGENTS.md. |
 | **0.2.3** | Restructured AGENTS.md with updated tagline, tree, and commands section; added README step to `/commit` bump workflow; added command execution instructions. |
 | **0.2.2** | Fixed missing `agents/deepsearcher.md` causing installer 404; added deepsearcher to path-rewriting and Claude Code copy in both installers. |
