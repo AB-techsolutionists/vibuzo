@@ -57,10 +57,9 @@ Files are grouped into sections with cyan headers showing item count:
   ── Agents (2) ──────────────────────
   ✓ vibuzo.md, deepveloper.md
 
-  ── Commands (9) ────────────────────
-  ✓ spec, add-context, context-init, context-find,
-    context-harvest, context-append, session,
-    session-view, session-timeline
+  ── Commands (5) ────────────────────
+  ✓ spec, add-context, context-init, research,
+    session
 ```
 - Each section header: `── Name (N) ──` padded with dashes to fill width
 - Items listed comma-separated on one line after a single green checkmark

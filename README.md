@@ -14,7 +14,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 | Mechanism | What it does |
 |-----------|-------------|
 | **Full engineering pipeline** | Plan before touching code, delegate complex features via `/spec` with approval gates between every phase, and commit with structured messages. |
-| **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. Sessions auto-load, auto-query, search (`/context find`), scan conversations (`/context append`), and mine summaries (`/context harvest`). |
+| **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. Sessions auto-load, auto-query, and auto-scan for patterns to promote. |
 | **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available for review. `/session init` initializes agent context at session start. |
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
@@ -63,7 +63,6 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
    /add-context This is a Next.js 14 app with App Router, shadcn/ui, and Prisma
    /add-context We use pnpm, not npm
    ```
-   Search later with `/context find [type your search..]`.
 
 4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
 
@@ -73,13 +72,11 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
 
 Vibuzo doesn't learn on its own — you teach it as you work. The more context you save, the smarter it gets across sessions.
 
-**Three learning mechanisms:**
+**Two learning mechanisms:**
 
 1. **Saved context (`context/`)** — every time you run `/add-context`, you save a permanent rule, pattern, or decision. At the start of every new session, Vibuzo reads `context/index.md` and loads everything your project knows. You never re-explain your stack, conventions, or architecture decisions.
 
-2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. At the start of every new session, Vibuzo automatically reads the latest session summary to pick up where you left off. Run `/context harvest` to promote patterns discovered in sessions into permanent context files.
-
-3. **Harvest pipeline** — `/context append` scans your current conversation for anything worth saving and asks if you want to add it to context. `/context harvest` reads all your session summaries and presents patterns worth promoting. You approve what gets saved — nothing is automatic.
+2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. At the start of every new session, Vibuzo automatically reads the latest session summary to pick up where you left off. The `/session` command itself scans for patterns and presents them as save candidates — no separate harvest step needed.
 
 **The result:** the first session starts from scratch. By session 10, Vibuzo knows your architecture, your naming conventions, your testing style, your past decisions, and why they were made. New agents on your team get the same knowledge instantly because it's all committed to the repo.
 
@@ -92,7 +89,7 @@ your-project/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Implementation sub-agent (used by /spec)
     ├── agent/core/deepsearcher.md← Research sub-agent (used by /research, @deepsearcher)
-    └── commands/                 ← 8 command templates
+    └── commands/                 ← 5 command templates
 ```
 
 **Key file: `AGENTS.md`**
@@ -110,9 +107,6 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 |---------|-------------|---------|
 | `/spec` | 5-phase feature pipeline with approval gates | `/spec dark mode toggle` |
 | `/context init` | Scaffold context directory structure | `/context init` |
-| `/context find` | Search saved project knowledge | `/context find naming conventions` |
-| `/context harvest` | Mine session summaries for patterns to promote | `/context harvest` |
-| `/context append` | Scan current conversation for knowledge to save | `/context append` |
 | `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context We use pnpm not npm` |
 | `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | `/session` |
@@ -122,6 +116,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.8** | Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command (harvesting is now built into `/session`). | 
 | **0.2.7** | Session management enhancement: restructured session.md (report + init only), deleted session-view/timeline, updated installers and docs, added YAML frontmatter to reports. |
 | **0.2.6** | Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19). |
 | **0.2.5** | Finalize session documentation and save installer-content-preservation-dedup pattern. |

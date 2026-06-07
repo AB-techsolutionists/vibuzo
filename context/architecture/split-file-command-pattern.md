@@ -36,15 +36,15 @@ Commands use one of two modes:
 - **Main session** (no `subtask: true`) — runs inline in the current agent session. Used for context/session management commands that need access to the full conversation history.
 - **Subtask** (with `subtask: true`) — runs as a separate agent via the task tool. Used for pipelines like `/spec` that need isolated execution.
 
-### Sub-file example (`commands/context-append.md`)
+### Sub-file example (`commands/context-init.md`)
 ```markdown
 ---
 agent: Vibuzo
 ---
 
 Do these steps NOW:
-1. Step one
-2. Step two
+1. Check existing structure
+2. Create missing directories
 ```
 
 ## Key Rules
@@ -71,7 +71,7 @@ This pattern has been applied to:
 
 | Command | Sub-Files | Mode |
 |---------|-----------|------|
-| `/context` | `context-init.md`, `context-find.md`, `context-harvest.md`, `context-append.md` | Main session |
+| `/context` | `context-init.md` | Main session |
 | `/session` | `session.md` (modes: report, init) | Main session |
 | `/spec` | `spec.md` | Subtask |
 

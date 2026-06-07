@@ -18,7 +18,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
-│   ├── commands/                 ← 9 command files (research, spec, context*, session)
+│   ├── commands/                 ← 5 command files (research, spec, context-init, add-context, session)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
@@ -89,7 +89,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Commands
 
-Vibuzo ships with **8 `.md` command files** (one file per command, plus `@deepsearcher` inline and `/session init` as part of `session.md`) — 10 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
+Vibuzo ships with **5 `.md` command files** (one file per command, plus `@deepsearcher` inline and `/session init` as part of `session.md`) — 7 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
 
 | Command | Purpose | Runs |
 |---------|---------|------|
@@ -98,9 +98,6 @@ Vibuzo ships with **8 `.md` command files** (one file per command, plus `@deepse
 | `@deepsearcher <query>` | Inline research — same as `/research` but results in chat, no file | inline |
 | `/context init` | Scaffold context directories and `index.md` | main |
 | `/add-context <statement>` | Save a rule/pattern to context (agent infers type and filename) | subtask |
-| `/context append` | Scan conversation for context-worthy patterns, present candidates | main |
-| `/context harvest` | Mine session summaries for patterns to promote to permanent context | main |
-| `/context find <topic>` | Search context files by semantic relevance | main |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | main |
 | `/session init` | Initialize agent context (read-only, no file created) | main |
 
@@ -122,9 +119,6 @@ This chain ensures every new session automatically picks up where the last one l
 
 - **Scaffold:** `/context init` — ensures all 4 directories exist
 - **Add knowledge:** `/add-context <statement>` — agent infers type (architecture/standard/pattern) and file name
-- **Scan conversation:** `/context append` — scan current conversation for context-worthy patterns and save them
-- **Mine sessions:** `/context harvest` — read all session summaries and present patterns worth promoting to permanent context
-- **Search:** `/context find <topic>` — exact match first, then broader keyword search
 - **Update index:** After creating, modifying, or deleting any file under `context/`, update `context/index.md` immediately
 
 ## Context Auto-Query

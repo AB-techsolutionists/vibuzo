@@ -2,7 +2,7 @@
 
 This directory contains project-level context files that are automatically loaded at the start of every new session. Agents read this index to discover available knowledge.
 
-> **All context files now include structured YAML frontmatter** with `tags:`, `scope:`, and `when:` fields. This frontmatter enables semantic search (via `/context find`) and automatic context relevance scanning (via Context Auto-Query) for more accurate knowledge retrieval.
+> **All context files now include structured YAML frontmatter** with `tags:`, `scope:`, and `when:` fields. This frontmatter enables automatic context relevance scanning (via Context Auto-Query) for more accurate knowledge retrieval.
 
 **At session start, after reading this file, the agent MUST:**
 1. Read `sessions/index.md` to find the latest (last) entry
@@ -29,7 +29,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - **Manually**: Create a `.md` file in the appropriate directory with YAML frontmatter (`tags:`, `scope:`, `when:`)
 - **Via command**: `/add-context <type> <name> <description>` — prompts for frontmatter fields automatically
 - **From sessions**: `/session` scans for patterns and presents save candidates with auto-generated frontmatter
-- **From sessions**: `/context harvest` promotes session patterns to permanent files
+- **From sessions**: `/session` auto-scans for patterns and presents save candidates
 
 ## Files
 
@@ -43,6 +43,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `architecture/default-agent-in-opencode-jsonc.md` — 🗑️ DEPRECATED — Referenced opencode.jsonc (removed)
 - `architecture/installer-update-mechanism.md` — Architecture decision for the `--update` flag: version marker file, GitHub API comparison, interactive confirmation, best-effort failure handling
 - `architecture/session-minimalism.md` — Architecture decision: session command stripped to 2 modes (report + init), all subcommands (view/timeline/find) deleted
+- `architecture/context-init-standalone.md` — Architecture decision: context-init kept as standalone file; append/harvest/find deleted without consolidation into a multi-mode context.md
 
 ### Patterns
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
