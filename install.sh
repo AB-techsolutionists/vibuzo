@@ -352,6 +352,7 @@ if command -v claude &>/dev/null; then
     mkdir -p .claude/agents
     cp "$AGENTS_DIR/vibuzo.md" .claude/agents/vibuzo.md
     cp "$AGENTS_DIR/deepveloper.md" .claude/agents/deepveloper.md
+    cp "$AGENTS_DIR/deepsearcher.md" .claude/agents/deepsearcher.md
 fi
 
 # ─── Done ────────────────────────────────────────────────────────────────────

@@ -318,6 +318,7 @@ if ($Global) {
   Write-Host "   ✓ Path rewriting" -ForegroundColor $Green
   (Get-Content "$AgentsDir\vibuzo.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\vibuzo.md"
   (Get-Content "$AgentsDir\deepveloper.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepveloper.md"
+  (Get-Content "$AgentsDir\deepsearcher.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepsearcher.md"
   (Get-Content "$OpenCodeDir\AGENTS.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$OpenCodeDir\AGENTS.md"
 }
 
@@ -338,6 +339,7 @@ if (Get-Command "claude" -ErrorAction SilentlyContinue) {
   New-Item -ItemType Directory -Path ".claude\agents" -Force | Out-Null
   Copy-Item "$AgentsDir\vibuzo.md" ".claude\agents\vibuzo.md"
   Copy-Item "$AgentsDir\deepveloper.md" ".claude\agents\deepveloper.md"
+  Copy-Item "$AgentsDir\deepsearcher.md" ".claude\agents\deepsearcher.md"
 }
 
 # ─── Done ────────────────────────────────────────────────────────────────────
