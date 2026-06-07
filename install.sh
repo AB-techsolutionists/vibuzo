@@ -144,7 +144,11 @@ print_box() {
 
     # Content lines
     for line in "${lines[@]}"; do
-        local pad_len=$((max_len - ${#line}))
+        # Account for emoji double-width (✅❌ render as 2 columns, count as 1 char)
+        local stripped="${line//[✅❌]/}"
+        local emoji_extra=$(( ${#line} - ${#stripped} ))
+        local pad_len=$((max_len - ${#line} - emoji_extra))
+        if [ $pad_len -lt 0 ]; then pad_len=0; fi
         printf "${CYAN}│${NC} %s" "$line"
         for ((i=0; i<pad_len; i++)); do printf " "; done
         printf " ${CYAN}│${NC}\n"

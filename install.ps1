@@ -128,7 +128,13 @@ function Write-Box {
 
     # Content lines
     foreach ($line in $Lines) {
-        Write-Host ("│ " + $line.PadRight($contentWidth) + " │") -ForegroundColor $Color
+        # Account for emoji double-width (U+2700-U+27BF renders as 2 columns, counts as 1 char)
+        $emojiExtra = 0
+        foreach ($c in $line.ToCharArray()) {
+            $code = [int]$c
+            if ($code -ge 0x2700 -and $code -le 0x27BF) { $emojiExtra++ }
+        }
+        Write-Host ("│ " + $line.PadRight($contentWidth - $emojiExtra) + " │") -ForegroundColor $Color
     }
 
     # Bottom border: exact width
