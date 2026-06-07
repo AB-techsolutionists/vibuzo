@@ -119,6 +119,27 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | `/session view` | Browse past session reports | `/session view dark-mode` or `/session view 2026-06-05` |
 | `/session timeline` | Show all session reports chronologically | `/session timeline` |
 
+## Version History
+
+| Version | Highlights |
+|---------|------------|
+| **0.1.2** | Dynamic version fetching from `VERSION` file on GitHub. Removed commit SHA tracking and 7 wrapper scripts. Fixed PowerShell command syntax. Enhanced success messages with arrow-bulleted guidance. |
+| **0.1.1** | Complete installer visual redesign: grouped comma-separated file lists, compact update check box, compact success box, single-line AGENTS.md status, consistent rounded box style. |
+| **0.1.0** | Version tracking system (0.x.x semver). Removed source-mirror sync convention. Forward-looking session summary template. Dynamic version reporting. |
+| **0.0.1–0.0.19** | Development phase. Two-agent system (Vibuzo + Deepveloper), bash and PowerShell installers, context management commands, session system with compaction workflow, approval gates (levels 0–3), Karpathy behavioral principles, Deepsearcher research agent, installer update mechanism, AGENTS.md preservation convention. |
+
+**Checking your version:**
+```bash
+# Installed version is in .opencode/.vibuzo-version
+cat .opencode/.vibuzo-version
+
+# Latest available on GitHub
+curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/VERSION
+
+# Update to latest
+curl -fsSL https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh | bash -s -- --update
+```
+
 ## License
 
 MIT

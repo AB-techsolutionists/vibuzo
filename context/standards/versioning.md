@@ -31,9 +31,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
-**0.1.1** — this version introduced a redesign the visual output of `install.ps1` and `install.sh` (mirrored implementations) to be simpler, prettier, and more compact. The redesign covers the install flow, update flow, and the "up to date" case. Both installers must remain visually identical.
-
-This is purely a visual/cosmetic change. No functional changes to what gets installed, how files are downloaded, or how version checking works.
+**0.1.2** — Dynamic version fetching from the `VERSION` file at repo root. Installers no longer hardcode versions — they fetch from GitHub at runtime. Visual redesign with grouped section display, compact update check box, and streamlined success boxes. Removed wrapper scripts and commit SHA from version tracking.
 
 ## Bump Rules
 
@@ -44,36 +42,40 @@ This is purely a visual/cosmetic change. No functional changes to what gets inst
 
 ## Canonical Source
 
-The single source of truth for the version is **`.opencode/.vibuzo-version`**:
+The single source of truth for the version is the **`VERSION` file at the repo root**. Both installers fetch this file from GitHub at runtime:
 
 ```
-0.x.x | yyyy-MM-dd HH:mm sssssss mode
+0.1.2
 ```
 
-- The semver (`0.x.x`) comes first, before the `|`
-- Everything after `|` is installer metadata (date, time, commit SHA, install mode)
-- Installers parse both: the semver for display, the SHA for `--update` comparison
+Installers write a local copy to **`.opencode/.vibuzo-version`** with install metadata:
+
+```
+0.x.x | yyyy-MM-dd HH:mm mode
+```
+
+- Semver comes first, before the `|`
+- Everything after `|` is installer metadata (date, time, install mode)
+- No commit SHA tracked — version comparison uses semver strings only
 
 ## Where Version Appears
 
 | Location | What Shows |
 |----------|------------|
-| `.opencode/.vibuzo-version` | Canonical: `<semver> \| ...` |
-| `install.ps1` | `$ScriptVersion` variable at top, referenced everywhere |
-| `install.sh` | `SCRIPT_VERSION` variable at top, referenced everywhere |
-| Agent (vibuzo.md) | Reads `.vibuzo-version` and reports dynamically — no hardcode |
-| `AGENTS.md` | Directory tree annotation: `← Version marker` (no hardcoded version) |
+| `VERSION` (repo root) | **Canonical source**: single semver line `0.x.x` |
+| `.opencode/.vibuzo-version` | Local copy: `<semver> \| <date> <time> <mode>` |
+| `install.ps1` | Fetches version dynamically from `$RawUrl/VERSION` |
+| `install.sh` | Fetches version dynamically from `$RAW_URL/VERSION` |
+| Agent (vibuzo.md) | Reads `.vibuzo-version` and reports dynamically |
+| `AGENTS.md` | Directory tree: `← Version marker` (no hardcoded version) |
 
 ## How to Bump
 
-1. Edit `.opencode/.vibuzo-version` — change the `0.x.x` prefix
-2. Update the version in:
-   - `install.ps1` — change the `$ScriptVersion = "..."` value at the top
-   - `install.sh` — change the `SCRIPT_VERSION="..."` value at the top
-   - `context/standards/versioning.md` — update the "Current Version" section
+1. Edit the `VERSION` file at the repo root — change the `0.x.x` value
+2. Update `context/standards/versioning.md` — update the "Current Version" section
 3. Commit and push to GitHub
 
-**That's 4 spots total.** No more scattering version strings across a dozen locations.
+**That's 2 spots total.** Installers fetch dynamically — no manual installer changes needed for a version bump.
 
 ## Related
 

@@ -78,9 +78,9 @@ When the user asks what version of Vibuzo is installed, or any equivalent questi
 
 When the user asks to check for updates, "is there a new version", or any equivalent question:
 
-1. **Read local version** — Read `.opencode/.vibuzo-version` and parse the semver + commit SHA + date + mode
-2. **Fetch remote version** — Use `webfetch` on `https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.sh` and extract the `SCRIPT_VERSION="..."` value. Then also fetch `https://api.github.com/repos/AB-techsolutionists/vibuzo/commits/main` to get the latest commit SHA.
-3. **Compare** — Parse the remote semver and compare against the local version
+1. **Read local version** — Read `.opencode/.vibuzo-version` and parse the semver prefix + date + time + mode
+2. **Fetch remote version** — Use `webfetch` on `https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/VERSION` to get the latest semver from GitHub
+3. **Compare** — Compare the remote semver against the local version string
 4. **Render a comparison box** — Use this exact format rendered inside a code block:
 
 ```
@@ -91,12 +91,8 @@ When the user asks to check for updates, "is there a new version", or any equiva
 │  Status:   ✅ Up to date           │
 │            ⬆️ Update available     │
 │                                    │
-├──── Details ───────────────────────┤
-│                                    │
 │  Installed: <date> at <time>       │
-│  Commit:   <sha> (<mode>)          │
-│  Latest:   <date> at <time>        │
-│  New:      <sha>                   │
+│  Mode:      <local|global>         │
 │                                    │
 ╰────────────────────────────────────╯
 ```

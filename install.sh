@@ -339,12 +339,12 @@ if [ "$GLOBAL" = true ]; then
 else
     MODE="local"
 fi
-# Try to get the latest commit SHA (best-effort)
-SHA=$(curl -fsSL "https://api.github.com/repos/$REPO/commits/$BRANCH" 2>/dev/null \
-    | grep -o '"sha":"[^"]*"' | head -1 | cut -d'"' -f4 | cut -c1-7 || true)
-if [ -z "$SHA" ]; then
-    SHA="unknown"
-echo "${SCRIPT_VERSION} | $NOWhen
+echo "${SCRIPT_VERSION} | $NOW $MODE" > "$VERSION_FILE"
+
+# ─── Tool Detection ──────────────────────────────────────────────────────────
+
+# Claude Code
+if command -v claude &>/dev/null; then
     echo ""
     printf "  ${CYAN}─── Integrations ─────────────────────────${NC}\n"
     echo ""
