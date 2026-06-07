@@ -193,12 +193,12 @@ if ($Update) {
   # Compare versions
   $UpToDate = $false
   if ($Version -eq $ScriptVersion) {
-    $Status = "✅ Up to date"
+    $Status = "Up to date"
     $UpToDate = $true
   } elseif ($ScriptVersion -ne "unknown") {
-    $Status = "⬆️ Update available"
+    $Status = "Update available"
   } else {
-    $Status = "⚠️ Could not check"
+    $Status = "Could not check"
   }
 
   # Build and display the update check box

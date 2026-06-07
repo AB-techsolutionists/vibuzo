@@ -202,12 +202,12 @@ if [ "$UPDATE" = true ]; then
     # Compare versions
     UP_TO_DATE=false
     if [ "$VERSION" = "$SCRIPT_VERSION" ]; then
-        STATUS="✅ Up to date"
+        STATUS="Up to date"
         UP_TO_DATE=true
     elif [ "$SCRIPT_VERSION" != "unknown" ]; then
-        STATUS="⬆️ Update available"
+        STATUS="Update available"
     else
-        STATUS="⚠️ Could not check"
+        STATUS="Could not check"
     fi
 
     # Build and display the update check box
