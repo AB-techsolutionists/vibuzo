@@ -9,13 +9,13 @@ agent: Vibuzo
 
 Do these steps NOW:
 
-1. **Parse arguments** — read `$ARGUMENTS` (the text after `/commit`):
+1. **Parse arguments** — read $ARGUMENTS (the text after `/commit`):
 
-   - If `$ARGUMENTS` matches `^(feat|fix|refactor|chore|docs|style|test|perf):\s*(.+)$`, extract:
+   - If $ARGUMENTS matches `^(feat|fix|refactor|chore|docs|style|test|perf):\s*(.+)$`, extract:
      - `commit_type` = the matched prefix + colon (e.g., `feat:`)
      - `description` = the text after the colon + space
-   - Otherwise, set `description` = `$ARGUMENTS` (full text), `commit_type` = empty (will prompt later)
-   - If `$ARGUMENTS` is empty, set both to empty
+   - Otherwise, set `description` = $ARGUMENTS (full text), `commit_type` = empty (will prompt later)
+   - If $ARGUMENTS is empty, set both to empty
 
 2. **Display intent** — show what was parsed:
 
@@ -57,7 +57,7 @@ Do these steps NOW:
    ```
    ── APPROVAL GATE ──────────────────────
    Action: Version bump
-   Target: VERSION → context/standards/versioning.md
+   Target: VERSION → versioning.md → README.md
    Details: Bump <oldVersion> → <newVersion> (<bumpType>)
    ───────────────────────────────────────
    Approve? (y/N):
@@ -87,7 +87,15 @@ Do these steps NOW:
       `**<newVersion>** — <releaseNotes> (YYYY-MM-DD).`
    - Use the edit tool to add the line (insert as new line after the header)
 
-9. **Commit type selection** — if `commit_type` was not auto-detected in step 1, prompt:
+9. **Update README.md** — add a row to the Version History table:
+
+   - Read `README.md`
+   - Find the Version History table (the line starting with `| **0.x.x** |`)
+   - Insert a new row immediately after the header row with the format:
+      `| **<newVersion>** | <releaseNotes> |`
+   - Use the edit tool
+
+10. **Commit type selection** — if `commit_type` was not auto-detected in step 1, prompt:
 
    ```
    ── Commit Type ──────────────────────────
@@ -106,7 +114,7 @@ Do these steps NOW:
 
    Read user response. Default to `chore` if empty. Format as `<type>:` (append colon) and store in `commit_type`.
 
-10. **Build commit message** — construct a structured commit message:
+11. **Build commit message** — construct a structured commit message:
 
     - **Subject**: `<commit_type> <description>` (or "No description provided" if both empty)
       Example: `feat: add dark mode toggle`
@@ -115,6 +123,7 @@ Do these steps NOW:
       - List each file that was modified with a brief human-readable explanation:
         - `VERSION` → describe the old→new version
         - `context/standards/versioning.md` → describe the new release notes entry
+        - `README.md` → describe the new version history row
       - Write in present tense, imperative mood, for developers to read smoothly
       - End with a summary paragraph explaining the change holistically
       - Example body:
@@ -122,10 +131,10 @@ Do these steps NOW:
         - Modified VERSION: bumped 0.1.5 → 0.1.6
         - Updated versioning.md: added 0.1.6 entry
           documenting the hotfix
+        - Updated README.md: added 0.1.6 row to version history
         
-        This bumps the version and updates release notes
-        for the hotfix. The patch increment reflects a
-        backward-compatible bug fix.
+        This bumps the version, updates release notes, and
+        documents the release in the README version history.
         ```
       - Note: this is an instruction for what the agent will build at runtime — the body describes the actual changes just made
 
@@ -133,12 +142,12 @@ Do these steps NOW:
 
     - Store the parts as `$commitSubject`, `$commitBody`, `$fullCommitMessage` (subject + blank line + body + blank line + footer)
 
-11. **Commit approval gate** — display the full commit message and wait for approval:
+12. **Commit approval gate** — display the full commit message and wait for approval:
 
     ```
     ── APPROVAL GATE ──────────────────────
     Action: Git commit
-    Target: VERSION + context/standards/versioning.md
+    Target: VERSION, versioning.md, README.md
     Details:
     Subject: <commitSubject>
     
@@ -152,16 +161,16 @@ Do these steps NOW:
 
     If approved, continue. If rejected, print "Commit cancelled." and stop.
 
-12. **Git commit** — stage and commit:
+13. **Git commit** — stage and commit:
 
     - Run these bash commands (in sequence, one call):
       ```bash
-      git add VERSION context/standards/versioning.md && git commit -m "<commitSubject>" -m "<commitBody>"
+      git add VERSION context/standards/versioning.md README.md && git commit -m "<commitSubject>" -m "<commitBody>"
       ```
     - DO NOT include `git push` under any circumstances
     - If the commit fails (e.g., nothing to commit), print the error and stop
 
-13. **Report box** — show the result inside a VIBUZO-style box:
+14. **Report box** — show the result inside a VIBUZO-style box:
 
     - Get the abbreviated commit hash: run `git rev-parse --short HEAD` and capture the output
     - Render this box (printed as text, not via installer functions):
@@ -171,7 +180,7 @@ Do these steps NOW:
     ║                                                         ║
     ║  Commit:    <hash>                                      ║
     ║  Version:   <oldVersion> → <newVersion>                 ║
-    ║  Files:     VERSION, versioning.md                      ║
+    ║  Files:     VERSION, versioning.md, README.md           ║
     ║  Subject:   <commitSubject>                             ║
     ║                                                         ║
     ║  ─────────────────────────────────────────────           ║

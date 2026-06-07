@@ -1,6 +1,6 @@
-# Vibuzo — Agentic Framework
+# Vibuzo — Agentic Workflow System
 
-Vibuzo is an agentic framework for AI coding agents — it gives you a planning-first workflow, persistent project context, session summaries, and a dedicated implementation agent for complex features.
+Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
 
 ## Three-Agent System
 
@@ -28,25 +28,87 @@ Vibuzo is an agentic framework for AI coding agents — it gives you a planning-
 │   └── sessions/                 ← Summary archives (via /session)
 └── specs/                        ← Created on demand by /spec
 ```
+## Karpathy Principles (Guidelines)
 
-## How Commands Work
+Behavioral guidelines to reduce common AI coding mistakes, derived from [Andrej Karpathy's observations](https://x.com/karpathy) on LLM coding pitfalls.
 
-Every command file follows this pattern:
+### 1. Think Before Coding
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-```yaml
----
-description: <what it does>
-agent: Vibuzo
----
-Do these steps NOW:
-1. ...
+Before implementing:
+- **State your assumptions explicitly.** If uncertain, ask rather than guess.
+- **Present multiple interpretations.** If ambiguity exists, enumerate options — don't pick silently.
+- **Push back when warranted.** If a simpler approach exists, say so.
+- **Stop when confused.** Name what's unclear and ask for clarification.
+
+### 2. Simplicity First
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: *"Would a senior engineer say this is overcomplicated?"* If yes, simplify.
+
+### 3. Surgical Changes
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it — don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+**The test:** Every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+**Define success criteria. Loop until verified.**
+
+Transform imperative tasks into verifiable goals:
+
+| Instead of... | Transform to... |
+|---|---|
+| "Add validation" | "Write tests for invalid inputs, then make them pass" |
+| "Fix the bug" | "Write a test that reproduces it, then make it pass" |
+| "Refactor X" | "Ensure tests pass before and after" |
+
+For multi-step tasks, state a brief plan with verification at each step:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
 ```
 
-- `subtask: true` (optional) tells opencode to run this via the task tool. **Not used** for context/session commands — they run in the main session to access conversation history. Used for `/spec`, `/add-context`, and `/research`.
-- `Do these steps NOW:` is the only imperative instruction — one file, one purpose
-- `$ARGUMENTS` is substituted at the top of the file (parsed from the user's `/command ...` text)
-- `/research [query]` routes to Deepsearcher for structured web research, saving results to `specs/<feature>/research.md`
-- `@deepsearcher` invokes Deepsearcher inline for ad-hoc research without the full pipeline
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## Commands
+
+Vibuzo ships with **11 commands** — one `.md` file per command. Each has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
+
+| Command | Purpose | Runs |
+|---------|---------|------|
+| `/spec <feature>` | Full pipeline: research → spec → plan → tasks → implement → review | subtask |
+| `/research <query>` | Web research via Deepsearcher, saves to `specs/<topic>/research.md` | subtask |
+| `@deepsearcher <query>` | Inline research — same as `/research` but results in chat, no file | inline |
+| `/context init` | Scaffold context directories and `index.md` | main |
+| `/add-context <statement>` | Save a rule/pattern to context (agent infers type and filename) | subtask |
+| `/context append` | Scan conversation for context-worthy patterns, present candidates | main |
+| `/context harvest` | Mine session summaries for patterns to promote to permanent context | main |
+| `/context find <topic>` | Search context files by semantic relevance | main |
+| `/session` | Generate comprehensive session summary, then scan for patterns | main |
+| `/session view <ref>` | Browse past summaries by name or date | main |
+| `/session timeline [month]` | Show all summaries chronologically | main |
+| `/commit [description]` | Bump version, update release notes, structured commit (no push) | main |
+
+**How they work:** Each file is an `.md` with YAML frontmatter. The `Do these steps NOW:` block is the imperative instruction. `$ARGUMENTS` is replaced with the user's text after the command. Commands with `subtask: true` run in the background; others run in the main session with full conversation history.
+
+The command files live at `commands/<name>.md` in the repo, and get copied to `.opencode/commands/` during install.
 
 ## Context Auto-Load
 
@@ -131,65 +193,6 @@ Approve? (y/N):
 
 Override inline: add "at gate level X" to any request.
 
-## Karpathy Principles (Guidelines)
-
-Behavioral guidelines to reduce common AI coding mistakes, derived from [Andrej Karpathy's observations](https://x.com/karpathy) on LLM coding pitfalls.
-
-### 1. Think Before Coding
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-- **State your assumptions explicitly.** If uncertain, ask rather than guess.
-- **Present multiple interpretations.** If ambiguity exists, enumerate options — don't pick silently.
-- **Push back when warranted.** If a simpler approach exists, say so.
-- **Stop when confused.** Name what's unclear and ask for clarification.
-
-### 2. Simplicity First
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: *"Would a senior engineer say this is overcomplicated?"* If yes, simplify.
-
-### 3. Surgical Changes
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it — don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-**The test:** Every changed line should trace directly to the user's request.
-
-### 4. Goal-Driven Execution
-**Define success criteria. Loop until verified.**
-
-Transform imperative tasks into verifiable goals:
-
-| Instead of... | Transform to... |
-|---|---|
-| "Add validation" | "Write tests for invalid inputs, then make them pass" |
-| "Fix the bug" | "Write a test that reproduces it, then make it pass" |
-| "Refactor X" | "Ensure tests pass before and after" |
-
-For multi-step tasks, state a brief plan with verification at each step:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
 ---
 
 > **📝 Note for your project:** This file was installed by Vibuzo.  
@@ -197,3 +200,4 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───
 
+1. Never push changes to github without approval

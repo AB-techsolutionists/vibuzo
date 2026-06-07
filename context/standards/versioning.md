@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.2.3** — Update AGENTS.md structure, tagline, and commands section; update commit command to include README in bump workflow; add execution instructions for commands (2026-06-07).
 **0.2.2** — Fixed missing `agents/deepsearcher.md` causing installer 404; added deepsearcher to path-rewriting and Claude Code copy in both installers (2026-06-07).
 **0.2.1** — Enhance context system with YAML frontmatter, semantic search, and auto-pattern scanning (2026-06-07).
 **0.2.0** — New `/commit` command: full pipeline (spec → plan → tasks → implementation → review) creating a 13-step command for version bump → release notes → structured commit → no-push report. Fixed `/spec` feature naming (short kebab-case names). Saved 4 context files (installer-visual-language, feature-naming-convention, structured-commit-body-convention, commit-workflow-pattern).
@@ -60,7 +61,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 The single source of truth for the version is the **`VERSION` file at the repo root**. Both installers fetch this file from GitHub at runtime:
 
 ```
-0.2.2
+0.2.3
 ```
 
 Installers write a local copy to **`.opencode/.vibuzo-version`** with install metadata:
