@@ -205,7 +205,7 @@ if [ "$UPDATE" = true ]; then
         STATUS="Up to date"
         UP_TO_DATE=true
     elif [ "$SCRIPT_VERSION" != "unknown" ]; then
-        STATUS="Update available"
+        STATUS="Update available!"
     else
         STATUS="Could not check"
     fi
@@ -216,7 +216,7 @@ if [ "$UPDATE" = true ]; then
     BOX_LINES+=("Latest:   $SCRIPT_VERSION")
     BOX_LINES+=("Status:   $STATUS")
     BOX_LINES+=("")
-    BOX_LINES+=("Installed: $INSTALLED_FULL")
+    BOX_LINES+=("Last Update: $INSTALLED_FULL")
     BOX_LINES+=("Location:  $OPENCODE_DIR")
 
     print_box "Vibuzo Update Check" "${BOX_LINES[@]}"

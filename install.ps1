@@ -196,18 +196,18 @@ if ($Update) {
     $Status = "Up to date"
     $UpToDate = $true
   } elseif ($ScriptVersion -ne "unknown") {
-    $Status = "Update available"
+    $Status = "Update available!"
   } else {
     $Status = "Could not check"
   }
-
+  
   # Build and display the update check box
   $BoxLines = @()
   $BoxLines += "Current:  $Version"
   $BoxLines += "Latest:   $ScriptVersion"
   $BoxLines += "Status:   $Status"
   $BoxLines += ""
-  $BoxLines += "Installed: $InstalledFull"
+  $BoxLines += "Last Update: $InstalledFull"
   $BoxLines += "Location:  $OpenCodeDir"
 
   Write-Box -Title "Vibuzo Update Check" -Lines $BoxLines
