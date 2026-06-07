@@ -31,6 +31,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.1.5** — Box renderer double-line borders: all installer boxes (`Write-Box`/`print_box`) now use `╔═╗║╚═╝` matching the VIBUZO banner style, fixed at 59-char total width, status lines wrapped in header boxes.
 **0.1.4** — Box renderer emoji width bug fix: `Write-Box` (PowerShell) and `print_box` (Bash) now account for emoji double-width rendering (U+2700–U+27BF characters count as 1 char but render as 2 terminal columns).
 **0.1.3** — Documentation sync: added version history to README, fixed `install.sh` syntax corruption from SHA removal, updated agent version check to fetch from `VERSION` file.
 

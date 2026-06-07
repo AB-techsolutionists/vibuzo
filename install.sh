@@ -115,16 +115,9 @@ print_box() {
     local title="$1"
     shift
     local lines=("$@")
-    local max_len=0
-
-    for line in "${lines[@]}"; do
-        if [ ${#line} -gt $max_len ]; then
-            max_len=${#line}
-        fi
-    done
-
-    # Total width: left border + space + content + space + right border
-    local total=$((max_len + 4))
+    # Fixed box width matching the VIBUZO banner: 59 total, 55 content
+    local total=59
+    local max_len=$((total - 4))
     
     # Title section with spaces
     local title_section=" $title "
@@ -136,11 +129,11 @@ print_box() {
     local right_dashes=$((dash_space - left_dashes))
     
     # Top border
-    printf "${CYAN}╭"
-    for ((i=0; i<left_dashes; i++)); do printf "─"; done
+    printf "${CYAN}╔"
+    for ((i=0; i<left_dashes; i++)); do printf "═"; done
     printf "%s" "$title_section"
-    for ((i=0; i<right_dashes; i++)); do printf "─"; done
-    printf "╮${NC}\n"
+    for ((i=0; i<right_dashes; i++)); do printf "═"; done
+    printf "╗${NC}\n"
 
     # Content lines
     for line in "${lines[@]}"; do
@@ -149,15 +142,15 @@ print_box() {
         local emoji_extra=$(( ${#line} - ${#stripped} ))
         local pad_len=$((max_len - ${#line} - emoji_extra))
         if [ $pad_len -lt 0 ]; then pad_len=0; fi
-        printf "${CYAN}│${NC} %s" "$line"
+        printf "${CYAN}║${NC} %s" "$line"
         for ((i=0; i<pad_len; i++)); do printf " "; done
-        printf " ${CYAN}│${NC}\n"
+        printf " ${CYAN}║${NC}\n"
     done
 
     # Bottom border
-    printf "${CYAN}╰"
-    for ((i=0; i<total - 2; i++)); do printf "─"; done
-    printf "╯${NC}\n"
+    printf "${CYAN}╚"
+    for ((i=0; i<total - 2; i++)); do printf "═"; done
+    printf "╝${NC}\n"
 }
 
 # ─── Banner ──────────────────────────────────────────────────────────────────
@@ -246,10 +239,10 @@ if [ "$UPDATE" = true ]; then
     fi
 
     echo ""
-    printf "${YELLOW}⬆️  Updating Vibuzo ${SCRIPT_VERSION} ($INSTALL_TARGET)...${NC}\n"
+    print_box "Updating" "⬆️  Updating Vibuzo ${SCRIPT_VERSION} ($INSTALL_TARGET)..."
 else
     echo ""
-    printf "${CYAN}🔧 Installing Vibuzo ${SCRIPT_VERSION} ($INSTALL_TARGET)...${NC}\n"
+    print_box "Installing" "🔧 Installing Vibuzo ${SCRIPT_VERSION} ($INSTALL_TARGET)..."
 fi
 
 # ─── Install / Update ────────────────────────────────────────────────────────

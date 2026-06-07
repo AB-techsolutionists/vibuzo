@@ -105,25 +105,16 @@ function Write-Box {
         [string]$Color = "Cyan"
     )
 
-    # Calculate content width from the longest line
-    $maxLen = 0
-    foreach ($line in $Lines) {
-        if ($line.Length -gt $maxLen) { $maxLen = $line.Length }
-    }
-    
-    # Ensure box is at least as wide as title
-    $titleDisplayLen = $Title.Length + 2
-    if ($titleDisplayLen -gt $maxLen) { $maxLen = $titleDisplayLen }
-    
-    $contentWidth = $maxLen
-    $totalWidth = $contentWidth + 4  # 2 spaces padding each side
+    # Fixed box width matching the VIBUZO banner: 59 total, 55 content
+    $contentWidth = 55
+    $totalWidth = 59
 
     # Top border with title
     $titleSection = " $Title "
     $dashSpace = $totalWidth - 2 - $titleSection.Length
     $leftDashes = [Math]::Floor($dashSpace / 2)
     $rightDashes = $dashSpace - $leftDashes
-    $top = "╭" + "─" * $leftDashes + $titleSection + "─" * $rightDashes + "╮"
+    $top = "╔" + "═" * $leftDashes + $titleSection + "═" * $rightDashes + "╗"
     Write-Host $top -ForegroundColor $Color
 
     # Content lines
@@ -134,11 +125,11 @@ function Write-Box {
             $code = [int]$c
             if ($code -ge 0x2700 -and $code -le 0x27BF) { $emojiExtra++ }
         }
-        Write-Host ("│ " + $line.PadRight($contentWidth - $emojiExtra) + " │") -ForegroundColor $Color
+        Write-Host ("║ " + $line.PadRight($contentWidth - $emojiExtra) + " ║") -ForegroundColor $Color
     }
 
     # Bottom border: exact width
-    Write-Host ("╰" + "─" * ($totalWidth - 2) + "╯") -ForegroundColor $Color
+    Write-Host ("╚" + "═" * ($totalWidth - 2) + "╝") -ForegroundColor $Color
 }
 
 # ─── Help ────────────────────────────────────────────────────────────────────
@@ -238,10 +229,10 @@ if ($Update) {
   }
 
   Write-Host ""
-  Write-Host "⬆️  Updating Vibuzo $ScriptVersion ($InstallTarget)..." -ForegroundColor $Yellow
+  Write-Box "Updating" @("⬆️  Updating Vibuzo $ScriptVersion ($InstallTarget)...")
 } else {
   Write-Host ""
-  Write-Host "🔧 Installing Vibuzo $ScriptVersion ($InstallTarget)..." -ForegroundColor $Cyan
+  Write-Box "Installing" @("🔧 Installing Vibuzo $ScriptVersion ($InstallTarget)...")
 }
 
 # ─── Install / Update ────────────────────────────────────────────────────────
