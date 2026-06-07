@@ -123,6 +123,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.1.3** | Documentation sync: version history in README, fixed `install.sh` syntax corruption, updated agent version check. |
 | **0.1.2** | Dynamic version fetching from `VERSION` file on GitHub. Removed commit SHA tracking and 7 wrapper scripts. Fixed PowerShell command syntax. Enhanced success messages with arrow-bulleted guidance. |
 | **0.1.1** | Complete installer visual redesign: grouped comma-separated file lists, compact update check box, compact success box, single-line AGENTS.md status, consistent rounded box style. |
 | **0.1.0** | Version tracking system (0.x.x semver). Removed source-mirror sync convention. Forward-looking session summary template. Dynamic version reporting. |

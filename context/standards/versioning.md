@@ -31,7 +31,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
-**0.1.2** — Dynamic version fetching from the `VERSION` file at repo root. Installers no longer hardcode versions — they fetch from GitHub at runtime. Visual redesign with grouped section display, compact update check box, and streamlined success boxes. Removed wrapper scripts and commit SHA from version tracking.
+**0.1.3** — Documentation sync: added version history to README, fixed `install.sh` syntax corruption from SHA removal, updated agent version check to fetch from `VERSION` file.
 
 ## Bump Rules
 
