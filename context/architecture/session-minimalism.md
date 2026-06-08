@@ -11,7 +11,7 @@ when: Designing command interfaces or restructuring multi-mode commands
 
 # Session Command Minimalism
 
-> Architecture decision: strip the session command to 2 modes (report + init) with no subcommands. View, timeline, and find are deleted entirely.
+> Architecture decision: strip the session command to 2 modes (report + init) with no subcommands. View, timeline, and find are deleted entirely. Init was later split into its own standalone command file (`session-init.md`).
 
 ## Context
 
@@ -28,7 +28,7 @@ The /spec pipeline implemented all 5, but the user explicitly rejected view/time
 
 **Keep only 2 modes:**
 - `/session` (or `/session report`) — generate a comprehensive session summary
-- `/session init` — initialize agent context (read-only, no file created)
+- `/session-init` — initialize agent context (read-only, no file created)
 
 **Delete everything else:**
 - `session-view.md` and `session-timeline.md` files — deleted from both `commands/` and `.opencode/commands/`
@@ -39,7 +39,7 @@ The /spec pipeline implemented all 5, but the user explicitly rejected view/time
 ## Rationale
 
 1. **Minimal surface area** — Fewer commands to discover, learn, and maintain.
-2. **Single responsibility** — `/session` generates reports, `/session init` initializes context. No mixing of concerns.
+2. **Single responsibility** — `/session` generates reports, `/session-init` initializes context. No mixing of concerns.
 3. **User preference** — Explicit direction from the user trumps comprehensive feature design.
 4. **Deletion > deprecation** — Removing code entirely avoids maintenance burden of deprecated paths.
 
@@ -51,5 +51,6 @@ The /spec pipeline implemented all 5, but the user explicitly rejected view/time
 
 ## Related
 
-- `commands/session.md` — The implementation with 2 modes
+- `commands/session.md` — Session report generation (single purpose)
+- `commands/session-init.md` — Standalone init command (split from session.md)
 - `context/patterns/session-init-pattern.md` — The init mode pattern

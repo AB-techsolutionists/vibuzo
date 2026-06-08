@@ -12,13 +12,13 @@ when: Deciding whether to consolidate a single-command file into a multi-mode co
 
 # Context-Init Standalone
 
-> Architecture decision: unlike session (which consolidated 5 modes into `session.md` with report + init), context-init was kept as a standalone file without a consolidated `context.md` wrapper. Related commands (append, harvest, find) were simply deleted rather than merged.
+> Architecture decision: unlike session (which consolidated 5 modes then split into `session.md` + `session-init.md`), context-init was kept as a standalone file without a consolidated `context.md` wrapper. Related commands (append, harvest, find) were simply deleted rather than merged.
 
 ## Context
 
 When the session command was simplified, the approach was:
 - Delete session-view.md and session-timeline.md
-- Consolidate remaining modes (report + init) into a single `session.md` with mode routing
+- Consolidate remaining modes (report + init) into a single `session.md` with mode routing (later split into `session.md` + `session-init.md` per the split-file pattern)
 
 When the same consolidation was requested for context commands, two approaches were possible:
 1. **Session-style** — create a consolidated `context.md` with modes (e.g., `init` + default status), delete the sub-files
@@ -45,7 +45,7 @@ New files created: none
 | Aspect | Session | Context |
 |--------|---------|---------|
 | Before | session.md + session-view.md + session-timeline.md | context-init.md + context-append.md + context-harvest.md + context-find.md |
-| After | session.md (modes: report, init) | context-init.md (unchanged) |
+| After | session.md (report) + session-init.md (init) | context-init.md (unchanged) |
 | What happened | 3 files → 1 consolidated file | 4 files → 1 file (3 deleted) |
 | Default mode | Report generation | N/A (init must be typed explicitly) |
 

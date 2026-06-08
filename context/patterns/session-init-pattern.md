@@ -33,8 +33,8 @@ when: Initializing agent context or designing a session-start workflow
 
 ## Rationale
 
-Separating agent initialization from session report generation keeps each command focused. `/session init` answers "what does the agent know?" without creating noise. `/session` answers "what happened?" without mixing in startup logic.
+Separating agent initialization from session report generation keeps each command focused. `/session-init` answers "what does the agent know?" without creating noise. `/session` answers "what happened?" without mixing in startup logic.
 
 ## Related
 
-- `commands/session.md` — Contains the Init Mode implementation
+- `commands/session-init.md` — The standalone init command (split from session.md)

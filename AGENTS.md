@@ -18,7 +18,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
-│   ├── commands/                 ← 5 command files (research, spec, context-init, add-context, session)
+    │   ├── commands/                 ← 6 command files (research, spec, context-init, add-context, session, session-init)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
@@ -89,7 +89,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Commands
 
-Vibuzo ships with **5 `.md` command files** (one file per command, plus `@deepsearcher` inline and `/session init` as part of `session.md`) — 7 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
+Vibuzo ships with **6 `.md` command files** (one file per command, plus `@deepsearcher` inline) — 7 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
 
 | Command | Purpose | Runs |
 |---------|---------|------|
@@ -99,7 +99,7 @@ Vibuzo ships with **5 `.md` command files** (one file per command, plus `@deepse
 | `/context init` | Scaffold context directories and `index.md` | main |
 | `/add-context <statement>` | Save a rule/pattern to context (agent infers type and filename) | subtask |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | main |
-| `/session init` | Initialize agent context (read-only, no file created) | main |
+| `/session-init` | Initialize agent context — discover, verify, scaffold, report loaded state | main |
 
 **How they work:** Each file is an `.md` with YAML frontmatter. The `Do these steps NOW:` block is the imperative instruction. `$ARGUMENTS` is replaced with the user's text after the command. Commands with `subtask: true` run in the background; others run in the main session with full conversation history.
 
@@ -159,7 +159,7 @@ At natural breakpoints:
 
 **Session commands:**
 - `/session` — generate and save a comprehensive session summary
-- `/session init` — initialize agent context (read-only, no file created)
+- `/session-init` — initialize agent context — discover, verify, scaffold, report loaded state
 
 ## Approval Gates
 

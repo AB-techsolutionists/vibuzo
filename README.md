@@ -15,7 +15,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 |-----------|-------------|
 | **Full engineering pipeline** | Plan before touching code, delegate complex features via `/spec` with approval gates between every phase, and commit with structured messages. |
 | **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. Sessions auto-load, auto-query, and auto-scan for patterns to promote. |
-| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available for review. `/session init` initializes agent context at session start. |
+| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available for review. `/session-init` initializes agent context at session start. |
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
 
@@ -66,7 +66,7 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
 
 4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
 
-5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Run `/session init` at the start of a new session to load agent context.
+5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — after `/session` completes, run `/compact` in opencode's TUI, copy the output, and paste it there. This block serves as starting context for the next session. Run `/session-init` at the start of a new session to load agent context.
 
 ## How Vibuzo Learns Over Time
 
@@ -89,7 +89,7 @@ your-project/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Implementation sub-agent (used by /spec)
     ├── agent/core/deepsearcher.md← Research sub-agent (used by /research, @deepsearcher)
-    └── commands/                 ← 5 command templates
+    └── commands/                 ← 6 command templates
 ```
 
 **Key file: `AGENTS.md`**
@@ -110,12 +110,13 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context We use pnpm not npm` |
 | `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | `/session` |
-| `/session init` | Initialize agent context (read-only, no file created) | `/session init` |
+| `/session-init` | Initialize agent context — discover, verify, scaffold, report loaded state | `/session-init` |
 
 ## Version History
 
 | Version | Highlights |
 |---------|------------|
+| **0.3.0** | Split session command into two standalone files: session.md (report generation) and session-init.md (agent context initialization). Removed routing logic, updated all docs and installers. |
 | **0.2.9** | Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command. Saved context-init-standalone architecture record from session scan. |
 | **0.2.8** | Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command (harvesting is now built into `/session`). | 
 | **0.2.7** | Session management enhancement: restructured session.md (report + init only), deleted session-view/timeline, updated installers and docs, added YAML frontmatter to reports. |

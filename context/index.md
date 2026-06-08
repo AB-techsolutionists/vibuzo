@@ -54,7 +54,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/commit-workflow-pattern.md` — Pattern for the 3-gate commit workflow (action preview → execute → commit preview → git commit → report with no push)
 - `patterns/installer-content-preservation-dedup.md` — Pattern for checking fresh download content before appending preserved user content to prevent duplication on re-install
 - `patterns/internal-commands-convention.md` — Pattern for commands that live in commands/ but are excluded from installer and user-facing docs (Vibuzo dev-only)
-- `patterns/session-init-pattern.md` — Pattern for /session init: read-only agent context initialization (discover, verify, scaffold, report, no file created)
+- `patterns/session-init-pattern.md` — Pattern for /session-init: read-only agent context initialization (discover, verify, scaffold, report, no file created)
 
 ### Standards
 - `standards/commit-message-format.md` — Standard commit message format for "commit" commands: feat: prefix with ## section categories

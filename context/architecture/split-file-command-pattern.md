@@ -72,7 +72,8 @@ This pattern has been applied to:
 | Command | Sub-Files | Mode |
 |---------|-----------|------|
 | `/context` | `context-init.md` | Main session |
-| `/session` | `session.md` (modes: report, init) | Main session |
+| `/session` | `session.md` | Main session |
+| `/session-init` | `session-init.md` | Main session |
 | `/spec` | `spec.md` | Subtask |
 
 Context and session commands run in the main agent session so they can access conversation history and maintain continuity. `/spec` uses a subtask because the 5-phase pipeline benefits from isolated execution.

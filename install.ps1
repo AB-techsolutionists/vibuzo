@@ -58,7 +58,7 @@ $AgentFiles = @(
 )
 
 $CommandFiles = @(
-    "spec", "add-context", "context-init", "research", "session"
+    "spec", "add-context", "context-init", "research", "session", "session-init"
 )
 
 # ─── Terminal Colors ─────────────────────────────────────────────────────────

@@ -34,7 +34,7 @@ AGENT_FILES=(
 )
 
 COMMAND_FILES=(
-    "spec" "add-context" "context-init" "research" "session"
+    "spec" "add-context" "context-init" "research" "session" "session-init"
 )
 
 # ─── Arg Parsing ─────────────────────────────────────────────────────────────
