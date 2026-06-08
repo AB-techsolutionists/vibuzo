@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.2.9** — Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command. Saved context-init-standalone architecture record from session scan (2026-06-07).
 **0.2.8** — Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command (2026-06-07).
 **0.2.7** — Session management enhancement: restructured session.md (report + init only), deleted session-view/timeline, updated installers and docs, added YAML frontmatter to reports, synced context standards (2026-06-07).
 **0.2.6** — Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19) (2026-06-07).

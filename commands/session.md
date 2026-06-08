@@ -55,17 +55,6 @@ Do these steps NOW:
     - **<Topic>:** <rule that governed this session's decisions>
     - **<Topic>:** <same format — only the ones that shaped the session>
 
-    ## Progress
-
-    ### Done
-    - <What was completed — bullet list with specific file/feature references>
-
-    ### In Progress
-    *(none)*
-
-    ### Blocked
-    *(none)*
-
     ## Forward Decisions
 
     | # | Decision | Rationale |
@@ -78,12 +67,6 @@ Do these steps NOW:
 
     - <What the next session MUST know — unfinished work, gotchas, state that compaction won't capture>
     - <Keep it to the 2-5 items that are actually actionable next session>
-
-    ## Next Steps
-
-    1. Run `/compact` in opencode TUI (immediately after this summary)
-    2. Copy the output and paste into **Session Compaction** section below
-    3. That block becomes starting context for next `/new` session
 
     ## Hot Files
 
@@ -126,27 +109,7 @@ Do these steps NOW:
     ────────────────────────────────────────────────
     ```
 
-7. **Check for previous session compaction content** — after the new session file is saved, check if the previous latest session has real compaction content:
-
-    a. Find the session file that was latest BEFORE this new one — query `context/sessions/index.md` for the last entry in the timeline that is NOT the one just added. Get the file name from that entry.
-
-    b. If a previous session exists, read it and search for a `## Session Compaction` section.
-
-    c. If found, check if the content below that heading is real (not the default placeholder text `> Paste \`/compact\` output here...`). A simple check: if the content contains more than just placeholder text, it has real compaction.
-
-    d. If real compaction content is found, present this hint:
-    ```
-    ── SESSION HINT ────────────────────────
-    Previous session compaction content found.
-    Load it as working context? (y/N):
-    ────────────────────────────────────────
-    ```
-
-    e. If "y": instruct the user: "Copy the Session Compaction block from <filename> and paste it as starting context for your next session."
-
-    f. If "N" or anything else: skip silently. No hint is shown if there's no previous session or no real compaction content.
-
-8. **Scan for patterns and save candidates** — using the session file and conversation history, scan for knowledge worth preserving permanently:
+7. **Scan for patterns and save candidates** — using the session file and conversation history, scan for knowledge worth preserving permanently:
 
     - Read the **Forward Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
     - Read the **Session Summary** and **Progress** — any workaround, trick, or insight that isn't documented elsewhere
@@ -179,7 +142,7 @@ Do these steps NOW:
     - If "N" (or anything else): skip to next candidate
     - After all candidates are processed, append a `## Patterns Detected` section to the session file listing all candidates and whether they were saved or skipped
 
-9. **Instruct the user on the workflow** — after the pattern scan, print:
+8. **Instruct the user on the workflow** — after the pattern scan, print:
 
     ```
     ── NEXT STEPS ──────────────────────────
@@ -214,21 +177,15 @@ Do these steps NOW:
    - `context/patterns/`
    - `context/sessions/`
 
-3. **Scaffold missing directories** — for any directory that doesn't exist, run:
-   ```
-   New-Item -ItemType Directory -Path "context/<name>" -Force
-   ```
-   Then create a `.gitkeep` file inside it to preserve it in git.
-
-4. **Read the session timeline** — read `context/sessions/index.md`. If it exists, find the last (bottom-most) row in the timeline table to identify the latest session file. Collect:
+3. **Read the session timeline** — read `context/sessions/index.md`. If it exists, find the last (bottom-most) row in the timeline table to identify the latest session file. Collect:
    - Total number of sessions listed
    - Latest session date and file name
 
-5. **Read the latest session summary** — locate and read the most recent session file from step 4. If no sessions exist yet, report "No previous sessions found".
+4. **Read the latest session summary** — locate and read the most recent session file from step 4. If no sessions exist yet, report "No previous sessions found".
 
-6. **Check for compaction content** — in the latest session file (if it exists), search for a `## Session Compaction` section. Check if the content beneath it is real content (not the default placeholder text referencing `/compact`). If real compaction content exists, note it for the report.
+5. **Check for compaction content** — in the latest session file (if it exists), search for a `## Session Compaction` section. Check if the content beneath it is real content (not the default placeholder text referencing `/compact`). If real compaction content exists, note it for the report.
 
-7. **Report what was loaded** — print a concise summary:
+6. **Report what was loaded** — print a concise summary:
    ```
    ── SESSION INIT ──────────────────────
    Context files:  <N> total across all directories
@@ -238,4 +195,4 @@ Do these steps NOW:
    ──────────────────────────────────────
    ```
 
-8. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.
+7. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.

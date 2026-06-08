@@ -116,6 +116,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.2.9** | Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command. Saved context-init-standalone architecture record from session scan. |
 | **0.2.8** | Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command (harvesting is now built into `/session`). | 
 | **0.2.7** | Session management enhancement: restructured session.md (report + init only), deleted session-view/timeline, updated installers and docs, added YAML frontmatter to reports. |
 | **0.2.6** | Synced versioning.md rollover scheme to match /new-release (patch 0→9, minor 0→19). |

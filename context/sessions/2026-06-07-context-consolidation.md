@@ -90,4 +90,79 @@ Saved 2 patterns from the previous session's scan (session-init-pattern and sess
 
 ## Session Compaction
 
-> Paste `/compact` output here. This replaces Chronological Log, File Manifest, Commands Invoked, and State — compaction captures those better. Everything above covers what compaction misses: intent, constraints, categorized progress, forward decisions, forward context, and hot files.
+## Goal
+
+Consolidated context commands (deleted append/harvest/find, kept only context-init), saved 2 permanent context files from previous session patterns, updated all docs/installers to reflect both changes, and bumped version to 0.2.8.
+
+## Constraints & Preferences
+
+- **Session command minimalism** — only `/session` (report) and `/session init` (agent context); no view/timeline/find subcommands
+- **Context command minimalism** — only `/context init`; no append/harvest/find (context harvesting is now built into `/session`)
+- **Commit format strictness** — `feat:` prefix + `## Section` categories + bullets, saved to `commit-message-format.md` standard
+- **Approval level 3 (Full Control)** — gates active for every pipeline phase, file mutation, and command execution
+- **Versioning scheme** — patch 0→9 (rolls to minor), minor 0→19 (rolls to major); standardized across versioning.md and /new-release
+- **git push requires explicit approval** — per custom rule, never push without user saying yes
+
+## Progress
+
+### Done
+- Saved 2 pattern candidates from previous session to permanent context:
+  - `context/patterns/session-init-pattern.md` — read-only agent context initialization workflow
+  - `context/architecture/session-minimalism.md` — architecture decision: session command stripped to 2 modes
+- Appended `## Patterns Detected` section to `context/sessions/2026-06-07-session-restructure-versioning-sync.md`
+- Deleted `context-append.md`, `context-harvest.md`, `context-find.md` from both `commands/` and `.opencode/commands/` (6 files total)
+- Updated `AGENTS.md`: commands table (10→7 rows), tree count (9→5 files), removed append/harvest/find from Working With Context
+- Updated `README.md`: mechanism table, Quick Start, "Three learning mechanisms" → "Two", commands table (9→6 rows), tree count (8→5), v0.2.8 version history entry
+- Updated `context/index.md`: removed `/context find` from frontmatter note, `/context harvest` → `/session` auto-scan
+- Updated `context/architecture/split-file-command-pattern.md`: context row → `context-init.md` only, sub-file example changed from context-append to context-init
+- Updated `context/standards/command-parameter-notation.md`: removed /context find and /context append rows
+- Updated `context/standards/installer-visual-language.md`: example count 9→5, removed deleted files
+- Updated `context/standards/versioning.md`: added 0.2.8 entry
+- Updated `install.ps1` / `install.sh`: 8→5 command files (context-find, context-harvest, context-append removed)
+- Bumped `VERSION` 0.2.7→0.2.8
+- Committed previous session changes (`2f1072e`) and pushed to origin/main
+- Fixed AGENTS.md tree count (6→5) and README "Three learning mechanisms" → "Two" during final audit
+
+### In Progress
+*(none)*
+
+### Blocked
+*(none)*
+
+## Key Decisions
+
+- **Context commands consolidated to only `/context init`** — append (scan conversation), harvest (mine sessions), and find (semantic search) deleted. Context harvesting is now built into `/session` via its pattern-scanning step (step 6). `/add-context` remains as the separate save mechanism.
+- **Pattern candidates saved on approval** — session-init-pattern.md and session-minimalism.md presented as candidates by `/session` step 6, user approved both, saved to appropriate `context/` directories
+- **No `context.md` command file created** — unlike session.md which consolidated into one file with 2 modes, context-init.md stays as-is (single-file, single-purpose). No default `/context` command exists.
+
+## Next Steps
+
+1. Run `/compact` in opencode TUI and paste into this session's Session Compaction section
+2. Verify `.opencode/commands/` has 6 files — confirm context-init.md survives, deleted files are gone
+
+## Critical Context
+
+- Current version: **0.2.8** (`VERSION` at repo root)
+- Last commit: `2f1072e` — "feat: session restructure — 2 modes only, view/timeline deleted, YAML frontmatter, patterns saved" (pushed to origin/main)
+- User-facing command files: `commands/` has 6 files (5 user-facing: spec, add-context, context-init, research, session + 1 internal: new-release); `.opencode/commands/` has 6 files (same set)
+- `context-append.md`, `context-harvest.md`, `context-find.md` — deleted from both `commands/` and `.opencode/commands/`
+- `context-init.md` is the only context command — no `/context` default mode exists
+- Context pattern scanning is now step 6 of `/session` (report mode) — replaces what `/context append` and `/context harvest` did
+- `install.ps1` and `install.sh` command arrays now have 5 files (context-find, context-harvest, context-append removed)
+- `new-release.md` manually synced to `.opencode/commands/` — excluded from installer arrays
+
+## Relevant Files
+
+- `commands/context-append.md`, `context-harvest.md`, `context-find.md`: **DELETED** from both commands/ and .opencode/commands/
+- `commands/context-init.md`: Only context command — unchanged
+- `commands/session.md`: 2 modes (report, init), step 6 handles pattern scanning
+- `context/patterns/session-init-pattern.md`: New — read-only agent context initialization pattern
+- `context/architecture/session-minimalism.md`: New — architecture decision record for 2-mode session
+- `context/standards/versioning.md`: Updated — 0.2.8 entry
+- `install.ps1` / `install.sh`: Updated — 5 command files (context-find/harvest/append removed)
+- `AGENTS.md`: Updated — 5 command files, 7 commands total, no append/harvest/find
+- `README.md`: Updated — 6 commands table, 2 learning mechanisms, 5 command templates
+- `context/architecture/split-file-command-pattern.md`: Updated — context row → context-init.md only
+- `context/standards/command-parameter-notation.md`: Updated — /context find/append rows removed
+- `context/sessions/2026-06-07-session-restructure-versioning-sync.md`: Updated — Patterns Detected section appended
+- `VERSION`: 0.2.8
