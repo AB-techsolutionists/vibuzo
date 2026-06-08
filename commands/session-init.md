@@ -5,31 +5,32 @@ agent: Vibuzo
 
 Do these steps NOW:
 
-1. **Read `AGENTS.md`** — load the universal entry point. Parse the file to understand agent roles (Vibuzo, Deepveloper, Deepsearcher), available commands (listed in the commands table), project conventions (Karpathy Principles, approval gates, custom rules), and file structure overview. Note any custom rules below the `─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───` marker.
+1. **Read `AGENTS.md`** — load the universal entry point. Parse the file to understand agent roles (Vibuzo, Deepveloper, Deepsearcher), available commands (listed in the commands table), project conventions (Karpathy Principles, approval gates, custom rules), and file structure overview. Note any custom rules below the `─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───` marker. Do NOT print parsing details to chat.
 
-2. **Read `context/index.md`** — parse the ## Files section to discover all available context files. Count how many files exist under architecture/, standards/, patterns/, and sessions/.
+2. **Read `context/index.md`** — parse the `## Files` section to discover all available context files. Count how many files exist under architecture/, standards/, patterns/, and sessions/. Do NOT print the file list to chat.
 
 3. **Verify context directories** — use `Test-Path` to check each directory exists:
    - `context/architecture/`
    - `context/standards/`
    - `context/patterns/`
    - `context/sessions/`
+   Do NOT print verification results to chat.
 
-4. **Read the session timeline** — read `context/sessions/index.md`. If it exists, find the last (bottom-most) row in the timeline table to identify the latest session file. Collect:
-   - Total number of sessions listed
-   - Latest session date and file name
+4. **Scan recent sessions** — read `context/sessions/index.md` and parse the timeline table:
+   a. Determine today's date dynamically using `Get-Date -Format "yyyy-MM-dd"`
+   b. Find all timeline rows matching today's date
+   c. If today has entries → collect their file names → read ALL matching session files
+   d. If no entries for today → compute yesterday's date using `(Get-Date).AddDays(-1).ToString("yyyy-MM-dd")` → find all rows matching yesterday → read ALL matching session files
+   e. For each file read, check whether a `## Session Compaction` section with real content (not placeholder) exists
 
-5. **Read the latest session summary** — locate and read the most recent session file from step 4. If no sessions exist yet, report "No previous sessions found".
-
-6. **Check for compaction content** — in the latest session file (if it exists), search for a `## Session Compaction` section. Check if the content beneath it is real content (not the default placeholder text referencing `/compact`). If real compaction content exists, note it for the report.
-
-7. **Report what was loaded** — print a concise summary:
+5. **Print the session summary box** — output ONLY this to chat:
    ```
    ── Session Initialized ──────────────
    Context files:  <N> total across all directories
-   Sessions:       <N> total, latest: YYYY-MM-DD-<title>.md
-   Compaction:     <found | not found | no previous session>
+   Sessions:       <N> total, <M> recent loaded from <date>
+   Compaction:     <found in N files | not found>
    ──────────────────────────────────────
    ```
+   Replace `<N>`, `<M>`, and `<date>` with actual values. Do not print any other output from steps 1-4.
 
-8. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.
+6. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.

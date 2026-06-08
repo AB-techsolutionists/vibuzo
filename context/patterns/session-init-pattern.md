@@ -15,21 +15,29 @@ when: Initializing agent context or designing a session-start workflow
 
 ## Steps
 
-1. **Read `AGENTS.md`** — load the universal entry point. Parse agent roles, commands, conventions, and any custom rules.
+1. **Read `AGENTS.md`** — load the universal entry point. Parse agent roles, commands, conventions, and any custom rules. Run silently (no output to chat).
 
-2. **Read `context/index.md`** — parse the `## Files` section to discover all available context files. Count files in each directory (architecture, standards, patterns, sessions).
+2. **Read `context/index.md`** — parse the `## Files` section to discover all available context files. Count files in each directory (architecture, standards, patterns, sessions). Run silently.
 
-3. **Verify context directories** — use `Test-Path` (PowerShell) to check each of the 4 context directories exists.
+3. **Verify context directories** — use `Test-Path` (PowerShell) to check each of the 4 context directories exists. Run silently.
 
-4. **Read the session timeline** — read `context/sessions/index.md`. Find the last (bottom-most) entry to identify the latest session file. Collect total session count, latest date, and file name.
+4. **Scan recent sessions** — read `context/sessions/index.md` and parse the timeline:
+   a. Derive today's date dynamically (`Get-Date -Format "yyyy-MM-dd"`)
+   b. Find all timeline rows matching today's date
+   c. If today has entries → read ALL matching session files
+   d. If no entries for today → derive yesterday's date (`(Get-Date).AddDays(-1).ToString("yyyy-MM-dd")`) → read ALL matching session files
+   e. For each file read, note whether a `## Session Compaction` section with real content exists
 
-5. **Read the latest session summary** — locate and read the most recent session file. If no sessions exist, report "No previous sessions found".
+5. **Report state** — print ONLY the summary box to chat (no intermediate output):
+   ```
+   ── Session Initialized ──────────────
+   Context files:  <N> total across all directories
+   Sessions:       <N> total, <M> recent loaded from <date>
+   Compaction:     <found in N files | not found>
+   ──────────────────────────────────────
+   ```
 
-6. **Locate compaction content** — find the `## Session Compaction` section in the latest session file. This contains the auto-generated starting context block (a styled box). Report whether it was found.
-
-7. **Report state** — print a summary box showing context file count, session count, latest session date, and compaction found status. No directories are scaffolded.
-
-8. **Do NOT generate a session file** — init is read-only. No file is created in `context/sessions/`.
+6. **Do NOT generate a session file** — init is read-only. No file is created in `context/sessions/`.
 
 ## Rationale
 
