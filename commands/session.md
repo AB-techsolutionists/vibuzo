@@ -1,5 +1,5 @@
 ---
-description: Generate a session report — full summary with YAML frontmatter, timeline update, pattern scan
+description: Generate a session report — full summary with YAML frontmatter, timeline update, context scan (patterns/architecture/standards)
 agent: Vibuzo
 ---
 
@@ -149,38 +149,39 @@ Do these steps NOW:
     ────────────────────────────────────────────────
     ```
 
-7. **Scan for patterns and save candidates** — using the session file and conversation history, scan for knowledge worth preserving permanently:
+7. **Scan for context candidates (patterns, architecture, or standards)** — using the session file and conversation history, scan for knowledge worth preserving permanently across all three context types:
 
     - Read the **Forward Decisions** section — any decision that is a new rule, convention, or architectural choice belongs in `context/standards/` or `context/architecture/`
     - Read the **Session Summary** and **Progress** — any workaround, trick, or insight that isn't documented elsewhere
-    - Check if any **Hot Files** were newly created context files — already saved; skip. But if a new pattern emerged from modifications, it may be candidate material
+    - Check if any **Hot Files** were newly created context files — already saved; skip. But if new patterns, architecture insights, or standards emerged from modifications, they may be candidate material
     - Also scan the conversation for:
-      - New conventions established (e.g., "we use pnpm not npm")
-      - Architecture decisions made
-      - Repeated code patterns
+      - **Standards:** New conventions, naming rules, process preferences (e.g., "we use pnpm not npm")
+      - **Architecture:** System design decisions, component relationships, data flow choices
+      - **Patterns:** Repeated code patterns, reusable idioms, workflow templates
       - Tooling preferences discovered
 
     For each candidate, generate:
-    - Suggested file name (kebab-case, under `context/standards/` or `context/patterns/`)
+    - Suggested file name (kebab-case, under `context/standards/`, `context/architecture/`, or `context/patterns/`)
     - Suggested frontmatter (tags, scope, when)
     - Brief content summary
 
     Then present candidates **one at a time** in this format:
     ```
-    ── PATTERN CANDIDATE ──────────────────
+    ── CONTEXT CANDIDATE ──────────────────
     Candidate 1 of <N>
+    Type: <standard | architecture | pattern>
     Name: <filename.md>
     Tags: <tag1, tag2, tag3>
     Scope: <description>
     When: <trigger>
     Content: <1-2 sentence summary>
     ───────────────────────────────────────
-    Save this pattern? (y/N/edit):
+    Save to context? (y/N/edit):
     ```
     - If "y": save the file to the appropriate `context/` directory with generated frontmatter + content, update `context/index.md`
     - If "edit": let the user modify name/tags/scope/when, then save
     - If "N" (or anything else): skip to next candidate
-    - After all candidates are processed, append a `## Patterns Detected` section to the session file listing all candidates and whether they were saved or skipped
+    - After all candidates are processed, append a `## Context Candidates` section to the session file listing each candidate with its type and whether it was saved or skipped
 
 8. **Instruct the user on the workflow** — after the pattern scan, print:
 

@@ -150,8 +150,9 @@ Run the full feature development pipeline for: $ARGUMENTS
 1. Read `specs/<feature>/spec.md`, `specs/<feature>/plan.md`, `specs/<feature>/tasks.md`.
 2. Find implemented code in the codebase (read files referenced in tasks.md).
 3. **Stage 1 — Spec Compliance Review:**
-   - Dispatch a reviewer subagent via `task()` with subagent_type "general"
-   - Provide the reviewer with these instructions inline:
+   - Dispatch Deepviewer via `task()` with subagent_type "Deepviewer" for Spec Compliance Review
+   - Pass: spec doc, plan, tasks, implemented file paths as context
+   - Provide Deepviewer with these instructions inline:
      > **Role:** You are a spec compliance reviewer. Verify that the implementation exactly matches its specification.
      >
      > **Instructions:**
@@ -174,13 +175,14 @@ Run the full feature development pipeline for: $ARGUMENTS
      > **Issues:** <specific issues with file paths and line numbers>
      > **Assessment:** approved or changes required
      > ```
-   - Provide the reviewer with: the spec document, task requirements, and all files that were created/modified
+   - Provide Deepviewer with: the spec document, task requirements, and all files that were created/modified
    - If reviewer returns ❌ Fail:
      - Present issues to user with option to (r)etry fixes, (s)kip, or (a)bort
 4. **Stage 2 — Code Quality Review:**
    - Only if Spec Compliance Review passed ✅
-   - Dispatch a reviewer subagent via `task()` with subagent_type "general"
-   - Provide the reviewer with these instructions inline:
+   - Dispatch Deepviewer via `task()` with subagent_type "Deepviewer" for Code Quality Review
+   - Pass: all files that were created/modified as context
+   - Provide Deepviewer with these instructions inline:
      > **Role:** You are a code quality reviewer. Verify that the implementation is well-structured, maintainable, and follows project standards.
      >
      > **Instructions:**

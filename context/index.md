@@ -20,6 +20,7 @@ This ensures every new session automatically picks up where the last one left of
 | `patterns/` | Reusable code patterns, architectural approaches, idioms |
 | `architecture/` | System design decisions, data flow, component relationships |
 | `sessions/` | Auto-generated summary archives (via `/session`) |
+| `reports/` | Auto-generated audit reports (via `/deepviewer`) |
 
 See the master timeline at `sessions/index.md` for a chronological list of all summaries.
 
@@ -43,6 +44,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `architecture/installer-update-mechanism.md` — Architecture decision for the `--update` flag: version marker file, GitHub API comparison, interactive confirmation, best-effort failure handling
 - `architecture/session-minimalism.md` — Architecture decision: session command stripped to 2 modes (report + init), all subcommands (view/timeline/find) deleted
 - `architecture/context-init-standalone.md` — Architecture decision: context-init kept as standalone file; append/harvest/find deleted without consolidation into a multi-mode context.md
+- `architecture/deepviewer-review-phase.md` — Architecture decision: Deepviewer replaces generic reviewer in /spec pipeline Review phase (spec compliance + code quality)
 
 ### Patterns
 - `patterns/route-based-argument-handling.md` — ⚠️ FAILED PATTERN — Single-file routing doesn't work. All commands use split files instead.
@@ -77,9 +79,13 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/semantic-context-search.md` — Standard for the 3-factor TF-IDF + Levenshtein + keyword scoring formula used by /context find
 - `standards/structured-commit-body-convention.md` — Standard for auto-generating natural-language commit bodies that explain every file change in present tense, imperative mood, for developers to read smoothly
 - `standards/yaml-frontmatter-convention.md` — Standard for YAML frontmatter structure (tags, scope, when) on all context files
+- `standards/deepviewer-invocation-modes.md` — Standard for the three Deepviewer invocation modes (/deepviewer audit, @deepviewer, /spec Review phase) and their file-creation rules
 
 ### Sessions
 - `sessions/index.md` — Auto-generated master timeline of all summaries (via `/session`)
+
+### Reports
+- `reports/` — Auto-generated audit reports (via `/deepviewer`)
 
 ## Maintenance
 

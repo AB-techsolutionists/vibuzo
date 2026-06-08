@@ -1,14 +1,15 @@
 # Vibuzo — Agentic Workflow System
 
-Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
+Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primary orchestrator (Vibuzo) with three specialized sub-agents (Deepveloper, Deepsearcher, Deepviewer) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
 
-## Three-Agent System
+## Agent System
 
 | Agent | Role | Mode |
 |-------|------|------|
-| **Vibuzo** | Plans, executes everyday tasks, runs `/spec` pipeline | Main (`mode: primary`) |
+| **Vibuzo** | Orchestrator — plans, delegates, reviews, and executes everyday tasks. Runs `/spec` pipeline. Single entry point for everything. | Primary (`mode: primary`) |
 | **Deepveloper** | Pure implementation — spawned as subtask via `/spec` | Subtask (`mode: subagent`) |
 | **Deepsearcher** | Web research — spawned as subtask via `/research` or inline via `@deepsearcher` | Subtask (`mode: subagent`) |
+| **Deepviewer** | Codebase analysis and review — audit pipeline, session/context cross-ref, git history, /spec Review phase | Subtask (`mode: subagent`) |
 
 ## Agent Structure
 
@@ -18,14 +19,15 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates 
 │   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
-    │   ├── commands/                 ← 6 command files (research, spec, context-init, add-context, session, session-init)
+│   ├── agent/core/deepviewer.md   ← Codebase analysis and review sub-agent
+    │   ├── commands/                 ← 7 command files (research, spec, context-init, add-context, session, session-init, deepviewer)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents
 │   ├── architecture/             ← Architecture Decision Records
 │   ├── standards/                ← Rules and conventions
 │   ├── patterns/                 ← Reusable idioms
-│   └── sessions/                 ← Summary archives (via /session)
+│   └── sessions/                 ← Session archives (via /session)
 └── specs/                        ← Created on demand by /spec
 ```
 ## Karpathy Principles (Guidelines)
@@ -89,13 +91,15 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Commands
 
-Vibuzo ships with **6 `.md` command files** (one file per command, plus `@deepsearcher` inline) — 7 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
+Vibuzo ships with **8 `.md` command files** (one file per command, plus `@deepsearcher` and `@deepviewer` inline) — 10 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
 
 | Command | Purpose | Runs |
 |---------|---------|------|
 | `/spec <feature>` | Full pipeline: research → spec → plan → tasks → implement → review | subtask |
 | `/research <query>` | Web research via Deepsearcher, saves to `specs/<topic>/research.md` | subtask |
 | `@deepsearcher <query>` | Inline research — same as `/research` but results in chat, no file | inline |
+| `/deepviewer <query>` | Full codebase audit or targeted codebase question | subtask |
+| `@deepviewer <query>` | Inline codebase analysis — targeted answer to any codebase question, no file | inline |
 | `/context init` | Scaffold context directories and `index.md` | main |
 | `/add-context <statement>` | Save a rule/pattern to context (agent infers type and filename) | subtask |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | main |
