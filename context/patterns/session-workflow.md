@@ -5,34 +5,29 @@ tags:
   - compaction
   - golden-path
   - lifecycle
-scope: Session management lifecycle and compaction workflow
-when: Managing session lifecycle, running /session, or preparing for /compact
+scope: Session management lifecycle with auto-generated compaction
+when: Managing session lifecycle or running /session
 ---
 
-# Session Workflow: `/session → /compact → paste into Session Compaction → /new`
+# Session Workflow: `/session → /new`
 
-A reliable pattern for preserving session state across compaction and new-session cycles using the Session Compaction placeholder in every session file.
+A reliable pattern for preserving session state across sessions using the auto-generated Session Compaction block in every session file.
 
 ## The Golden Workflow
 
 ```
 1. Work on a feature / task
-2. At a natural breakpoint → run `/session` (creates session file with Session Compaction placeholder)
-3. Open the session file
-4. Run `/compact` in opencode's TUI
-5. Copy the compaction output
-6. Paste it into the Session Compaction section (replace the placeholder text)
-7. `/new` — start a fresh session, copy the Session Compaction block as starting context
+2. At a natural breakpoint → run `/session` (creates session file with auto-generated Session Compaction)
+3. `/new` — start a fresh session
+4. Copy the Session Compaction block (the full styled box) and paste as starting context
 ```
 
 ## Why This Order
 
 | Step | What happens | Why it matters |
 |------|-------------|----------------|
-| `/session` first | Captures full conversation into `context/sessions/YYYY-MM-DD-<title>.md` + presents context candidates | I have complete context — every request, decision, file change, and git state |
-| `/compact` second | opencode's TUI command truncates conversation for the model, generates a compaction summary | Safe — everything is already saved to a persistent file |
-| Paste into Session Compaction | The compaction output goes into the designated section | Next session will have a ready-made starting context block |
-| `/new` fourth | Starts a fresh session | Copy the Session Compaction block and paste as starting context |
+| `/session` first | Captures full conversation into `context/sessions/YYYY-MM-DD-<title>.md` + auto-generates Session Compaction | Everything saved — narrative, decisions, state, and compact starting context |
+| `/new` second | Starts a fresh session | Copy the Session Compaction block and paste as starting context |
 
 ## Trigger Points
 
@@ -61,8 +56,8 @@ When you open `/new`, the agent automatically:
 AGENTS.md → context/index.md → sessions/index.md → latest session file
 ```
 
-This means the agent knows the previous session's goal, decisions, pending work, and state — without you typing a single prompt. Pasting the Session Compaction block gives you the exact starting point.
+This means the agent knows the previous session's goal, decisions, pending work, and state — without you typing a single prompt. The Session Compaction block gives you the exact starting point.
 
 ## Origin
 
-This workflow was established in `session-workflow-auto-load` (2026-06-06) and refined in `session-compaction` (2026-06-06) when the Session Compaction section was added to the session file template as a paste target for `/compact` output.
+This workflow was established in `session-workflow-auto-load` (2026-06-06) and refined in `session-compaction` (2026-06-06) when the Session Compaction section was added to the session file template. It was further streamlined in `session-auto-compaction` (2026-06-08) when `/session` began auto-generating the compaction block — eliminating the manual `/compact` → paste step.

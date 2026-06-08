@@ -5,7 +5,7 @@ agent: Vibuzo
 
 Do these steps NOW:
 
-1. **Analyze the entire conversation** — read ALL messages in this session. Distill into the forward-looking template below. Do NOT write a chronological log, file manifest, commands table, or state section — `/compact` captures those exhaustively. Your sections cover what compaction misses: intent, preferences, structured progress, curated decisions, forward context, and hot files.
+1. **Analyze the entire conversation** — read ALL messages in this session. Distill into the forward-looking template below. ALSO reconstruct the compaction output from the conversation and git state — the Session Compaction section must be auto-filled with the styled box format (see step 4). The compaction captures Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, and Relevant Files — complementary to your forward-looking sections, not redundant.
 
 2. **Generate a title** — extract 2-4 key words from the session, convert to kebab-case. Check `context/sessions/` for existing files with the same title today. If collision, append `-2`, `-3`, etc.
 
@@ -29,7 +29,7 @@ Do these steps NOW:
     ---
     ```
 
-4. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — prepend the frontmatter block from step 3 above the template below, with a blank line separating them. Fill **EVERY section** (except Session Compaction — leave it as a placeholder for `/compact` paste). If a section has no entries, write "None" explicitly.
+4. **Create the file** `context/sessions/YYYY-MM-DD-<title>.md` — prepend the frontmatter block from step 3 above the template below, with a blank line separating them. Fill **EVERY section** (including Session Compaction — auto-generate it using the styled box format). If a section has no entries, write "None" explicitly.
 
     ```markdown
     # <title>
@@ -72,7 +72,56 @@ Do these steps NOW:
 
     ## Session Compaction
 
-    > Paste `/compact` output here. This replaces Chronological Log, File Manifest, Commands Invoked, and State — compaction captures those better. Everything above covers what compaction misses: intent, constraints, categorized progress, forward decisions, forward context, and hot files.
+    ````
+    ╭─────── Session Compaction ───────────────────────────────────────╮
+    │                                                                   │
+    │  Session:    <title>                                               │
+    │  Date:       YYYY-MM-DD                                            │
+    │  Messages:   <N>                                                   │
+    │                                                                   │
+    ├─────── Goal ──────────────────────────────────────────────────────┤
+    │                                                                   │
+    │  • <one-line summary of what was achieved>                         │
+    │                                                                   │
+    ├─────── Constraints & Preferences ─────────────────────────────────┤
+    │                                                                   │
+    │  • <rules that governed the session>                               │
+    │  • <...>                                                           │
+    │                                                                   │
+    ├─────── Progress ──────────────────────────────────────────────────┤
+    │                                                                   │
+    │  Done:                                                             │
+    │  • <completed items>                                               │
+    │  • <...>                                                           │
+    │                                                                   │
+    │  In Progress:                                                      │
+    │  • <...>                                                           │
+    │                                                                   │
+    │  Blocked:                                                          │
+    │  • <...>                                                           │
+    │                                                                   │
+    ├─────── Key Decisions ─────────────────────────────────────────────┤
+    │                                                                   │
+    │  • <decisions that shape next session>                             │
+    │  • <...>                                                           │
+    │                                                                   │
+    ├─────── Next Steps ────────────────────────────────────────────────┤
+    │                                                                   │
+    │  • <actionable steps>                                              │
+    │  • <...>                                                           │
+    │                                                                   │
+    ├─────── Critical Context ──────────────────────────────────────────┤
+    │                                                                   │
+    │  • <git state, gotchas, unfinished work the next session needs>    │
+    │  • <...>                                                           │
+    │                                                                   │
+    ├─────── Relevant Files ────────────────────────────────────────────┤
+    │                                                                   │
+    │  <path>                  │ <why it's hot next session>             │
+    │  <path>                  │ <...>                                   │
+    │                                                                   │
+    ╰───────────────────────────────────────────────────────────────────╯
+    ````
     ```
 
 5. **Update the timeline** at `context/sessions/index.md` — if it doesn't exist, create it with:
@@ -96,6 +145,7 @@ Do these steps NOW:
     Files:   <N> touched
     Commits: <N>
     Timeline: updated (N total summaries)
+    Compaction: auto-generated
     ────────────────────────────────────────────────
     ```
 
@@ -138,19 +188,13 @@ Do these steps NOW:
     ── NEXT STEPS ──────────────────────────
     Your session file is ready at context/sessions/YYYY-MM-DD-<title>.md
 
-    Workflow to complete the Session Compaction:
-    1. In opencode, run /compact 
-    2. Copy the compaction output
-    3. Open the session file
-    4. Paste it into the Session Compaction section at the bottom
-       (replace the placeholder text)
-    5. Paste it into new session directly for agent memory
-       
+    Session Compaction was auto-generated — no manual /compact needed.
+    The compaction block is ready to copy as starting context for the
+    next session.
 
-    Next session: 
-    - Paste compaction output directly or
+    Next session:
     - Open this session file
-    - Copy the Session Compaction block
+    - Copy the Session Compaction block (the full box)
     - Paste as starting context
     ─────────────────────────────────────────
     ```

@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.3.1** — Session auto-compaction: `/session` now auto-generates the Session Compaction block (styled box with Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, Relevant Files), eliminating manual `/compact` → paste step. Updated all docs for auto-compaction workflow (2026-06-08).
 **0.3.0** — Split session command into two standalone command files: session.md (report generation) and session-init.md (agent context initialization). Removed routing logic, updated all docs and installers (2026-06-08).
 **0.2.9** — Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command. Saved context-init-standalone architecture record from session scan (2026-06-07).
 **0.2.8** — Context command consolidation: deleted context-append/harvest/find, kept context-init as the only context command (2026-06-07).
