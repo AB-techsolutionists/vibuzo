@@ -23,7 +23,6 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primar
 | **Web research** | Three modes: `@deepsearcher <query>` for inline ad-hoc research (no file created), `/research <query>` for standalone research (no file created), and the `/spec` Research stage which saves to `specs/<feature>/research.md` as a permanent artifact. |
 | **Codebase analysis** | `/deepviewer <query>` runs a full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history). `@deepviewer <query>` answers codebase questions inline. Also powers the Review phase of `/spec`. |
 | **Karpathy behavioral principles** | Built-in agent guidelines: Think Before Coding (surface tradeoffs, push back), Simplicity First (minimal code), Surgical Changes (touch only what you must), Goal-Driven Execution (define success criteria, loop until verified). |
-| **Structured commit messages** | Commits use conventional commit types (`feat:`, `docs:`, `refactor:`, `fix:`, etc.) derived from actual changes — single type for uniform commits, stacked types for mixed commits, with a `## Summary` overview section and categorized bullet points. |
 
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
