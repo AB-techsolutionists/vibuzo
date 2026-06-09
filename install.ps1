@@ -55,6 +55,7 @@ $AgentFiles = @(
     @{ Name = "vibuzo.md";        Desc = "main agent" }
     @{ Name = "deepveloper.md";   Desc = "execution specialist" }
     @{ Name = "deepsearcher.md";  Desc = "research specialist" }
+    @{ Name = "deepviewer.md";    Desc = "codebase analysis & review" }
 )
 
 $CommandFiles = @(
@@ -324,6 +325,7 @@ if ($Global) {
   (Get-Content "$AgentsDir\vibuzo.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\vibuzo.md"
   (Get-Content "$AgentsDir\deepveloper.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepveloper.md"
   (Get-Content "$AgentsDir\deepsearcher.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepsearcher.md"
+  (Get-Content "$AgentsDir\deepviewer.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$AgentsDir\deepviewer.md"
   (Get-Content "$OpenCodeDir\AGENTS.md") -replace '\.opencode/', "$OpenCodeDir/" | Set-Content "$OpenCodeDir\AGENTS.md"
 }
 
@@ -345,6 +347,7 @@ if (Get-Command "claude" -ErrorAction SilentlyContinue) {
   Copy-Item "$AgentsDir\vibuzo.md" ".claude\agents\vibuzo.md"
   Copy-Item "$AgentsDir\deepveloper.md" ".claude\agents\deepveloper.md"
   Copy-Item "$AgentsDir\deepsearcher.md" ".claude\agents\deepsearcher.md"
+  Copy-Item "$AgentsDir\deepviewer.md" ".claude\agents\deepviewer.md"
 }
 
 # ─── Done ────────────────────────────────────────────────────────────────────

@@ -38,7 +38,7 @@ Use the write tool to overwrite `VERSION` with `$newVersion`.
 
 ### Step 5: Get release description
 
-Read the latest session summary from `context/sessions/` (the most recently modified file) to extract a brief description of what was built/changed. If no session context is available, use "No description provided." Store as `$releaseNotes`.
+Synthesize a brief description from the conversation (what was built, changed, or decided this session). Scan the most recent user requests and your own actions to extract 5-10 key words summarizing the work. Do NOT read any session file — the session may not exist yet. If the conversation has no clear work (e.g. just questions or planning), use "No description provided." Store as `$releaseNotes`.
 
 ### Step 6: Update versioning.md
 

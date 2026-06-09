@@ -196,3 +196,4 @@ Override inline: add "at gate level X" to any request.
 ─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───
 
 1. Never push changes to github without approval
+2. Always tell me if there is an update that needs to be made or a restart needed

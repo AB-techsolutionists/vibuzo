@@ -54,16 +54,16 @@ Refactored Vibuzo's approval system from a custom chat-based gate model (`approv
 ## Session Compaction
 
 ```
-╭─────── Session Compaction ───────────────────────────────────────╮
+╭─────── Session Compaction ────────────────────────────────────────╮
 │                                                                   │
-│  Session:    approval-gate-refactor                                │
-│  Date:       2026-06-09                                            │
-│  Messages:   ~15                                                   │
+│  Session:    approval-gate-refactor                               │
+│  Date:       2026-06-09                                           │
+│  Messages:   ~15                                                  │
 │                                                                   │
 ├─────── Goal ──────────────────────────────────────────────────────┤
 │                                                                   │
 │  • Replace custom chat-based approval gates (approval_level +     │
-│    manual y/N prompts) with native opencode Desktop popups         │
+│    manual y/N prompts) with native opencode Desktop popups        │
 │                                                                   │
 ├─────── Constraints & Preferences ─────────────────────────────────┤
 │                                                                   │
@@ -75,8 +75,8 @@ Refactored Vibuzo's approval system from a custom chat-based gate model (`approv
 │                                                                   │
 ├─────── Progress ──────────────────────────────────────────────────┤
 │                                                                   │
-│  Done:                                                             │
-│  • Changed all agent permissions "*": "allow" → "*": "ask"       │
+│  Done:                                                            │
+│  • Changed all agent permissions "*": "allow" → "*": "ask"        │
 │  • Removed approval_level from Vibuzo frontmatter                 │
 │  • Replaced verbose Approval Gates sections with slim Gating      │
 │    sections on all sub-agents                                     │
@@ -88,11 +88,11 @@ Refactored Vibuzo's approval system from a custom chat-based gate model (`approv
 │  • Applied same changes to all 4 mirror files in                  │
 │    .opencode/agent/core/                                          │
 │                                                                   │
-│  In Progress:                                                      │
-│  • (none)                                                          │
+│  In Progress:                                                     │
+│  • (none)                                                         │
 │                                                                   │
-│  Blocked:                                                          │
-│  • (none)                                                          │
+│  Blocked:                                                         │
+│  • (none)                                                         │
 │                                                                   │
 ├─────── Key Decisions ─────────────────────────────────────────────┤
 │                                                                   │
@@ -110,11 +110,11 @@ Refactored Vibuzo's approval system from a custom chat-based gate model (`approv
 ├─────── Critical Context ──────────────────────────────────────────┤
 │                                                                   │
 │  • Git: working tree dirty — 9 files modified, 0 committed        │
-│  • Version: 0.3.3 (current, from earlier bump)                     │
-│  • Opencode restart required — agent permissions are read at       │
-│    session start                                                   │
+│  • Version: 0.3.3 (current, from earlier bump)                    │
+│  • Opencode restart required — agent permissions are read at      │
+│    session start                                                  │
 │  • The old approval_level system is fully removed; users will     │
-│    get native Desktop popups on every gated action                 │
+│    get native Desktop popups on every gated action                │
 │                                                                   │
 ├─────── Relevant Files ────────────────────────────────────────────┤
 │                                                                   │
@@ -124,8 +124,8 @@ Refactored Vibuzo's approval system from a custom chat-based gate model (`approv
 │  .opencode/agent/core/deepviewer.md  │ allow→ask, gating section  │
 │  .opencode/agent/core/vibuzo.md      │ Mirror of vibuzo.md        │
 │  context/architecture/approval-      │ ADR rewritten for hybrid   │
-│    gates.md                           │ model                      │
-│  AGENTS.md                           │ Updated references          │
+│   gates.md                           │ model                      │
+│  AGENTS.md                           │ Updated references         │
 │                                                                   │
 ╰───────────────────────────────────────────────────────────────────╯
 ```

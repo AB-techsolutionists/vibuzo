@@ -34,3 +34,5 @@ Do these steps NOW:
    Replace `<N>`, `<M>`, and `<date>` with actual values. Do not print any other output from steps 1-4.
 
 6. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.
+
+7. **Summarize for continuity** — after the summary box, print a concise narrative summary of the loaded sessions. For each session file that had real Compaction content, extract: session name, key activity, and pending/unresolved items. End with a bullet list of top pending items the user can pick up from. This lets the user continue without having to ask "what was I doing?" Do NOT print the step verbatim or explain what you're doing — just output the summary directly after the box.
