@@ -71,7 +71,7 @@ when: Writing or reviewing source code
 
 ## Backward Compatibility
 
-Files without frontmatter continue to work — `/context find` falls back to filename + content matching, and auto-query lists them as lower-scored candidates. However, for optimal performance, all files should have frontmatter.
+Files without frontmatter continue to work — the auto-query system falls back to filename + content matching and lists them as lower-scored candidates. However, for optimal performance, all files should have frontmatter.
 
 ## Auto-Generation
 

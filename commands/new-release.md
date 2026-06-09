@@ -3,8 +3,6 @@ description: Auto-bump version (no prompts, no git)
 agent: Vibuzo
 ---
 
-## RUN: /new-release
-
 > Auto-bumps the version, updates versioning.md and README.md. No git, no commit.
 
 Do these steps NOW:

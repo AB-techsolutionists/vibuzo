@@ -51,4 +51,3 @@ Semantic search uses in-file algorithms only — no vector database, no embeddin
 ## Related
 
 - [`context/index.md`](../index.md) — context file index
-- [`commands/context-find.md`](../../commands/context-find.md) — command implementation
