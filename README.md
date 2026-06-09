@@ -13,16 +13,16 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primar
 
 | Mechanism | What it does |
 |-----------|-------------|
+| **Karpathy behavioral principles** | Built-in agent guidelines: Think Before Coding (surface tradeoffs, push back), Simplicity First (minimal code), Surgical Changes (touch only what you must), Goal-Driven Execution (define success criteria, loop until verified). |
 | **Multi-agent orchestration** | Vibuzo (primary orchestrator) delegates to three specialized sub-agents: Deepveloper (implementation), Deepsearcher (web research), and Deepviewer (codebase analysis & review). All three are spawned as subtasks via commands or inline `@` mentions. |
 | **/spec engineering pipeline** | 5-phase feature pipeline (Research → Spec → Plan → Implement → Review) with approval gates between every phase. Spawns Deepsearcher for research, Deepveloper for implementation, and Deepviewer for review — you approve before each handoff. |
 | **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. All context files carry YAML frontmatter (`tags`, `scope`, `when`) enabling auto-load at session start and auto-query scoring before every implementation task. |
 | **Context auto-query** | Before any implementation task, Vibuzo automatically scans `context/index.md`, scores each file for relevance (TF-IDF + Levenshtein + keyword matching), and loads high-scoring files into working context. No manual prompting needed. |
 | **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided — including a **Session Compaction** block (styled box with Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, Relevant Files). `/session-init` initializes agent context at session start with a unified summary box. |
 | **Session continuity chain** | Every new session auto-loads the chain: `context/index.md` → `context/sessions/index.md` (timeline) → latest session file's Compaction block. The `/session` command also scans for new patterns and presents them as save candidates. |
-| **Approval gates (hybrid)** | Mechanical actions (file writes, commands, task delegation) gated via native opencode Desktop popups with Approve/Reject buttons. Conceptual actions (plan approval, push approval) use custom chat gates. All sub-agents have independent permission blocks. |
+| **Approval gates** | Mechanical actions (file writes, commands, task delegation) gated via native opencode Desktop popups with Approve/Reject buttons. Conceptual actions (plan approval, push approval) use custom chat gates. All sub-agents have independent permission blocks. |
 | **Web research** | Three modes: `@deepsearcher <query>` for inline ad-hoc research (no file created), `/research <query>` for standalone research (no file created), and the `/spec` Research stage which saves to `specs/<feature>/research.md` as a permanent artifact. |
 | **Codebase analysis** | `/deepviewer <query>` runs a full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history). `@deepviewer <query>` answers codebase questions inline. Also powers the Review phase of `/spec`. |
-| **Karpathy behavioral principles** | Built-in agent guidelines: Think Before Coding (surface tradeoffs, push back), Simplicity First (minimal code), Surgical Changes (touch only what you must), Goal-Driven Execution (define success criteria, loop until verified). |
 
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
@@ -155,6 +155,8 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 | Version | Highlights |
 |---------|------------|
+| **0.0.16** | **README mechanism table cleanup and reorder — 2 files changed, 3 insertions, 3 deletions** |
+| | Removed structured commit messages row from the mechanism table and moved Karpathy behavioral principles to the top of the table. |
 | **0.3.9** | **Integration installer bug fix and installer sync — 1 file changed, 6 insertions, 6 deletions** |
 | | Fixed PowerShell installer integration bug where opencode and Codex CLI integrations crashed with null path errors due to continue misbehavior in switch statements, added proper skippable tools filtering with progress alignment, and verified install.sh parity for Codex CLI integration. |
 | **0.3.8** | **Interactive installer wizard with detection modules, progress indicators, and documentation drift fixes — 8 files changed, 1169 insertions, 351 deletions** |
