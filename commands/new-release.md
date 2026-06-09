@@ -36,19 +36,29 @@ Use the write tool to overwrite `VERSION` with `$newVersion`.
 
 ### Step 5: Get release description
 
-Synthesize a brief description from the conversation (what was built, changed, or decided this session). Scan the most recent user requests and your own actions to extract 5-10 key words summarizing the work. Do NOT read any session file — the session may not exist yet. If the conversation has no clear work (e.g. just questions or planning), use "No description provided." Store as `$releaseNotes`.
+Read the latest session summary from `context/sessions/` (the most recently modified file) to extract a brief description of what was built/changed. Synthesize it into a structured release description with:
+
+- **One-line summary** — a short headline like "Documentation drift fixes, README restructure"
+- **Detailed changes** — a single sentence covering what changed in commands, context/standards, fixes, features, and anything else. Describe functional changes, not file paths. Use commas to separate items, with "and" before the last item.
+
+Also capture the git diffstat by running `git diff --stat HEAD` and store the file count/insertions/deletions numbers. If no session context is available, use "No description provided." Store all of this as `$releaseNotes`.
 
 ### Step 6: Update versioning.md
 
 Read `context/standards/versioning.md`. Find the exact line `### Current Version`. Insert a new line immediately after it with the format:
-   `**<newVersion>** — <releaseNotes> (YYYY-MM-DD).`
+   `**<newVersion>** — <one-line summary> (YYYY-MM-DD).`
 Use the edit tool.
 
 ### Step 7: Update README.md
 
-Read `README.md`. Find the Version History table (the line starting with `| **0.x.x** |`). Insert a new row immediately after the header row with the format:
-   `| **<newVersion>** | <releaseNotes> |`
-Use the edit tool.
+Read `README.md`. Find the Version History table (the line starting with `| **0.x.x** |`). Insert the release entry as a two-line row immediately after the header row:
+
+```
+| **<newVersion>** | **<one-line summary> — <diffstat>** |
+| | <detailed paragraph> |
+```
+
+The second line starts with `| |` — the first cell is empty, creating a grouped visual under the version number. Use the edit tool.
 
 ### Step 8: Check installer status
 

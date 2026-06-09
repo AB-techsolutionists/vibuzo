@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.3.6** — README restructure, new-release detailed release notes, internal command cleanup (2026-06-09).
 **0.3.5** — Documentation drift fixes across 15 files (approval_level cleanup, agent count corrections, dead ref removal) (2026-06-09).
 **0.3.4** — Approval gate refactor (native popups), created agents/deepviewer.md source, synced installers (2026-06-09).
 **0.3.3** — Deepviewer codebase audit, 3 remediation fixes (docs drift, legacy header), version bump 0.3.2→0.3.3 (2026-06-09).

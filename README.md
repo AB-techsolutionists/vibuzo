@@ -24,7 +24,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primar
 | **Codebase analysis** | `/deepviewer <query>` runs a full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history). `@deepviewer <query>` answers codebase questions inline. Also powers the Review phase of `/spec`. |
 | **Karpathy behavioral principles** | Built-in agent guidelines: Think Before Coding (surface tradeoffs, push back), Simplicity First (minimal code), Surgical Changes (touch only what you must), Goal-Driven Execution (define success criteria, loop until verified). |
 | **Structured commit messages** | Commits use conventional commit types (`feat:`, `docs:`, `refactor:`, `fix:`, etc.) derived from actual changes — single type for uniform commits, stacked types for mixed commits, with a `## Summary` overview section and categorized bullet points. |
-| **Version management** | `/new-release` auto-bumps `VERSION`, updates `versioning.md`, generates release notes from conversation context, and produces an enhanced report box with installer status and update instructions. The `--update` flag syncs mirror files. |
+
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
 
@@ -156,6 +156,8 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 | Version | Highlights |
 |---------|------------|
+| **0.3.6** | **README restructure, new-release detailed release notes, internal command cleanup — 3 files changed, 17 insertions, 7 deletions** |
+| | Expanded README mechanism table to 12 rows covering all system capabilities, reordered commands table with context commands first, restructured Quick Start into First-Time Setup and Golden Workflow sections with continuity chain diagram, moved What Gets Installed and Commands under Installation, added detailed multi-line release notes format to new-release command with diffstat and structured descriptions, and removed new-release from user-facing docs as an internal command. |
 | **0.3.5** | **Documentation drift fixes — 16 files changed, 634 insertions, 67 deletions** |
 | | Unified session-init output into single codeblock, rewrote spec pipeline gating, switched new-release to conversation-derived notes, migrated commit messages to conventional types, cleansed stale approval_level references, filled missing agent references, and removed dead command refs and stale counts. |
 | **0.3.4** | Approval gate refactor (native popups), created agents/deepviewer.md source, synced installers |
