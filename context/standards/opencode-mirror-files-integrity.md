@@ -26,16 +26,13 @@ when: Needing to update files in the .opencode/ directory
 
 ## Exception: Internal Dev Commands
 
-**Internal dev commands** (per `internal-commands-convention.md`) ARE manually synced to `.opencode/commands/` even though they are excluded from installer arrays.
+**Internal dev commands** (per `internal-commands-convention.md`) live only in `.opencode/commands/` — they are never added to source `commands/`.
 
-Rationale: opencode loads commands from `.opencode/commands/`. For maintainers to use internal dev tools, the file must be present there. Since it's excluded from the installer (to avoid shipping to users), it must be copied manually.
+Rationale: opencode loads commands from `.opencode/commands/`. For maintainers to use internal dev tools, the file must be present there. Since it's excluded from the installer (to avoid shipping to users), it must be created and edited directly in `.opencode/commands/`.
 
-**Rule:** After creating or updating an internal dev command in `commands/`, manually copy it to `.opencode/commands/`:
-```powershell
-Copy-Item "commands\<name>.md" ".opencode\commands\<name>.md"
-```
+**Rule:** Create or update internal dev commands by editing `.opencode/commands/<name>.md` directly. There is no source file to sync.
 
-The installer will NOT overwrite it because the file is not in its array. Manual sync is the only path.
+The installer will NOT overwrite internal commands because they are excluded from its file array.
 
 ## Workflow
 

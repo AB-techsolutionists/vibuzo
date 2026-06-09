@@ -15,7 +15,7 @@ when: Bumping version numbers or checking the version scheme
 
 ## Format
 
-Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as opencode itself (e.g., `1.16.0`).
+Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`).
 
 ```
 0.<minor>.<patch>
@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 
 ### Current Version
 
+**0.3.8** — Interactive installer wizard with detection modules, progress indicators, and documentation drift fixes (2026-06-09).
 **0.3.7** — Internal command cleanup, release notes convention update (2026-06-09).
 **0.3.6** — README restructure, new-release detailed release notes, internal command cleanup (2026-06-09).
 **0.3.5** — Documentation drift fixes across 15 files (approval_level cleanup, agent count corrections, dead ref removal) (2026-06-09).
@@ -75,7 +76,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`) matching the same format as op
 The single source of truth for the version is the **`VERSION` file at the repo root**. Both installers fetch this file from GitHub at runtime:
 
 ```
-0.3.5
+0.3.7
 ```
 
 Installers write a local copy to **`.opencode/.vibuzo-version`** with install metadata:

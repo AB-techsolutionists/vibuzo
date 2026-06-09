@@ -20,7 +20,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primar
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
 │   ├── agent/core/deepviewer.md   ← Codebase analysis and review sub-agent
-    │   ├── commands/                 ← 7 command files (research, spec, context-init, add-context, session, session-init, deepviewer)
+│   ├── commands/                 ← 7 command files (research, spec, context-init, add-context, session, session-init, deepviewer)
 │   └── .vibuzo-version           ← Version marker
 ├── context/                      ← Project knowledge base (auto-loaded on /new)
 │   ├── index.md                  ← Auto-updated table of contents

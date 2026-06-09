@@ -156,6 +156,8 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 | Version | Highlights |
 |---------|------------|
+| **0.3.8** | **Interactive installer wizard with detection modules, progress indicators, and documentation drift fixes — 8 files changed, 1169 insertions, 351 deletions** |
+| | Transformed both installers into interactive guided wizards with 8-step install flow, 3 detection modules (environment, AI tools, install state), Braille-dot spinner and X-of-15 progress indicators, --no-color/--yes flags, post-install summary, integration installer for 8 AI coding tools, and enhanced update flow with version comparison preview. Fixed 7 documentation drift issues across versioning.md, context/index.md, AGENTS.md, and opencode-mirror-files-integrity.md. |
 | **0.3.7** | **Internal command cleanup, release notes convention update — 3 files changed, 25 insertions, 20 deletions** |
 | | Deleted new-release from source repo to eliminate user confusion, updated internal-commands-convention to reflect local-only approach, rewrote new-release to .opencode/commands/ with conversation-derived release notes, and migrated Step 5 from session file reading to conversation synthesis. |
 | **0.3.6** | **README restructure, new-release detailed release notes, internal command cleanup — 3 files changed, 17 insertions, 7 deletions** |

@@ -1,12 +1,12 @@
 # Audit Report: Vibuzo Agentic Framework
 
 **Date:** 2026-06-09
-**Audit Scope:** Full codebase
+**Audit Scope:** Full codebase (documentation drift focus)
 **Status:** Complete
 
 ## Executive Summary
 
-Vibuzo is a well-structured, documentation-first Markdown-based agentic workflow framework with 155 `.md` files, 2 installer scripts, and a clear versioned evolution trajectory. The codebase is remarkably clean: no hardcoded secrets, no actual TODO/FIXME markers in implementation files, and a disciplined git history with 117+ commits over 5 days of intensive development. Three instances of documentation drift were found — two deprecated architecture files still listed as active, and two standards files referencing deleted commands. The command architecture (split-file pattern) is sound, and the auto-loaded context system is comprehensive. Overall codebase health is **high**, with minor cleanup needed on stale references.
+Vibuzo is a mature, well-structured Markdown-based agentic workflow framework with 106+ commits, 4 agent definitions, 7 command files (+1 internal), and a comprehensive context system. This audit focused on identifying documentation drift and outdated references following several recent sessions (approval gate refactor, Deepviewer creation, documentation drift fixes, README golden workflow). The codebase shows no hardcoded secrets, no security issues, and a disciplined git history. Five documentation drift instances were found — most notably the `versioning.md` example VERSION content remaining at 0.3.5 (actual: 0.3.7), duplicate lines in `context/index.md`, and a misleading description of internal commands. Overall health remains **high**, with minor corrective work needed.
 
 ## Methodology
 
@@ -15,49 +15,48 @@ Phases executed: Structural Scan, Pattern-Based Analysis, Session/Context Cross-
 ## Project Overview & Evolution
 
 **Type:** Documentation/Markdown framework (no compiled code)
-**Total files:** 165 (excluding .git, node_modules, .opencode)
+**Total files:** ~165 across all directories (excluding .git, node_modules, .opencode)
 **Language breakdown:**
-- Markdown (.md): 155 files (94%)
-- Plain/text: 1 file (VERSION)
-- .gitkeep: 4 files
+- Markdown (.md): ~155 files (94%)
+- PowerShell (.ps1): 1 file (install.ps1)
+- Shell (.sh): 1 file (install.sh)
+- Plain/text: 2 files (VERSION, .vibuzo-version)
 - .gitignore: 2 files
-- PowerShell (.ps1): 1 file (install.ps1, 374 lines)
-- Shell (.sh): 1 file (install.sh, 385 lines)
-- .vibuzo-version: 1 file
 
-**Project evolution (from git history):**
-The project spans ~117 commits over 6 days (June 4-9, 2026). Evolution phases:
-1. **Initial build** (commits 1-20): Two-agent system, basic framework, installers, AGENTS.md
-2. **Feature expansion** (commits 21-60): Session management, context system, /spec pipeline, approval gates, Deepsearcher
-3. **Consolidation & refinement** (commits 61-90): Command consolidation, session minimalism, installer visual upgrades, bug fixes
-4. **Maturity** (commits 91-117): Deepviewer agent, spec pipeline refinements, auto-compaction, versioning discipline
+**Project evolution (from git history — 106+ commits over 6 days, June 4-9, 2026):**
+1. **Initial build** (commits ~1-20): Two-agent system (Vibuzo + Deepveloper), bash/PowerShell installers, AGENTS.md, Karpathy principles
+2. **Feature expansion** (commits ~21-60): Session management, context system, /spec pipeline, approval gates (levels 0-3), Deepsearcher, installer update mechanism
+3. **Consolidation & refinement** (commits ~61-80): Command consolidation (session, context), installer visual redesign, Deepsearcher refinements, AGENTS.md preservation convention
+4. **Maturity** (commits ~81-106+): Deepviewer agent, hybrid approval gates (native popups), session auto-compaction, documentation drift fixes, README golden workflow, internal command conventions
 
-Commit message trend: Heavy `feat:` prefix usage (~70%), with `fix:` (~15%), `docs:` (~8%), `chore:` (~5%), `refactor:` (~2%). Single contributor (user). No revert commits after the initial days, indicating increasing stability.
+Commit message trend: Heavy `feat:` prefix usage (~60%) with `docs:` (~20%), `fix:` (~10%), `refactor:` (~3%), `style:` (~2%), `chore:` (~5%). Single contributor. No revert commits in the recent history — indicating high stability.
+
+**Current HEAD:** `d0303b2` — version 0.3.7, working tree clean, up to date with origin/main.
 
 ## Architecture Map
 
 ### Key Directories
 | Directory | Purpose | File Count |
 |-----------|---------|------------|
-| `commands/` | User-facing and internal command files | 8 files |
-| `agents/` | Agent definitions (source of truth) | 3 files |
-| `context/architecture/` | Architecture Decision Records | 12 files (incl. .gitkeep) |
-| `context/standards/` | Coding standards and conventions | 23 files (incl. .gitkeep) |
-| `context/patterns/` | Reusable patterns and idioms | 10 files (incl. .gitkeep) |
-| `context/sessions/` | Session summary archives | ~30 files |
-| `specs/` | Feature specs (generated by /spec pipeline) | 40+ files across multiple features |
+| `commands/` | User-facing command definitions (source of truth) | 7 files |
+| `agents/` | Agent definitions (source of truth) | 4 files |
+| `context/architecture/` | Architecture Decision Records | 9 files |
+| `context/standards/` | Coding standards and conventions | 14 files |
+| `context/patterns/` | Reusable patterns and idioms | 9 files |
+| `context/sessions/` | Session summary archives | ~37 files |
+| `specs/` | Feature specs (generated by /spec pipeline) | 50+ files across 15+ features |
 | `.opencode/agent/core/` | Agent definitions (mirror copies) | 4 files |
-| `.opencode/commands/` | Command files (mirror copies) | 8 files |
+| `.opencode/commands/` | Command files (mirror copies + 1 internal) | 8 files |
 
 ### Entry Points
 - **Primary agent:** `agents/vibuzo.md` (installed to `.opencode/agent/core/vibuzo.md`)
 - **Installers:** `install.ps1`, `install.sh`
 - **Root manifest:** `AGENTS.md` (universal entry point for AI coding tools)
-- **Version:** `VERSION` (single canonical source)
+- **Version:** `VERSION` (single canonical source at repo root)
 
 ### Agent System
 ```
-User → Vibuzo (main, mode: primary, approval_level: 3)
+User → Vibuzo (main, mode: primary, native permission popups)
          ├── /spec → Deepveloper (subtask, implementation)
          ├── /research → Deepsearcher (subtask, web research)
          ├── /deepviewer → Deepviewer (subtask, codebase audit/review)
@@ -65,7 +64,18 @@ User → Vibuzo (main, mode: primary, approval_level: 3)
 ```
 
 ### Command Architecture
-Each command is a standalone `.md` file in `commands/` with single `Do these steps NOW:` section. Mirrors live in `.opencode/commands/`. Commands are installed by `install.ps1`/`install.sh`. Internal commands (e.g., `new-release.md`) are manually synced.
+Each command is a standalone `.md` file in `commands/` with single `Do these steps NOW:` section and YAML frontmatter. Mirrors live in `.opencode/commands/` installed by `install.ps1`/`install.sh`. One internal command (`new-release.md`) lives only in `.opencode/commands/` per the internal commands convention.
+
+| Source File | Type | Installed To |
+|-------------|------|-------------|
+| `commands/context-init.md` | User-facing | `.opencode/commands/context-init.md` |
+| `commands/spec.md` | User-facing | `.opencode/commands/spec.md` |
+| `commands/session.md` | User-facing | `.opencode/commands/session.md` |
+| `commands/session-init.md` | User-facing | `.opencode/commands/session-init.md` |
+| `commands/research.md` | User-facing | `.opencode/commands/research.md` |
+| `commands/add-context.md` | User-facing | `.opencode/commands/add-context.md` |
+| `commands/deepviewer.md` | User-facing | `.opencode/commands/deepviewer.md` |
+| N/A (internal) | Internal | `.opencode/commands/new-release.md` |
 
 ## Findings by Category
 
@@ -73,16 +83,17 @@ Each command is a standalone `.md` file in `commands/` with single `Do these ste
 
 | Severity | File | Line | Description | Evidence | Recommended Action |
 |----------|------|------|-------------|----------|-------------------|
-| Low | `commands/new-release.md` | 1-6 | Uses legacy `## RUN:` header format alongside `Do these steps NOW:` | Line 6: `## RUN: /new-release` — this is a legacy pattern that was deprecated in favor of the `---` YAML frontmatter + `Do these steps NOW:` pattern | Remove the `## RUN:` header line, keep only the YAML frontmatter and `Do these steps NOW:` section |
-| Low | `context/index.md` | 42-43 | Deprecated architecture files still listed without deprecation marker | Lines 42-43 reference `build-agent-override.md` and `default-agent-in-opencode-jsonc.md` but do NOT show the 🗑️ DEPRECATED marker that those files themselves contain | Add `🗑️ DEPRECATED —` prefix to both entries in context/index.md to match the files' own deprecation status |
-| Low | `versioning.md` | 73 | VERSION file content in docs is stale | Line 73 shows `0.2.5` but actual VERSION is `0.3.2` | Update the example content to match current version, or replace with a placeholder |
+| Low | `context/index.md` | 11 | Step numbering skips from 3 to 5 (missing step 4) | Line 10: "3. The `## Session Compaction` section..." then jumps to Line 11: "5. Then proceed normally" — step 4 is missing | Add or renumber to fix the skip (steps should be 1, 2, 3, 4) |
+| Low | `context/index.md` | 31-32 | Duplicate "From sessions" bullet point | Lines 31-32 both read: `- **From sessions**: /session scans for patterns and presents save candidates...` | Remove one of the duplicate lines |
+| Low | `context/index.md` | 57 | Description of internal-commands-convention is misleading | Says "commands that live in commands/ but are excluded from installer" — but the actual convention says internal commands live ONLY in `.opencode/commands/`, never in source `commands/` | Update description to match the actual convention: "commands that live only in .opencode/commands/ (excluded from installer and user-facing docs)" |
+| Low | `AGENTS.md` | 23 | Tree indentation misalignment in file tree | Line 23 starts with `    │   ├── commands/` but the parent `├── .opencode/` above uses proper tree characters. The nesting alignment is off by one level | Fix the tree indentation to properly nest under `.opencode/` |
 
 ### Security
 
 | Severity | File | Line | Description | Evidence | Recommended Action |
 |----------|------|------|-------------|----------|-------------------|
 | None found | | | No hardcoded secrets, credentials, API keys, tokens, or private keys found in any file | All grep matches were documentation references to secret-scanning concepts, not actual secrets | N/A |
-| None found | | | No eval(), Invoke-Expression, or unsafe execution patterns found | grep results showed only documentation of what to scan for | N/A |
+| None found | | | No eval(), Invoke-Expression, or unsafe execution patterns found | grep results across .ps1 files showed no security anti-patterns | N/A |
 
 ### Performance
 
@@ -94,71 +105,66 @@ Each command is a standalone `.md` file in `commands/` with single `Do these ste
 
 | Severity | File | Line | Description | Evidence | Recommended Action |
 |----------|------|------|-------------|----------|-------------------|
-| Medium | `install.ps1` / `install.sh` | Throughout | PowerShell and Bash installers are dual implementations of identical logic | Both installers implement the same flow: banner, version check, file download, AGENTS.md handling, path rewriting, tool detection | This is intentional cross-platform support, but the ~374-line duplication creates maintenance burden. Consider a single-source approach (e.g., generate one from the other) |
-| Low | `commands/deepviewer.md` / `.opencode/agent/core/deepviewer.md` | All | Agent definition and command file both contain full audit pipeline instructions | The agent definition in `.opencode/agent/core/deepviewer.md` (lines 44-75) duplicates the audit pipeline instructions from `commands/deepviewer.md` (lines 18-55) | This is intentional mirror architecture; verify installer `--update` keeps them in sync |
-| Low | Various files | Various | Multiple context standards reference deleted `commands/context-find.md` | `semantic-context-search.md:53` and `yaml-frontmatter-convention.md:87` both reference `commands/context-find.md` which was deleted | Update references to point to current equivalent or remove (see Documentation Drift section) |
+| Medium | `install.ps1` / `install.sh` | Throughout | PowerShell and Bash installers are dual implementations of identical logic (~374 and ~385 lines respectively) | Both implement the same flow: banner, version check, file download, AGENTS.md handling, path rewriting, tool detection | This is intentional cross-platform support, but creates maintenance burden. Consider single-source approach |
+| Low | Various context files | Various | Command definitions in `commands/` are mirrored to `.opencode/commands/` | Intentional architecture — installer copies source to mirror on install/update | Ensure installer `--update` keeps mirrors in sync; currently verified in sync |
 
 ### Misalignments
 
 | Severity | File | Line | Description | Evidence | Recommended Action |
 |----------|------|------|-------------|----------|-------------------|
-| Low | `.opencode/agent/core/deepviewer.md` | 15-18 | Deepviewer has full edit/write permissions despite being a read-only analysis agent | Lines 15-18: `edit: {"*": "allow"}` and `write: {"*": "allow"}` — Deepviewer's own rules state it should never modify code (lines 31-32: "never creates, edits, or deletes implementation files") | Restrict edit/write permissions to only `context/reports/` path to enforce the read-only contract |
-| Low | `agents/vibuzo.md` | 153 | Error handling implies Deepveloper is the only implementation subagent, but Deepviewer and Deepsearcher also exist | Line 153: "Never attempt to fix Deepveloper's work yourself. Always re-delegate." — doesn't mention Deepviewer or Deepsearcher | Update to include all three subagents: "Never attempt to fix a subagent's work. Always re-delegate to the appropriate agent." |
+| Low | `context/standards/versioning.md` | 78 | VERSION file content example shows `0.3.5` but actual VERSION is `0.3.7` | Line 78: `` ``` `` then `0.3.5` on line 79 — actual VERSION file at root contains `0.3.7` | Update the example to match current version `0.3.7` or use a placeholder |
+| Low | `context/index.md` | 57 | Internal commands convention is in `patterns/` but about standards/rules rather than reusable code patterns | The file at `context/patterns/internal-commands-convention.md` is a policy/rule document, not a code pattern | Consider if it belongs in `standards/` instead of `patterns/`, or update the classification |
 
 ### Dead Code
 
 | Severity | File | Line | Description | Evidence | Recommended Action |
 |----------|------|------|-------------|----------|-------------------|
-| Low | `context/architecture/build-agent-override.md` | Entire file | Marked DEPRECATED but still linked from context/index.md and takes up space | File header: `🗑️ DEPRECATED — opencode.jsonc has been removed` | Either remove or ensure it's clearly marked as deprecated in context/index.md (see Inconsistencies) |
-| Low | `context/architecture/default-agent-in-opencode-jsonc.md` | Entire file | Marked DEPRECATED but still linked from context/index.md | File header: `🗑️ DEPRECATED — opencode.jsonc has been removed` | Same as above |
-| Low | `commands/new-release.md` | 6 | Legacy `## RUN:` section header is dead convention | The current pattern uses YAML frontmatter only; `## RUN:` is a leftover from an older template design | Remove the line |
-| Low | `context/patterns/route-based-argument-handling.md` | Entire file | Explicitly labeled as FAILED PATTERN | Line 1: `# Route-Based Argument Handling — ⚠️ FAILED PATTERN` — kept for historical record | This is intentional historical documentation; no action needed |
-| Low | `context/sessions/.gitkeep` | 1 | .gitkeep files in session/standards/patterns/ are unnecessary since content exists | These directories already contain actual files | Remove .gitkeep files from non-empty directories |
+| Low | `context/architecture/build-agent-override.md` | Entire file | Marked DEPRECATED but still in the codebase | File header: `🗑️ DEPRECATED — opencode.jsonc has been removed` | This is intentional historical documentation; no action needed |
+| Low | `context/architecture/default-agent-in-opencode-jsonc.md` | Entire file | Marked DEPRECATED but still in the codebase | File header: `🗑️ DEPRECATED — opencode.jsonc has been removed` | This is intentional historical documentation; no action needed |
+| Low | `context/patterns/route-based-argument-handling.md` | Entire file | Explicitly labeled as FAILED PATTERN | Line 1: `⚠️ FAILED PATTERN` | This is intentional historical documentation; no action needed |
 
 ### Documentation Drift
 
 | Severity | File | Line | Description | Evidence | Recommended Action |
 |----------|------|------|-------------|----------|-------------------|
-| Medium | `context/standards/semantic-context-search.md` | 53 | References deleted file `commands/context-find.md` | Line 53: `- [\`commands/context-find.md\`](../../commands/context-find.md) — command implementation` — this command was deleted during context consolidation | Replace reference with current equivalent or remove the Related section |
-| Medium | `context/standards/yaml-frontmatter-convention.md` | 87 | References deleted `/context find` command and `commands/context-find.md` | Lines 87-88: reference to `/context find` and `commands/context-find.md` — both deleted | Update to reference current context commands (`/context init`) or remove |
-| Low | `context/standards/versioning.md` | 73 | Example VERSION content shows outdated value `0.2.5` | Line 73: `` ``` `` with `0.2.5` — actual VERSION is `0.3.2` | Update example to current version or use a semantic placeholder like `0.x.x` |
-| Low | `context/standards/context-auto-query.md` | 63-64 | References AGENTS.md for auto-query rules but auto-query rules are also defined directly in vibuzo.md | Lines 63-64: `- [\`AGENTS.md\`](../../AGENTS.md) — agent instructions with auto-query rules` — this is correct but could cause confusion if they diverge | Ensure both files remain in sync |
+| Low | `context/standards/versioning.md` | 78-79 | Example VERSION content shows outdated value `0.3.5` | Line 79: `0.3.5` — actual VERSION is `0.3.7` | Update example to `0.3.7` or use a placeholder like `0.x.x` |
+| Low | `context/standards/versioning.md` | 18 | Says semver matching opencode format (e.g., `1.16.0`) but Vibuzo is still at 0.x.x | Line 18: "matching the same format as opencode itself (e.g., `1.16.0`)" — while technically correct about format, the example suggests a far higher version number than Vibuzo's current `0.3.7` | Consider a more appropriate example like `0.x.x` to avoid confusion |
+| Low | `context/standards/opencode-mirror-files-integrity.md` | Title/body | Says "never modify .opencode/ files directly (installer-managed only)" but internal commands (.opencode/commands/new-release.md) ARE manually edited per internal-commands-convention | The standard directly contradicts the internal-commands-convention pattern which says "edit .opencode/commands/<name>.md directly" | Add an exception for internal commands to the standard, or clarify that it applies only to mirrored files |
+| Low | `context/index.md` | 57 | Description says internal commands "live in commands/" but the actual convention says they live in `.opencode/commands/` only | Compare index.md description with `patterns/internal-commands-convention.md` line 21: "Live only in `.opencode/commands/`" | Update the description in context/index.md to match the convention |
+| Low | `context/sessions/2026-06-09-approval-gate-refactor.md` | 113 | Version reference shows `0.3.3` but actual VERSION at that point was `0.3.4` (bumped during the audit-cleanup-release session) | Line 113: `Version: 0.3.3 (current, from earlier bump)` — The session timeline shows this session followed the audit-cleanup-release which bumped to 0.3.3. This is likely correct at time of writing | No action needed — the version was correct for that session's point in time; ensure the sequence is clear in the timeline |
 
 ## Strategic Observations
 
-1. **Strong documentation discipline:** The project maintains a high-quality, well-structured context system with YAML frontmatter, cross-references, and auto-loading. This is the codebase's greatest strength.
+1. **Strong documentation discipline:** The project maintains a well-structured context system with YAML frontmatter, cross-references, and auto-loading. The continuous improvement cycle (build → context → session → promote → resume) is well-established and practiced.
 
-2. **Clean architecture evolution:** The git history shows a clear progression from prototype to mature system, with deliberate consolidation phases (deleting deprecated commands, splitting/merging files as patterns emerged).
+2. **Clean git history:** 106+ commits over 6 days with clear conventional commit types. Single contributor with no recent reverts — indicates deliberate, well-scoped changes.
 
-3. **Mirror file maintenance is a risk:** The `.opencode/` directory mirror copies in `.gitignore` are invisible to version control. If an installer update isn't run, source-mirror drift can occur silently. Currently the mirrors appear in sync (verified by comparing `commands/` with `.opencode/commands/`), but this requires manual vigilance.
+3. **Documentation drift is minimal and controlled:** Most drift instances found are low-severity (stale version numbers, duplicate lines, description inaccuracies). The previous Deepviewer audit and two subsequent documentation drift sessions have significantly cleaned up the codebase.
 
-4. **Single contributor risk:** All 117+ commits are from one author. Bus-factor is 1. The comprehensive context system and documentation partially mitigate this, but knowledge is concentrated.
+4. **Mirror file maintenance is a known risk:** The `.opencode/` directory is in `.gitignore`, making mirror copies invisible to version control. Internal commands (`new-release.md`) add a maintenance dimension — they're manually edited in `.opencode/commands/` and could be lost if not backed up.
 
-5. **No automated testing:** As a pure Markdown/YAML framework, there's no test suite. Validation relies on manual verification and grep-based audits. Consider adding structure validation scripts.
+5. **Context standard contradicts pattern:** `opencode-mirror-files-integrity.md` says never modify `.opencode/` files directly, but `internal-commands-convention.md` says to edit `.opencode/commands/new-release.md` directly. These two documents need reconciliation.
 
-6. **Dual installer maintenance:** PowerShell and Bash installers are ~374 and ~385 lines respectively with near-identical logic. Each feature or fix must be implemented in both, doubling effort and risk of inconsistency.
+6. **No automated testing:** As a pure Markdown/YAML framework, there's no test suite beyond grep-based validation. This is acceptable for the framework's nature but worth noting for any future code expansion.
 
 ## Outdated Context Inventory
 
 | Context File | Referenced Entity | Current Status | Recommended Action |
 |--------------|-------------------|----------------|-------------------|
-| `context/standards/semantic-context-search.md` (line 53) | `commands/context-find.md` | **DELETED** — removed during context consolidation (v0.2.8) | Remove or update the reference |
-| `context/standards/yaml-frontmatter-convention.md` (line 87) | `commands/context-find.md` | **DELETED** — removed during context consolidation (v0.2.8) | Remove or update the reference |
-| `context/architecture/build-agent-override.md` (all) | `opencode.jsonc` at project root | **DOES NOT EXIST** — removed from repo (was local config) | Ensure context/index.md marks it as 🗑️ DEPRECATED (already is in the file itself) |
-| `context/architecture/default-agent-in-opencode-jsonc.md` (all) | `opencode.jsonc` at project root | **DOES NOT EXIST** — removed from repo (was local config) | Ensure context/index.md marks it as 🗑️ DEPRECATED (already is in the file itself) |
-| `context/standards/versioning.md` | VERSION content example `0.2.5` | **STALE** — actual version is `0.3.2` | Update example to `0.3.2` or use placeholder |
+| `context/standards/versioning.md` (line 79) | VERSION content example `0.3.5` | **STALE** — actual VERSION is `0.3.7` | Update example to `0.3.7` or use placeholder |
+| `context/standards/opencode-mirror-files-integrity.md` (all) | Rule: "never modify .opencode/ files" | **CONTRADICTS** internal-commands-convention pattern which requires manual edits to `.opencode/commands/` | Add exception for internal commands |
+| `context/index.md` (line 57) | Description of internal-commands-convention | **INACCURATE** — says commands "live in commands/" but convention says `.opencode/commands/` only | Update description to match convention |
 
 ## Remediation Roadmap
 
 | Priority | Category | Issue | Effort | Impact |
 |----------|----------|-------|--------|--------|
-| P1 | Documentation Drift | Update `semantic-context-search.md` and `yaml-frontmatter-convention.md` to remove references to deleted `context-find.md` | 5 min | Medium — prevents confusion for agents reading context |
-| P2 | Inconsistency | Mark deprecated architecture files in `context/index.md` with 🗑️ prefix to match file headers | 5 min | Medium — aligns index with actual status |
-| P3 | Misalignment | Restrict Deepviewer agent permissions to match read-only contract | 5 min | Low — security hardening for defensive depth |
-| P4 | Dead Code | Remove `## RUN:` legacy header from `commands/new-release.md` | 2 min | Low — cosmetic cleanup |
-| P5 | Dead Code | Remove `.gitkeep` files from non-empty context subdirectories | 2 min | Low — trivial cleanup |
-| P6 | Duplication | Consider single-source approach for dual installers (future enhancement) | High | Medium — reduces maintenance burden |
-| P7 | Drift | Update `versioning.md` example VERSION content | 2 min | Low — cosmetic accuracy |
+| P1 | Inconsistency | Fix step numbering skip (3→5) in `context/index.md` line 11 | 2 min | Medium — agents reading the index may be confused by missing step |
+| P2 | Inconsistency | Remove duplicate "From sessions" bullet in `context/index.md` lines 31-32 | 1 min | Low — cosmetic duplication |
+| P3 | Documentation Drift | Update `versioning.md` example VERSION from 0.3.5 to 0.3.7 | 2 min | Low — prevents confusion about current version |
+| P4 | Documentation Drift | Reconcile `opencode-mirror-files-integrity.md` with `internal-commands-convention.md` — add exception for internal commands | 5 min | Medium — removes contradictory guidance |
+| P5 | Inconsistency | Update `context/index.md` description of internal-commands-convention (line 57) to say `.opencode/commands/` instead of `commands/` | 2 min | Low — accuracy fix |
+| P6 | Inconsistency | Fix AGENTS.md line 23 tree indentation | 1 min | Low — cosmetic alignment fix |
 
 ## Appendix
 
@@ -170,10 +176,11 @@ Each command is a standalone `.md` file in `commands/` with single `Do these ste
 - read for file content inspection
 
 **Scan parameters:**
-- Excluded: `.git/`, `node_modules/`, `.opencode/` (mirror copies)
+- Excluded: `.git/`, `node_modules/` (not present), `.opencode/` mirror copies (where noted)
 - Secrets scan patterns: `password`, `api_key`, `api-key`, `token`, `secret`, `BEGIN (RSA|DSA|EC|PGP|OPENSSH) PRIVATE KEY`
 - TODO scan pattern: `TODO|FIXME|HACK|XXX|NOTE`
 - Security scan: `eval(`, `Invoke-Expression`, `Start-Process`
 
 **Exclusions:**
-- `.opencode/` directory files were excluded from structural scan (mirror copies of source files in `agents/` and `commands/`) but agent definitions were read where needed
+- `.opencode/` agent definitions were read for accuracy but mirror copies in `.opencode/agent/core/` were treated as installer-managed copies
+- Binary files and `.git/` internals were excluded from structural scanning
