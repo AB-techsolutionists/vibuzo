@@ -189,13 +189,7 @@ Do these steps NOW:
     ── NEXT STEPS ──────────────────────────
     Your session file is ready at context/sessions/YYYY-MM-DD-<title>.md
 
-    Session Compaction was auto-generated — no manual /compact needed.
-    The compaction block is ready to copy as starting context for the
-    next session.
-
-    Next session:
-    - Open this session file
-    - Copy the Session Compaction block (the full box)
-    - Paste as starting context
+    Next steps:
+    - /new => Switch to Vibuzo => /session-init
     ─────────────────────────────────────────
     ```

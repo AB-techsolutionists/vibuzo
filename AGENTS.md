@@ -16,7 +16,7 @@ Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primar
 ```
 ├── AGENTS.md              ← Universal entry point (read by 25+ tools)
 ├── .opencode/
-│   ├── agent/core/vibuzo.md      ← Main agent (approval_level: 3)
+│   ├── agent/core/vibuzo.md      ← Main agent (native permission popups)
 │   ├── agent/core/deepveloper.md ← Implementation sub-agent
 │   ├── agent/core/deepsearcher.md← Research sub-agent
 │   ├── agent/core/deepviewer.md   ← Codebase analysis and review sub-agent
@@ -167,7 +167,7 @@ At natural breakpoints:
 
 ## Approval Gates
 
-`approval_level` in the Vibuzo agent file controls strictness (0-3). Current value: **3** (Full Control).
+Hybrid model — native opencode permission popups (Approve/Reject buttons) for file ops, commands, and delegation. Custom chat gates only for plan approval and push approval.
 
 | Level | Name | What's Gated |
 |-------|------|-------------|

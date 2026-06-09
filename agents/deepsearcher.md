@@ -5,7 +5,7 @@ mode: subagent
 temperature: 0
 permission:
   bash:
-    "*": "allow"
+    "*": "ask"
     "**/*.env": "deny"
     "**/*.env.*": "deny"
     "**/*.key": "deny"
@@ -13,14 +13,14 @@ permission:
     "**/*.secret*": "deny"
     "node_modules/**": "deny"
   edit:
-    "*": "allow"
+    "*": "ask"
     "**/*.env": "deny"
     "**/*.env.*": "deny"
     "**/*.key": "deny"
     "**/*.pem": "deny"
     "**/*.secret*": "deny"
   write:
-    "*": "allow"
+    "*": "ask"
     "**/*.env": "deny"
     "**/*.env.*": "deny"
     "**/*.key": "deny"
@@ -118,24 +118,6 @@ When saving to `specs/<feature>/research.md` (only in `/spec` Research stage mod
 - If you encounter an error you can fix, fix it and note it. If you can't, report it.
 - You CANNOT spawn sub-agents (no task permission).
 
-## Approval Gates
+## Gating
 
-Deepsearcher receives the gate level from Vibuzo's handoff. It does not have its own `approval_level` setting.
-
-### Rules
-
-1. **Between-task gating** — after completing each research task in a multi-step research session, pause and report what was done. Then ask: "Proceed to next task? (y/N)". If "N", stop and report back to Vibuzo.
-2. **Destructive action gating** — before deleting files, overwriting existing content, or running destructive commands (rm, del, remove, force-write), present a standard approval prompt and wait for y/N.
-3. **Standard prompt format** — always render inside a code block so opencode displays it as a terminal card. Use this format for destructive action gates:
-
-```
-── APPROVAL GATE ──────────────────────
-Action: <delete | overwrite | destructive-command>
-Target: <file path or command>
-Details: <summary of what will change>
-───────────────────────────────────────
-Approve? (y/N):
-```
-
-4. **Level inheritance** — the gate level is passed by Vibuzo in the handoff. If the handoff includes `approval_level: 0`, skip all gates. If it includes `approval_level: 1` or higher, enforce the corresponding rules.
-5. **No planning** — do not decide which gates to apply. Follow the level provided by Vibuzo strictly.
+Mechanical actions (file edits, writes, deletes, bash commands) are gated by opencode's native permission popups.

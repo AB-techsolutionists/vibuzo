@@ -12,48 +12,42 @@ when: Configuring approval levels or understanding gate behavior rules
 # Approval Gates — Architecture Decision
 
 ## Date
-2026-06-04
+2026-06-04 (updated 2026-06-09)
 
 ## Context
-Users wanted full control over agent actions — the ability to review and approve file writes, commands, and task progression before they happen. The existing "Plan first" rule provided a single approval checkpoint at the planning stage, but no mechanism for ongoing approval during execution.
+Users wanted full control over agent actions — the ability to review and approve file writes, commands, and task progression before they happen. The original custom approval gate system (levels 0-3) worked via chat prompts but was error-prone (formatting bugs, manual typing).
 
 ## Decision
-Add configurable approval gates to Vibuzo and Deepveloper agent definitions. Gate strictness is controlled by an `approval_level` setting (0-3) in Vibuzo's YAML frontmatter. Deepveloper inherits the level from Vibuzo's handoff.
+Switch to a **hybrid gating model**:
 
-## Level Definitions
+### Native Permission Popups (Mechanical Actions)
+Opencode's built-in `permission` system handles all mechanical actions with native Desktop popup dialogs (Approve/Reject buttons):
+- File writes, edits, deletes
+- Bash command execution
+- Task/subagent delegation
 
-| Level | Name | Gates Active |
-|-------|------|-------------|
-| 0 | Trusted | No gates. Execute freely. Equivalent to original behavior. |
-| 1 | Safe | File mutations (write/edit/delete) and destructive bash commands require approval. |
-| 2 | Cautious | All file mutations + all bash commands + delegation to Deepveloper require approval. |
-| 3 | Full Control | Every action requires approval — including planning steps, large file reads, command execution, delegation, and between-task progression. |
+Set `"*": "ask"` in agent frontmatter permission blocks to enable.
 
-Current default in `agents/vibuzo.md`: **level 3** (Full Control). Set to 0 for development.
+### Custom Chat Gates (Conceptual Actions)
+Only 2 remaining custom gates, since opencode has no native equivalent:
+1. **Plan approval** — before execution, Vibuzo presents the plan inline and asks for approval
+2. **Push approval** — before pushing to GitHub (custom rule: never push without approval)
 
-## Agent Roles
+## Agent Permissions
 
 ### Vibuzo (Main Agent)
-- Stores `approval_level` in YAML frontmatter (current: 3)
-- Checks level before every gated action
-- Presents standard approval prompt in code block format
-- On rejection, offers modify/skip/abort
-- Supports inline override: "at gate level X" for one interaction
-- Asks for plan approval before execution at level ≥ 1
+- `approval_level` removed from frontmatter — replaced by native `"*": "ask"` for all permission types
+- Custom gates only for plan approval and push approval
+- Rejection handling: modify/skip/abort options
 
-### Deepveloper (Subtask Agent)
-- Does NOT have its own `approval_level` setting
-- Inherits gate level from Vibuzo's handoff
-- Enforces between-task gating ("Proceed to next task? (y/N)")
-- Enforces destructive action gating
-- Strictly follows the level provided — no autonomous decisions
+### Sub-Agents (Deepveloper, Deepsearcher, Deepviewer)
+- All set to `"*": "ask"` for bash, edit, write — native popups gate mechanical actions
+- No inherited level system; each sub-agent's gating is independent via its own permissions
+- Deepveloper additionally uses a simple chat gate for between-task progression ("Proceed to next task? (y/N)")
 
 ## Key Principles
 
 1. **User sovereignty** — The user always has final say before any state-mutating action.
-2. **Configuration over hardcoding** — One YAML field controls strictness. No separate agent modes.
-3. **Zero runtime dependencies** — All gate behavior is encoded as LLM-followed rules in Markdown/YAML. No code.
-4. **Level 0 = unchanged** — Setting level 0 preserves the original behavior exactly.
-5. **Deepveloper inherits, doesn't own** — The subtask agent never sets its own level.
-
-> **Full gate format and behavior details** are defined in `agents/vibuzo.md` (section "Approval Gates / Gate Behavior"). Installed to `.opencode/agent/core/vibuzo.md` by `install.ps1`/`install.sh`.
+2. **Native over custom** — Use opencode's built-in permission dialogs where possible, avoiding fragile chat gates.
+3. **Only the conceptual stays custom** — Planning approval and push approval have no native equivalent, so they remain as chat gates.
+4. **Zero runtime dependencies** — All gate behavior is encoded as LLM-followed rules in Markdown/YAML. No code.

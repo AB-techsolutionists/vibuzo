@@ -105,9 +105,9 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Command | What it does | Example |
 |---------|-------------|---------|
-| `/spec` | 5-phase feature pipeline with approval gates | `/spec dark mode toggle` |
+| `/spec` | 5-phase feature pipeline with approval gates | `/spec add a new dark mode toggle` |
 | `/context init` | Scaffold context directory structure | `/context init` |
-| `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context We use pnpm not npm` |
+| `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context always follow the same pattern of x,y,z` |
 | `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | `/session` |
 | `/session-init` | Initialize agent context — discover, verify, scaffold, report loaded state | `/session-init` |
