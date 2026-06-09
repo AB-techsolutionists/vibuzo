@@ -14,61 +14,130 @@ When the user says **"commit"** (or "commit and push", "now commit", etc.), foll
 
 ## Format Template
 
+When a commit covers changes of the same type, use a single type line:
+
 ```
-feat: <short summary of main change>
+<type>: <short summary>
+
+## Summary
+Brief overview of what this commit accomplishes — 1-3 sentences covering
+the overall change.
 
 ## Version & Scheme
 - <version-related changes>
 
-## <Feature/Command> Changes
-- <feature-specific bullet points>
+## <Category>
+- <specific bullet points>
 
 ## <Other category>
 - <other changes>
 ```
 
-## Example
+When a commit covers changes of **multiple types**, list each type on its own line:
 
 ```
-feat: version bump 0.2.5→0.2.6, new-release command, versioning scheme sync
+<type1>: <summary for type1 changes>
+<type2>: <summary for type2 changes>
+<type3>: <summary for type3 changes>
+
+## Summary
+Brief overview of what this commit accomplishes — 1-3 sentences covering
+the overall change. This section is required when multiple types are used.
 
 ## Version & Scheme
-- Bumped VERSION 0.2.5→0.2.6 (patch)
-- Synced versioning.md rollover scheme to match /new-release:
-  Patch 0→19 → 0→9, Minor 0→9 → 0→19 (table, examples, bump rules)
+- <version-related changes>
 
-## New /new-release Command (internal dev tool)
-- Created commands/new-release.md: auto-bumps VERSION, updates versioning.md
-  and README.md, generates release description from latest session
-- Excluded from installer arrays (install.ps1, install.sh) — not user-facing
-- Excluded from AGENTS.md and README.md commands tables
-- /spec pipeline artifacts saved to specs/new-release-command/
+## <Category>
+- <specific bullet points>
+```
 
-## Removed /commit Command
-- Deleted commands/commit.md entirely
-- Removed from README.md (commands table, Quick Start step 4, pipeline description)
-- Removed from AGENTS.md commands table
+## Type Reference
 
-## README Overhaul
-- Replaced three numbered paragraphs with compact table-based intro
-- Fixed mechanism descriptions to match their names
-- Cleaned up all /commit references
+Derive the type from the nature of each change:
 
-## AGENTS.md Updates
-- Updated commands table: removed /commit and /new-release (10 user-facing)
-- Updated directory tree count 12→10
+| Type | When to Use |
+|------|-------------|
+| `feat:` | New feature, command, or capability |
+| `fix:` | Bug fix or corrective patch |
+| `docs:` | Documentation-only changes (README, context files, standards) |
+| `refactor:` | Code restructuring without behavioral change |
+| `style:` | Formatting, spacing, visual-only changes |
+| `chore:` | Maintenance, tooling, installer updates |
+| `perf:` | Performance improvement |
+| `test:` | Adding or updating tests |
+
+## Example (single type)
+
+```
+docs: documentation drift fixes for approval gate refactor, version 0.3.5
+
+## Summary
+Fixed 16 documentation files across 3 clusters to reflect the approval gate
+refactor and 4-agent system.
+
+## Version & Scheme
+- Bumped VERSION 0.3.4→0.3.5 (patch)
+
+## Documentation Drift Fixes
+- Cleaned up stale approval_level refs in commands/spec.md, AGENTS.md,
+  spec-command.md, new-release.md, terminology-change-process.md
+- Updated architecture docs for 4-agent system: agent-restructure.md,
+  deepsearcher-research-stage.md, vibuzo-main-session-only.md
+- Fixed dead command refs and stale counts in context/index.md,
+  internal-commands-convention.md, commit-workflow-pattern.md,
+  structured-commit-body-convention.md, session-workflow-discipline.md
+
+## README
+- Updated commands table, file tree, agent descriptions
+```
+
+## Example (multiple types)
+
+```
+docs: documentation drift fixes across 16 files
+refactor: pipeline gating in spec.md rewritten
+feat: /session-init output standardized with linewrapped narrative
+
+## Summary
+Cleaned up documentation drift from the approval gate refactor, rewrote
+/spec pipeline gating, and standardized the /session-init output format
+into a unified codeblock with linewrapped session descriptions.
+
+## Version & Scheme
+- Bumped VERSION 0.3.4→0.3.5 (patch)
+
+## /session-init Output Standardization
+- Unified init box and narrative summary into single codeblock
+- Replaced verbose step 7 with concise output instruction
+
+## Pipeline & Commands
+- commands/spec.md: Pipeline gating logic rewritten
+- commands/new-release.md: Step 5 conversation-derived release notes
+  + enhanced report box with installer status
 
 ## Context & Patterns
-- Saved session: 2026-06-07-new-release-command-readme-overhaul
-- Saved pattern: internal-commands-convention.md
+- AGENTS.md: Custom rule #2 added, approval section rewritten
+- Session added: 2026-06-09-documentation-drift-release.md
 ```
+
+## Type Lines
+
+- Each type line starts with a lowercase conventional commit type followed by a colon and space
+- The summary after the type is sentence case, no period at the end
+- When using multiple types, order them by significance (most impactful first)
+- Types must reflect actual content — do not force-fit all changes under one type
+
+## Summary Section
+
+- Always present when multiple types are used
+- Optional for single-type commits (but recommended for complex ones)
+- 1-3 sentences that answer: "what does this commit do as a whole?"
 
 ## Category Naming Rules
 
 - Group changes by logical category (what changed, not which file)
 - Use `## <Category>` as section headings
 - Use `- <bullet>` for individual changes, each on its own line or wrapped with indentation
-- First line after `feat:` is always the summary — use sentence case, no period
 
 ## Version Bump Pattern
 

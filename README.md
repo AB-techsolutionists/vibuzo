@@ -1,4 +1,4 @@
-# Vibuzo — Agentic Framework
+# Vibuzo — Agentic Framework for AI Coding
 
 ```
 ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗ ██████╗ 
@@ -9,13 +9,22 @@
   ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ 
 ```
 
-Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primary orchestrator (Vibuzo) with four specialized agents (Vibuzo, Deepveloper, Deepsearcher, Deepviewer) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
+Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primary orchestrator (Vibuzo) with three specialized agents (Deepveloper, Deepsearcher, Deepviewer) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
 
 | Mechanism | What it does |
 |-----------|-------------|
-| **Full engineering pipeline** | Plan before touching code, delegate complex features via `/spec` with approval gates between every phase, and commit with structured messages. |
-| **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. Sessions auto-load, auto-query, and auto-scan for patterns to promote. |
-| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided. Lives in `context/sessions/` and available for review. `/session-init` initializes agent context at session start. |
+| **Multi-agent orchestration** | Vibuzo (primary orchestrator) delegates to three specialized sub-agents: Deepveloper (implementation), Deepsearcher (web research), and Deepviewer (codebase analysis & review). All three are spawned as subtasks via commands or inline `@` mentions. |
+| **/spec engineering pipeline** | 5-phase feature pipeline (Research → Spec → Plan → Implement → Review) with approval gates between every phase. Spawns Deepsearcher for research, Deepveloper for implementation, and Deepviewer for review — you approve before each handoff. |
+| **Persistent context system** | Save conventions, decisions, and patterns via `/add-context`. All context files carry YAML frontmatter (`tags`, `scope`, `when`) enabling auto-load at session start and auto-query scoring before every implementation task. |
+| **Context auto-query** | Before any implementation task, Vibuzo automatically scans `context/index.md`, scores each file for relevance (TF-IDF + Levenshtein + keyword matching), and loads high-scoring files into working context. No manual prompting needed. |
+| **Session reports** | `/session` generates a full markdown report of everything built, changed, and decided — including a **Session Compaction** block (styled box with Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, Relevant Files). `/session-init` initializes agent context at session start with a unified summary box. |
+| **Session continuity chain** | Every new session auto-loads the chain: `context/index.md` → `context/sessions/index.md` (timeline) → latest session file's Compaction block. The `/session` command also scans for new patterns and presents them as save candidates. |
+| **Approval gates (hybrid)** | Mechanical actions (file writes, commands, task delegation) gated via native opencode Desktop popups with Approve/Reject buttons. Conceptual actions (plan approval, push approval) use custom chat gates. All sub-agents have independent permission blocks. |
+| **Web research** | Three modes: `@deepsearcher <query>` for inline ad-hoc research (no file created), `/research <query>` for standalone research (no file created), and the `/spec` Research stage which saves to `specs/<feature>/research.md` as a permanent artifact. |
+| **Codebase analysis** | `/deepviewer <query>` runs a full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history). `@deepviewer <query>` answers codebase questions inline. Also powers the Review phase of `/spec`. |
+| **Karpathy behavioral principles** | Built-in agent guidelines: Think Before Coding (surface tradeoffs, push back), Simplicity First (minimal code), Surgical Changes (touch only what you must), Goal-Driven Execution (define success criteria, loop until verified). |
+| **Structured commit messages** | Commits use conventional commit types (`feat:`, `docs:`, `refactor:`, `fix:`, etc.) derived from actual changes — single type for uniform commits, stacked types for mixed commits, with a `## Summary` overview section and categorized bullet points. |
+| **Version management** | `/new-release` auto-bumps `VERSION`, updates `versioning.md`, generates release notes from conversation context, and produces an enhanced report box with installer status and update instructions. The `--update` flag syncs mirror files. |
 
 Works with 25+ tools (opencode, Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini CLI, and more).
 
@@ -45,41 +54,6 @@ pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/
 pwsh -c "& { $(irm https://raw.githubusercontent.com/AB-techsolutionists/vibuzo/main/install.ps1) } -Update"
 ```
 
-## Quick Start
-
-1. **Restart opencode** — the installer adds agents to `.opencode/agent/core/`. After restart, select **Vibuzo** from the agent dropdown.
-
-2. **Initialize context** — run `/context init`. This creates `context/` with four directories:
-   ```
-   context/
-   ├── architecture/   ← ADRs and design decisions
-   ├── standards/      ← Conventions (naming, testing, style)
-   ├── patterns/       ← Reusable idioms
-   └── sessions/       ← Session archive (auto-generated)
-   ```
-
-3. **Save project context** — tell Vibuzo about your project so every session remembers:
-   ```
-   /add-context This is a Next.js 14 app with App Router, shadcn/ui, and Prisma
-   /add-context We use pnpm, not npm
-   ```
-
-4. **Start building** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs a 5-phase pipeline (spec → plan → tasks → implement → review), spawning Deepveloper for implementation and asking for your approval between each phase.
-
-5. **Checkpoint with sessions** — at natural breakpoints run `/session`. This creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** section at the bottom — auto-generated by `/session` in a styled box format. Copy the full box as starting context for the next session. No manual `/compact` paste needed. Run `/session-init` at the start of a new session to load agent context.
-
-## How Vibuzo Learns Over Time
-
-Vibuzo doesn't learn on its own — you teach it as you work. The more context you save, the smarter it gets across sessions.
-
-**Two learning mechanisms:**
-
-1. **Saved context (`context/`)** — every time you run `/add-context`, you save a permanent rule, pattern, or decision. At the start of every new session, Vibuzo reads `context/index.md` and loads everything your project knows. You never re-explain your stack, conventions, or architecture decisions.
-
-2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. At the start of every new session, Vibuzo automatically reads the latest session summary to pick up where you left off. The `/session` command itself scans for patterns and presents them as save candidates — no separate harvest step needed.
-
-**The result:** the first session starts from scratch. By session 10, Vibuzo knows your architecture, your naming conventions, your testing style, your past decisions, and why they were made. New agents on your team get the same knowledge instantly because it's all committed to the repo.
-
 ## What Gets Installed
 
 ```
@@ -106,19 +80,84 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Command | What it does | Example |
 |---------|-------------|---------|
-| `/spec` | 5-phase feature pipeline with approval gates | `/spec add a new dark mode toggle` |
 | `/context init` | Scaffold context directory structure | `/context init` |
 | `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context always follow the same pattern of x,y,z` |
+| `/spec` | Full feature pipeline (research → briefing → specification → plan → tasks → implementation → review) with approval gates between every phase | `/spec add a new dark mode toggle` |
 | `/deepviewer` | Full codebase audit and analysis via Deepviewer | `/deepviewer audit the error handling pattern` |
 | `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | `/session` |
 | `/session-init` | Initialize agent context — discover, verify, scaffold, report loaded state | `/session-init` |
 
+## Quick Start
+
+### First-Time Setup
+
+Run these once per project:
+
+1. **Restart opencode** — the installer adds agents to `.opencode/agent/core/`. After restart, select **Vibuzo** from the agent dropdown.
+
+2. **Initialize context** — run `/context init`. This creates `context/` with four directories:
+   ```
+   context/
+   ├── architecture/   ← ADRs and design decisions
+   ├── standards/      ← Conventions (naming, testing, style)
+   ├── patterns/       ← Reusable idioms
+   └── sessions/       ← Session archive (auto-generated)
+   ```
+
+3. **Save project context** — tell Vibuzo about your project so every session remembers:
+   ```
+   /add-context This is a Next.js 14 app with App Router, shadcn/ui, and Prisma
+   /add-context We use the pattern ... and follow the standard ...
+   ```
+
+### The Golden Workflow (Repeat)
+
+Steps 4–10 form a continuous cycle. Each step feeds into the next — building creates knowledge worth saving, sessions checkpoint that knowledge, and the next session picks up exactly where the last left off.
+
+4. **Build** — Vibuzo handles everyday tasks directly. For complex features use `/spec [enter complete feature specification]` — it runs the full feature pipeline (research → briefing → specification → plan → tasks → implementation → review), spawning subagents for each phase with approval gates between them.
+
+5. **Save context as you go** — when you discover a convention, pattern, or decision worth keeping, run `/add-context <statement>`. Vibuzo infers the type (architecture/standard/pattern) and file name, generates YAML frontmatter, and updates `context/index.md`. This knowledge persists across every future session — you never re-explain your stack or decisions.
+
+6. **Monitor the context window** — the agent's context window fills up as you work. Watch for when it reaches ~75% capacity. That's your checkpoint signal — don't wait until it auto-compacts and loses the conversation history.
+
+7. **Run `/session`** — captures everything before the window resets. It creates a full report at `context/sessions/YYYY-MM-DD-<title>.md` with: what was asked for, what was built, every file changed, every decision made, and what's still pending. The file includes a **Session Compaction** block — a styled box with Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, and Relevant Files.
+
+8. **Promote patterns** — `/session` doesn't just save a report. It scans the session's conversation for new patterns, conventions, and decisions, then presents them as save candidates with auto-generated frontmatter (`tags`, `scope`, `when`). Approve the ones worth keeping — they get saved to `context/` and the index updates automatically. No separate harvest step needed.
+
+9. **Open a fresh session** — after `/session` completes, run `/new` or open a new session. Never `/compact` without running `/session` first — compaction loses the conversation history and anything in it.
+
+10. **Run `/session-init`** — at the start of every new session, this reinitializes the agent. It auto-loads two things: `context/index.md` (all permanent context built up across every `/add-context` and `/session` promote cycle) and the latest session's Compaction block (where you left off). This is the continuity chain:
+
+    ```
+    context/index.md  ← permanent knowledge (never forgets)
+          ↓
+    sessions/index.md  ← timeline of all past sessions
+          ↓
+    latest compaction  ← where you left off (last session's state)
+    ```
+
+    That's the golden workflow in full — **build → context → session → promote → resume**. Context is your persistent memory, sessions are your episodic memory, and `/session-init` bridges both at every start.
+
+## How Vibuzo Learns Over Time
+
+Vibuzo doesn't learn on its own — you teach it as you work. The more context you save, the smarter it gets across sessions.
+
+**Two learning mechanisms:**
+
+1. **Saved context (`context/`)** — every time you run `/add-context`, you save a permanent rule, pattern, or decision. At the start of every new session, Vibuzo reads `context/index.md` and loads everything your project knows. You never re-explain your stack, conventions, or architecture decisions.
+
+2. **Session summaries (`context/sessions/`)** — every `/session` generates a full report of what was built, what was decided, and why. At the start of every new session, Vibuzo automatically reads the latest session summary to pick up where you left off. The `/session` command itself scans for patterns and presents them as save candidates — no separate harvest step needed.
+
+**The result:** the first session starts from scratch. By session 10, Vibuzo knows your architecture, your naming conventions, your testing style, your past decisions, and why they were made. New agents on your team get the same knowledge instantly because it's all committed to the repo.
+
+
 ## Version History
 
 | Version | Highlights |
 |---------|------------|
-| **0.3.5** | Documentation drift fixes across 15 files (approval_level cleanup, agent count corrections, dead ref removal) |
+| **0.3.5** | **Documentation drift fixes — 16 files changed, 634 insertions, 67 deletions** |
+| | Unified session-init output into single codeblock, rewrote spec pipeline gating, switched new-release to conversation-derived notes, migrated commit messages to conventional types, cleansed stale approval_level references, filled missing agent references, and removed dead command refs and stale counts. |
 | **0.3.4** | Approval gate refactor (native popups), created agents/deepviewer.md source, synced installers |
 | **0.3.3** | Deepviewer codebase audit, 3 remediation fixes (docs drift, legacy header), version bump 0.3.2→0.3.3 |
 | **0.3.2** | Created Deepviewer codebase analysis and review agent: full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history), /spec Review phase delegation, updated AGENTS.md, context index, and installers. |
