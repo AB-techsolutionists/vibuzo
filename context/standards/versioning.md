@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`).
 
 ### Current Version
 
+**0.3.9** — Integration installer bug fix and installer sync (2026-06-09).
 **0.3.8** — Interactive installer wizard with detection modules, progress indicators, and documentation drift fixes (2026-06-09).
 **0.3.7** — Internal command cleanup, release notes convention update (2026-06-09).
 **0.3.6** — README restructure, new-release detailed release notes, internal command cleanup (2026-06-09).

@@ -314,7 +314,8 @@ function Detect-AITools {
 function Install-Integrations {
     param([hashtable]$DetectedTools)
     Write-Step "Configuring Integrations" -Step 7 -Total 8
-    $total = ($DetectedTools.Values | Where-Object { $_ }).Count
+    $skippableTools = @('opencode', 'Codex CLI')
+    $total = ($DetectedTools.Keys | Where-Object { $DetectedTools[$_] -and $_ -notin $skippableTools }).Count
     if ($total -eq 0) {
         if ($Script:UseColor) { Write-Host "  (no integrations to configure)" -ForegroundColor DarkGray } else { Write-Host "  (no integrations to configure)" }
         return
@@ -322,16 +323,15 @@ function Install-Integrations {
     $idx = 0
     $integrationList = @()
     foreach ($tool in $DetectedTools.Keys) {
-        if (-not $DetectedTools[$tool]) { continue }
-        $idx++
+        if (-not $DetectedTools[$tool] -or $tool -in $skippableTools) { continue }
         $targetDir = switch ($tool) {
             'Claude Code' { ".claude/agents" }
-            'opencode'    { continue }
             'Cline'       { if (Test-Path ".cline") { ".cline/agents" } else { ".github/agents" } }
             'Cursor'      { ".cursor/agents" }
-            'Codex CLI'   { continue }
-            default       { continue }
+            default       { $null }
         }
+        if (-not $targetDir) { continue }
+        $idx++
         Write-Host "  [$idx/$total] $tool... " -NoNewline
         New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
         foreach ($agent in $AgentFiles) {
