@@ -116,6 +116,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.3.3** | Deepviewer codebase audit, 3 remediation fixes (docs drift, legacy header), version bump 0.3.2→0.3.3 |
 | **0.3.2** | Created Deepviewer codebase analysis and review agent: full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history), /spec Review phase delegation, updated AGENTS.md, context index, and installers. |
 | **0.3.1** | Session auto-compaction: `/session` auto-generates compaction block (styled box), eliminating manual paste. Updated all docs. |
 | **0.3.0** | Split session command into two standalone files: session.md (report generation) and session-init.md (agent context initialization). Removed routing logic, updated all docs and installers. |
