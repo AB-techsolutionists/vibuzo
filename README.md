@@ -156,6 +156,8 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 | Version | Highlights |
 |---------|------------|
+| **0.3.7** | **Internal command cleanup, release notes convention update — 3 files changed, 25 insertions, 20 deletions** |
+| | Deleted new-release from source repo to eliminate user confusion, updated internal-commands-convention to reflect local-only approach, rewrote new-release to .opencode/commands/ with conversation-derived release notes, and migrated Step 5 from session file reading to conversation synthesis. |
 | **0.3.6** | **README restructure, new-release detailed release notes, internal command cleanup — 3 files changed, 17 insertions, 7 deletions** |
 | | Expanded README mechanism table to 12 rows covering all system capabilities, reordered commands table with context commands first, restructured Quick Start into First-Time Setup and Golden Workflow sections with continuity chain diagram, moved What Gets Installed and Commands under Installation, added detailed multi-line release notes format to new-release command with diffstat and structured descriptions, and removed new-release from user-facing docs as an internal command. |
 | **0.3.5** | **Documentation drift fixes — 16 files changed, 634 insertions, 67 deletions** |
