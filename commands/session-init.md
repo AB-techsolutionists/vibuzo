@@ -23,16 +23,27 @@ Do these steps NOW:
    d. If no entries for today → compute yesterday's date using `(Get-Date).AddDays(-1).ToString("yyyy-MM-dd")` → find all rows matching yesterday → read ALL matching session files
    e. For each file read, check whether a `## Session Compaction` section with real content (not placeholder) exists
 
-5. **Print the session summary box** — output ONLY this to chat:
+5. **Print the full init output** — output this entire block to chat in a single codeblock, replacing `<N>`, `<M>`, `<date>` with actual values:
    ```
    ── Session Initialized ──────────────
    Context files:  <N> total across all directories
    Sessions:       <N> total, <M> recent loaded from <date>
    Compaction:     <found in N files | not found>
    ──────────────────────────────────────
+
+   Last <M> sessions today (<date>):
+
+   <slug> — <summary wrapped at ~56 chars>
+
+   <slug> — <summary wrapped at ~56 chars>
+   ...
+
+   Top pending items:
+   - <item>
+   - <item>
    ```
-   Replace `<N>`, `<M>`, and `<date>` with actual values. Do not print any other output from steps 1-4.
+   For the narrative: extract session slug, key activity, and pending items from each loaded session with real Compaction content. Wrap descriptions at ~56 characters. Do NOT print any other output from steps 1-4.
 
 6. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.
 
-7. **Summarize for continuity** — after the summary box, print a concise narrative summary of the loaded sessions. For each session file that had real Compaction content, extract: session name, key activity, and pending/unresolved items. End with a bullet list of top pending items the user can pick up from. This lets the user continue without having to ask "what was I doing?" Do NOT print the step verbatim or explain what you're doing — just output the summary directly after the box.
+7. **Do NOT print the step verbatim or explain what you're doing** — the entire output (init box + narrative + pending items) comes from step 5. Just execute and output the codeblock.

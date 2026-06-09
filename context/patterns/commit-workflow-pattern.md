@@ -75,16 +75,15 @@ This pattern is appropriate for any command that:
 - Requires user review before execution
 - Should never auto-push
 
-## Example: `/commit` Command
+## Example: `/new-release` Command (previously `/commit`)
 
-The `commands/commit.md` file implements this exact pattern:
-- **Step 5**: Gate 1 — bump approval (old→new version shown)
-- **Step 11**: Gate 2 — commit approval (full message shown)
-- **Step 12**: `git add` + `git commit` (no push)
-- **Step 13**: Report box with hash, version, push instruction
+The `commands/new-release.md` file implements this exact pattern:
+- **Step 3**: Gate — bump approval (old→new version shown)
+- **Step 4-8**: Version bump → update docs (no git, no commit)
+- **Step 8**: Report box with old→new version info
 
 ## Related
 
-- [`commands/commit.md`](../../commands/commit.md) — The `/commit` command implementing this pattern
+- [`commands/new-release.md`](../../commands/new-release.md) — The `/new-release` command implementing this pattern
 - [`architecture/approval-gates.md`](../architecture/approval-gates.md) — The approval gate infrastructure
 - [`standards/structured-commit-body-convention.md`](../standards/structured-commit-body-convention.md) — Commit body format used in the commit gate

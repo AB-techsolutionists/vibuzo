@@ -9,7 +9,7 @@
   ╚═══╝  ╚═╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝ 
 ```
 
-Vibuzo is an agentic workflow system for LLM-powered coding — it orchestrates three specialized agents (researcher, planner, executor) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates between every phase.
+Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primary orchestrator (Vibuzo) with four specialized agents (Vibuzo, Deepveloper, Deepsearcher, Deepviewer) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
 
 | Mechanism | What it does |
 |-----------|-------------|
@@ -89,7 +89,8 @@ your-project/
     ├── agent/core/vibuzo.md      ← Main agent — select this from dropdown
     ├── agent/core/deepveloper.md ← Implementation sub-agent (used by /spec)
     ├── agent/core/deepsearcher.md← Research sub-agent (used by /research, @deepsearcher)
-    └── commands/                 ← 6 command templates
+    ├── agent/core/deepviewer.md  ← Codebase analysis agent (used by /spec Review, @deepviewer)
+    └── commands/                 ← 7 command templates
 ```
 
 **Key file: `AGENTS.md`**
@@ -108,6 +109,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 | `/spec` | 5-phase feature pipeline with approval gates | `/spec add a new dark mode toggle` |
 | `/context init` | Scaffold context directory structure | `/context init` |
 | `/add-context` | Save a rule, pattern, or decision to permanent context | `/add-context always follow the same pattern of x,y,z` |
+| `/deepviewer` | Full codebase audit and analysis via Deepviewer | `/deepviewer audit the error handling pattern` |
 | `/research` | Web research via Deepsearcher, saves to `specs/<feature>/research.md` | `/research best React state management 2026` |
 | `/session` | Generate a comprehensive session summary capturing every action, change, and decision | `/session` |
 | `/session-init` | Initialize agent context — discover, verify, scaffold, report loaded state | `/session-init` |
@@ -116,6 +118,7 @@ This file tells all 25+ tools (opencode, Claude Code, Cursor, Copilot, etc.) whe
 
 | Version | Highlights |
 |---------|------------|
+| **0.3.5** | Documentation drift fixes across 15 files (approval_level cleanup, agent count corrections, dead ref removal) |
 | **0.3.4** | Approval gate refactor (native popups), created agents/deepviewer.md source, synced installers |
 | **0.3.3** | Deepviewer codebase audit, 3 remediation fixes (docs drift, legacy header), version bump 0.3.2→0.3.3 |
 | **0.3.2** | Created Deepviewer codebase analysis and review agent: full audit pipeline (structural scan, pattern analysis, session/context cross-reference, git history), /spec Review phase delegation, updated AGENTS.md, context index, and installers. |

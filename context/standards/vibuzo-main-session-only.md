@@ -27,13 +27,14 @@ Vibuzo is the primary orchestrator that manages approval gates, presents phase g
 
 **Never set `subtask: true` on any command where `agent: Vibuzo`.**
 
-Only Deepsearcher and Deepveloper commands use `subtask: true`:
+Only Deepsearcher, Deepveloper, and Deepviewer commands use `subtask: true`:
 
 | Agent | Role | `subtask` |
 |-------|------|-----------|
 | Vibuzo | Orchestrator, planner, reviewer | Never |
 | Deepsearcher | Web research | ✅ `true` |
 | Deepveloper | Implementation | ✅ `true` |
+| Deepviewer | Codebase analysis and review | ✅ `true` |
 
 ## Enforcement
 

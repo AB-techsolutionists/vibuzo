@@ -65,7 +65,7 @@ Run a second pass if any stragglers found.
 | Old Term | New Term | Scope | Effort |
 |----------|----------|-------|--------|
 | `compaction` | `summary` | 136 instances across 28 files | Large (entire codebase) |
-| `approval_gate` | `approval_level` | ~30 instances across 10+ files | Medium |
+| `approval_level` | `native popup gates` | ~20 instances across 8+ files | Medium |
 | `USER_INPUT` | `(user input)` | 9 command files | Small |
 | `(user input)` | `[descriptive prompts]` | README + command docs | Small |
 

@@ -59,9 +59,7 @@ On rejection: (r)etry phase, (s)kip to next, (a)bort entire pipeline.
 
 ### Integration with Approval Gates
 
-The `/spec` command reads `approval_level` from Vibuzo's YAML frontmatter:
-- Level 0: Phase gates are skipped (auto-proceed). Pipeline runs uninterrupted.
-- Level ≥ 1: Each phase pauses for approval before proceeding.
+The `/spec` command uses the hybrid approval model — native opencode permission popups for mechanical gates, custom chat gates for conceptual approval (plan/push). Each phase presents a gate prompt for user approval before proceeding.
 
 ### Deprecation
 
@@ -78,5 +76,5 @@ The original 5-command spec framework (`/plan`, `/tasks`, `/implement`, `/review
 
 1. **Single entry point** — One command replaces five. The pipeline is guided, not manual.
 2. **Gate-driven progression** — Each phase completes before the next begins. User approves or redirects.
-3. **Approval gate integration** — Respects Vibuzo's approval_level setting. Level 0 = uninterrupted flow.
+3. **Approval gate integration** — Uses the hybrid model: native popups for mechanical gates, custom chat for conceptual gates.
 4. **Zero runtime deps** — All behavior is command instructions in Markdown/YAML. No code.

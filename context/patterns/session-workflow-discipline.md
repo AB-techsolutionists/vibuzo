@@ -54,4 +54,4 @@ The `## Session Compaction` section at the bottom of each session file is **auto
 2. **Never run `/session` twice in a row** without a `/compact` between them
 3. **The Session Compaction section is auto-generated** — never manually edit it
 4. **Context/session commands run in the main agent session** — never as subtasks (`subtask: true` must be absent from these commands)
-5. **Timestamps for conversation events are approximate** — only git reflog and file modification times are reliable (see `context/standards/timestamp-reliability.md` if it exists)
+5. **Timestamps for conversation events are approximate** — only git reflog and file modification times are reliable.

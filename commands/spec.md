@@ -14,7 +14,7 @@ Run the full feature development pipeline for: $ARGUMENTS
    - For single-word descriptions, use the word as-is (e.g., "auth" → "auth")
    - Handle both quoted (`/spec "dark mode toggle"`) and unquoted (`/spec dark mode toggle`) input — in both cases, the full description is used for analysis, only the shortened name goes in the directory path
 3. Create `specs/<feature>/` directory if it doesn't exist.
-4. Check `approval_level` from Vibuzo's YAML frontmatter. If level ≥ 1, gates are active. If level is 0, skip all gates and auto-proceed.
+4. Gates are handled via the hybrid model — native opencode permission popups for mechanical actions (file ops, commands, delegation), custom chat gates for conceptual approvals (plan approval, push approval).
 
 ## Research (Optional)
 
@@ -63,7 +63,7 @@ Run the full feature development pipeline for: $ARGUMENTS
 4. Ask: "Proceed to Specification? (y/N):"
    - If "y" or "yes": continue to Specification
    - If "N" or anything else: ask clarifying questions, discuss approaches, refine direction based on user input, then regenerate briefing or proceed
-5. **Gate**: If approval_level is 0, auto-proceed past Briefing (no briefing needed).
+5. **Gate**: Gates follow the hybrid model — always present the gate prompt for conceptual approvals.
 
 ## Specification
 
@@ -73,7 +73,7 @@ Run the full feature development pipeline for: $ARGUMENTS
    - **Principles**: Code quality, testing, performance, UX consistency
    - **Specification**: Overview, User Stories, Functional Requirements, Acceptance Criteria, Out of Scope
 4. Write to `specs/<feature>/spec.md`.
-5. **Gate**: If approval_level ≥ 1, present:
+5. **Gate**: Present:
    ```
    ── PIPELINE GATE ──────────────────────
    Specification complete.
@@ -130,7 +130,7 @@ Run the full feature development pipeline for: $ARGUMENTS
 ## Implementation
 
 1. Read `specs/<feature>/tasks.md` to understand the task list and dependency order.
-2. **Gate**: If approval_level ≥ 1, present:
+2. **Gate**: Present:
    ```
    ── PIPELINE GATE ──────────────────────
    Implementation ready.
@@ -140,7 +140,7 @@ Run the full feature development pipeline for: $ARGUMENTS
    ```
 3. If approved, delegate all tasks to Deepveloper via `task()` with subagent_type "Deepveloper":
    - Include the feature name and instruct to read tasks.md and execute in order
-   - Include `approval_level` in the handoff so Deepveloper respects gates
+   - Include gate mode info in the handoff so Deepveloper respects gates
 4. Wait for Deepveloper to report back.
 5. If Deepveloper reports failure: offer (r)etry, (s)kip to review, or (a)bort.
 6. **Gate**: After implementation, present "Implementation complete" gate.
@@ -239,7 +239,4 @@ Implementation: <tasks completed / total>
 
 ## Gate Skip Logic
 
-If `approval_level` is 0:
-- Skip all phase gates. Auto-proceed after each phase completes.
-- Generate a brief status message (no approval prompt) so the user knows what phase is running.
-- Do NOT skip Deepveloper's between-task gates — those are Deepveloper's own rules.
+Gates follow the hybrid model — native opencode permission popups for mechanical actions, custom chat gates for plan/push approval. All phase gates use chat prompts for conceptual approval. The phase gates always present unless the user explicitly opts out.

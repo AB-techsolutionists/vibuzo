@@ -30,9 +30,13 @@ User → manual switch → Orchestrator (plan-only, no permissions)
 
 ### After
 ```
-User → Vibuzo (main — plans + executes)
+User → Vibuzo (main — plans + delegates + reviews)
             │
-            └──→ /spec → Deepveloper (subtask — pure execute)
+            ├──→ /spec → Deepveloper (subtask — pure execute)
+            │
+            ├──→ /research → Deepsearcher (subtask — web research)
+            │
+            └──→ /deepviewer → Deepviewer (subtask — codebase analysis)
 ```
 
 ## Agent Roles
@@ -61,6 +65,8 @@ Agent definitions live in `agents/` and are installed to `.opencode/agent/core/`
 |--------|---------------|
 | `agents/vibuzo.md` | `.opencode/agent/core/vibuzo.md` |
 | `agents/deepveloper.md` | `.opencode/agent/core/deepveloper.md` |
+| `agents/deepsearcher.md` | `.opencode/agent/core/deepsearcher.md` |
+| `agents/deepviewer.md` | `.opencode/agent/core/deepviewer.md` |
 
 Deepveloper is triggered as a subtask during `/spec` Implementation stage. The handoff includes the task description, file paths, numbered steps, and acceptance criteria.
 
@@ -71,3 +77,5 @@ Deepveloper is triggered as a subtask during `/spec` Implementation stage. The h
 3. **Planning discipline** — Planning rules are embedded in Vibuzo's definition.
 4. **Installer-managed deployment** — `agents/` is the source of truth; `.opencode/agent/core/` is refreshed by `install.ps1`/`install.sh --update`.
 5. **Unified mode** — `agents/deepveloper.md` uses `mode: subagent`, required by opencode for runtime compatibility.
+
+> **Note:** The agent system has expanded from the original 2-agent (Vibuzo + Deepveloper) to a 4-agent system with the addition of Deepsearcher (research) and Deepviewer (codebase analysis).

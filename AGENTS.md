@@ -169,24 +169,7 @@ At natural breakpoints:
 
 Hybrid model — native opencode permission popups (Approve/Reject buttons) for file ops, commands, and delegation. Custom chat gates only for plan approval and push approval.
 
-| Level | Name | What's Gated |
-|-------|------|-------------|
-| 0 | Trusted | Nothing |
-| 1 | Safe | File mutations + destructive commands |
-| 2 | Cautious | All file ops + all commands + delegation |
-| 3 | Full Control | Everything including planning and large reads |
-
-Gate prompts use this format inside a code block:
-```
-── APPROVAL GATE ──────────────────────
-Action: <write | edit | delete | command | delegate>
-Target: <file path or command string>
-Details: <summary of what will change>
-───────────────────────────────────────
-Approve? (y/N):
-```
-
-Override inline: add "at gate level X" to any request.
+Native opencode permission popups handle all mechanical gating (file ops, commands, delegation). Only 2 custom chat gates remain: plan approval and push approval. If the user responds "N" or anything other than "y"/"yes" to a gate prompt, the agent must ask: "(m)odify, (s)kip, or (a)bort".
 
 ---
 

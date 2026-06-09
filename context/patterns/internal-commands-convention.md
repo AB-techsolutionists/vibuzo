@@ -35,7 +35,7 @@ The repo's `commands/` directory will have more files than the user-facing count
 ## Example
 
 `commands/new-release.md` is an internal command:
-- Present in `commands/` (11 files) but user-facing count is 10
+- Present in `commands/` (8 files) but user-facing count is 7
 - Not in `$CommandFiles` / `COMMAND_FILES` arrays
 - Manually copied to `.opencode/commands/` for maintainer use
 - Not in AGENTS.md or README.md command tables

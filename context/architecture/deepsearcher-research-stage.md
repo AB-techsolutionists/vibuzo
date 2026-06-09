@@ -16,7 +16,7 @@ when: Working with Deepsearcher agent or the /spec research stage
 
 ## Context
 
-The Vibuzo agentic framework currently operates as a three-agent system: Vibuzo (primary planner/executor), Deepveloper (implementation subagent), and Deepsearcher (research subagent). The `/spec` command pipeline follows a 6-stage approach (Research → Specification → Plan → Tasks → Implementation → Review).
+The Vibuzo agentic framework currently operates as a four-agent system: Vibuzo (primary planner/executor), Deepveloper (implementation subagent), Deepsearcher (research subagent), and Deepviewer (codebase analysis/review subagent). The `/spec` command pipeline follows a 6-stage approach (Research → Specification → Plan → Tasks → Implementation → Review).
 
 When developing features that require understanding of external technologies, libraries, APIs, or best practices, the agents have no structured way to conduct web research. Vibuzo can perform web searches during everyday tasks, but there is no specialized, reproducible research workflow integrated into the feature development pipeline.
 
@@ -54,7 +54,7 @@ Deepsearcher can be invoked inline via `@Deepsearcher` in any conversation, allo
 
 ### Positive
 
-- **Three-agent system:** Vibuzo (planning/execution), Deepveloper (implementation), Deepsearcher (research) — clear separation of concerns
+- **Four-agent system:** Vibuzo (planning/execution), Deepveloper (implementation), Deepsearcher (research), Deepviewer (codebase analysis/review) — clear separation of concerns
 - **Optional research stage:** Features that don't need research skip the stage entirely; features that do get structured, saved research
 - **Reusable research artifacts:** `/spec` Research stage saves `specs/<feature>/research.md` as a permanent project artifact
 - **Consistent output format:** Every research task produces Summary, Key Findings, Resources, Source Metadata
@@ -76,7 +76,8 @@ Deepsearcher can be invoked inline via `@Deepsearcher` in any conversation, allo
 │   ├── core/
 │   │   ├── vibuzo.md           ← Main agent (unchanged)
 │   │   ├── deepveloper.md      ← Implementation subagent (unchanged)
-│   │   └── deepsearcher.md     ← NEW: Research subagent
+│   │   ├── deepsearcher.md     ← NEW: Research subagent
+│   │   └── deepviewer.md       ← NEW: Codebase analysis subagent
 │   └── commands/
 │       ├── spec.md             ← UPDATED: Research stage added
 │       ├── research.md         ← NEW: /research command (no-file mode)
@@ -90,7 +91,7 @@ context/
 │   ├── deepsearcher-research-stage.md  ← THIS FILE
 │   └── ... (existing)
 └── index.md                    ← UPDATED: reference to this file
-AGENTS.md                       ← UPDATED: Three-Agent System table
+AGENTS.md                       ← UPDATED: Four-Agent System table
 ```
 
 ## Related Decisions

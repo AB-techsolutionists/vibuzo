@@ -23,10 +23,8 @@ Increment `$patch` by 1. Apply rollover rules:
 
 Present:
 ```
-── APPROVAL GATE ──────────────────────
-Action: Version bump
-Target: VERSION → versioning.md → README.md
-Details: Bump <oldVersion> → <newVersion>
+── VERSION BUMP GATE ──────────────────
+Bump <oldVersion> → <newVersion>
 ───────────────────────────────────────
 Approve? (y/N):
 ```
@@ -52,14 +50,23 @@ Read `README.md`. Find the Version History table (the line starting with `| **0.
    `| **<newVersion>** | <releaseNotes> |`
 Use the edit tool.
 
-### Step 8: Report box
+### Step 8: Check installer status
+
+Check if `install.ps1` or `install.sh` have uncommitted changes by running `git diff --stat HEAD -- install.ps1 install.sh`. If they have changes, store `$installerStatus = "⚠️  Needs update"`. Otherwise store `$installerStatus = "✅ Up to date"`.
+
+### Step 9: Report box
 
 Render:
 ```
 ╔══════ Release Complete ════════════════════════════════════╗
 ║                                                           ║
-║  Version:   <oldVersion> → <newVersion>                   ║
-║  Files:     VERSION, versioning.md, README.md             ║
+║  Version:        <oldVersion> → <newVersion>              ║
+║  Files updated:  VERSION, versioning.md, README.md        ║
+║  Installers:     <installerStatus>                        ║
+║                                                           ║
+║  To update:      Run install.ps1 --update or              ║
+║                  ./install.sh --update                    ║
+║                  then restart your editor                 ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 ```

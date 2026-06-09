@@ -34,7 +34,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 ## Files
 
 ### Architecture
-- `architecture/agent-restructure.md` — Agent architecture decision: Vibuzo as main agent, Deepveloper triggered via /spec for implementation subtasks
+- `architecture/agent-restructure.md` — Agent architecture decision: Vibuzo as main agent, Deepveloper (implementation), Deepsearcher (research), and Deepviewer (analysis) as subtask agents
 - `architecture/approval-gates.md` — Architecture decision for configurable approval gates (levels 0-3)
 - `architecture/deepsearcher-research-stage.md` — Architecture decision for Deepsearcher agent, /research command, and Research stage integration in /spec
 - `architecture/spec-command.md` — Architecture decision for the /spec command (5-phase pipeline)
@@ -76,7 +76,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
 - `standards/session-summary-forward-template.md` — Standard for the dual-layer session summary template: forward-looking sections above and auto-generated Session Compaction box below; section rules, naming convention, and forward vs compaction distinction
 - `standards/context-auto-query.md` — Standard for when and how the agent auto-scans context before implementation tasks
-- `standards/semantic-context-search.md` — Standard for the 3-factor TF-IDF + Levenshtein + keyword scoring formula used by /context find
+- `standards/semantic-context-search.md` — Standard for the 3-factor TF-IDF + Levenshtein + keyword scoring formula used for context relevance scoring
 - `standards/structured-commit-body-convention.md` — Standard for auto-generating natural-language commit bodies that explain every file change in present tense, imperative mood, for developers to read smoothly
 - `standards/yaml-frontmatter-convention.md` — Standard for YAML frontmatter structure (tags, scope, when) on all context files
 - `standards/deepviewer-invocation-modes.md` — Standard for the three Deepviewer invocation modes (/deepviewer audit, @deepviewer, /spec Review phase) and their file-creation rules
