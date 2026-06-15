@@ -51,6 +51,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/session-workflow.md` — Pattern for `/session → /new` golden workflow: session file includes an auto-generated Session Compaction block (styled box), used as starting context for the next session
 - `patterns/session-workflow-discipline.md` — Pattern for session workflow discipline: trigger points, anti-patterns, rules for preventing information loss and session file overlap, and the auto-generated compaction section
 - `patterns/large-document-size-gate.md` — Pattern for gating large generated documents with size preview and user approval before writing
+- `patterns/protocol-implementation-notes.md` — Pattern for wiring imported protocol standards into agents/vibuzo.md with concise implementation notes
 - `patterns/commit-workflow-pattern.md` — Pattern for the 3-gate commit workflow (action preview → execute → commit preview → git commit → report with no push)
 - `patterns/external-skill-integration.md` — Pattern for importing external skill repository workflows (e.g., agent-skills) as context standards rather than replacing Vibuzo's explicit pipeline
 - `patterns/installer-content-preservation-dedup.md` — Pattern for checking fresh download content before appending preserved user content to prevent duplication on re-install
@@ -68,6 +69,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/command-parameter-notation.md` — All command parameters use `[descriptive prompts]` in square brackets; consistent across all surfaces
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
+- `standards/trigger-phrase-sync.md` — Standard for keeping trigger phrases consistent across all three routing surfaces (agent file, routing standard, protocol standard's when: field)
 - `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
 - `standards/interview-me.md` — One-question-at-a-time interview protocol for extracting user intent from vague requests
 - `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
