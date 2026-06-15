@@ -23,10 +23,10 @@ The flowchart is the **first dispatch layer** — checked before explicit comman
 Task arrives
     │
     ├── Unsure what you want / "interview me" / "grill me"
-    │   ────────────────────────────────────────→ interview-me (🔲 Batch 1)
-    │
+    │   ────────────────────────────────────────→ interview-me (✅ Batch 1)
+
     ├── Have a rough concept / "refine this idea" / "ideate"
-    │   ────────────────────────────────────────→ idea-refine (🔲 Batch 1)
+    │   ────────────────────────────────────────→ idea-refine (✅ Batch 1)
     │
     ├── New feature or change / "write a spec"
     │   ────────────────────────────────────────→ /spec
@@ -69,8 +69,8 @@ Task arrives
 | # | Skill | Vibuzo Equivalent | Status | Batch |
 |---|-------|-------------------|--------|-------|
 | 1 | using-agent-skills (meta) | This file | ✅ | 0 |
-| 2 | interview-me | Not yet imported | 🔲 | 1 |
-| 3 | idea-refine | Not yet imported | 🔲 | 1 |
+| 2 | interview-me | Load context/standards/interview-me.md | ✅ | 1 |
+| 3 | idea-refine | Load context/standards/idea-refine.md | ✅ | 1 |
 | 4 | spec-driven-development | /spec command | ✅ | — |
 | 5 | planning-and-task-breakdown | /spec Plan phase | ✅ | — |
 | 6 | incremental-implementation | Deepveloper subagent | ✅ | — |

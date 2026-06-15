@@ -155,6 +155,8 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 | Version | Highlights |
 |---------|------------|
+| **0.0.18** | **Batch 1 skill import: interview-me and idea-refine protocols — 4 files changed, 18 insertions, 8 deletions** |
+| | Created interview-me and idea-refine context standards with full protocol definitions and YAML frontmatter, updated the routing flowchart in agents/vibuzo.md to ✅ with expanded trigger phrases and Protocol Implementation Notes, updated the skill-routing-vibuzo.md status table and flowchart to reflect Batch 1 completion, ran Deepviewer spec compliance and five-axis code quality reviews with 3 remediation fixes, updated context/index.md, and bumped version to 0.0.18. |
 | **0.0.17** | **Five-axis code review framework and OWASP-informed security depth for Deepviewer — 6 files changed, 151 insertions, 42 deletions** |
 | | Upgraded Deepviewer Review phase with Correctness, Readability, Architecture, Security, and Performance axes with Critical/Nit/Optional/FYI severity labels, deepened the Security axis with OWASP injection patterns, SSRF prevention, AI/LLM security checks, dependency supply chain analysis, and a three-tier boundary system, created a security-review-checklist.md reference with code examples and dependency audit triage flow, and updated all agent files, spec command, and context standards. |
 | **0.0.16** | **README mechanism table cleanup and reorder — 2 files changed, 3 insertions, 3 deletions** |

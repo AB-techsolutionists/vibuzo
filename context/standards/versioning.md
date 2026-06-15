@@ -41,6 +41,7 @@ Vibuzo uses standard semver (`MAJOR.MINOR.PATCH`).
 
 ### Current Version
 
+**0.0.18** — Batch 1 skill import: interview-me and idea-refine protocols (2026-06-16).
 **0.0.17** — Five-axis code review framework and OWASP-informed security depth for Deepviewer (2026-06-15).
 **0.0.16** — README mechanism table cleanup and reorder (2026-06-09).
 **0.3.9** — Integration installer bug fix and installer sync (2026-06-09).

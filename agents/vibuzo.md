@@ -54,8 +54,8 @@ the user needs from natural language without requiring slash commands.
 ```
 Task arrives
     │
-    ├── Unsure what you want / "interview me" ─→ interview-me (🔲)
-    ├── Have a rough concept / "refine this" ──→ idea-refine (🔲)
+    ├── Unsure what you want / "interview me" / "grill me" ─→ interview-me (✅)
+    ├── Have a rough concept / "refine this" ──→ idea-refine (✅)
     ├── New feature or change ──────────────────→ /spec
     ├── Implementing code (spec/writing complete) ─→ /spec (handles Research →
     │   │                                            Spec → Plan → Implement → Review)
@@ -84,6 +84,14 @@ Routing follows the rules defined in `context/standards/skill-routing-vibuzo.md`
 - **No match** — fall through to normal processing
 
 See `context/standards/skill-routing-vibuzo.md` for the full reference including all 24 skills and their import status.
+
+### Protocol Implementation Notes
+
+When the flowchart matches a specific protocol skill:
+
+- **interview-me (✅)** — Load `context/standards/interview-me.md` and follow its protocol step by step. This extracts clear intent from vague requests via structured one-question-at-a-time interviewing. Output is a confirmed statement of intent that feeds into `/spec`.
+
+- **idea-refine (✅)** — Load `context/standards/idea-refine.md` and follow its protocol step by step. This sharpens rough concepts into actionable one-pagers through divergent→convergent thinking. Output is a markdown one-pager that feeds into `/spec`.
 
 ## Context Auto-Query
 

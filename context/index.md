@@ -69,12 +69,14 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
 - `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
+- `standards/interview-me.md` — One-question-at-a-time interview protocol for extracting user intent from vague requests
 - `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
 - `standards/review-phase-mandatory-gate.md` — Standard for the mandatory Review phase in /spec: Vibuzo must dispatch Deepviewer after implementation and must not self-verify
 - `standards/reviewer-prompt-inlining.md` — Standard for embedding reviewer instructions inline in command definitions instead of external prompt files
 - `standards/research-briefing-phase-order.md` — Standard for Research phase preceding Briefing in the /spec pipeline
 - `standards/deepsearcher-invocation-modes.md` — Standard for the three Deepsearcher invocation modes (@Deepsearcher, /research, /spec Research stage) and their file-creation rules
 - `standards/feature-naming-convention.md` — Standard for deriving short meaningful kebab-case feature names from /spec descriptions (analyze → extract 2-4 key words → kebab-case)
+- `standards/idea-refine.md` — Divergent→convergent thinking protocol for refining raw ideas into actionable concepts
 - `standards/vibuzo-main-session-only.md` — Vibuzo must never be spawned as a subtask; only Deepsearcher and Deepveloper use subtask: true
 - `standards/opencode-mirror-files-integrity.md` — Standard: never modify `.opencode/` files directly (installer-managed only)
 - `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
