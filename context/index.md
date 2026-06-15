@@ -56,6 +56,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/installer-content-preservation-dedup.md` — Pattern for checking fresh download content before appending preserved user content to prevent duplication on re-install
 - `patterns/internal-commands-convention.md` — Pattern for commands that live only in .opencode/commands/ (excluded from installer and user-facing docs, Vibuzo dev-only)
 - `patterns/session-init-pattern.md` — Pattern for /session-init: read-only agent context initialization (discover, verify, scaffold, report, no file created)
+- `patterns/slot-based-skill-import.md` — Pattern for importing external skill repositories in dependency-ordered batches, each sized for single-session /spec implementation with review
 - `patterns/interactive-installer-wizard.md` — Pattern for 8-step interactive CLI installer wizard with detection modules, progress indicators, and guided flow
 
 ### Standards
@@ -69,6 +70,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
 - `standards/installer-visual-language.md` — Consistent color scheme and layout structure for install.ps1 and install.sh output
 - `standards/agents-preservation-convention.md` — Standard for preserving user AGENTS.md custom rules across installer updates: marker boundary, 3-case logic (fresh/user-owned/Vibuzo-with-rules), and approval gate requirements
+- `standards/review-phase-mandatory-gate.md` — Standard for the mandatory Review phase in /spec: Vibuzo must dispatch Deepviewer after implementation and must not self-verify
 - `standards/reviewer-prompt-inlining.md` — Standard for embedding reviewer instructions inline in command definitions instead of external prompt files
 - `standards/research-briefing-phase-order.md` — Standard for Research phase preceding Briefing in the /spec pipeline
 - `standards/deepsearcher-invocation-modes.md` — Standard for the three Deepsearcher invocation modes (@Deepsearcher, /research, /spec Research stage) and their file-creation rules
