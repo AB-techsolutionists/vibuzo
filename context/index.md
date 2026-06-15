@@ -80,6 +80,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/session-summary-forward-template.md` — Standard for the dual-layer session summary template: forward-looking sections above and auto-generated Session Compaction box below; section rules, naming convention, and forward vs compaction distinction
 - `standards/context-auto-query.md` — Standard for when and how the agent auto-scans context before implementation tasks
 - `standards/semantic-context-search.md` — Standard for the 3-factor TF-IDF + Levenshtein + keyword scoring formula used for context relevance scoring
+- `standards/skill-routing-vibuzo.md` — Standard for dynamic skill routing: intent-based dispatch flowchart adapted from agent-skills meta-skill, 24-skill status table, and routing implementation rules
 - `standards/structured-commit-body-convention.md` — Standard for auto-generating natural-language commit bodies that explain every file change in present tense, imperative mood, for developers to read smoothly
 - `standards/yaml-frontmatter-convention.md` — Standard for YAML frontmatter structure (tags, scope, when) on all context files
 - `standards/deepviewer-invocation-modes.md` — Standard for the three Deepviewer invocation modes (/deepviewer audit, @deepviewer, /spec Review phase) and their file-creation rules

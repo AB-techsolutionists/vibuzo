@@ -43,6 +43,48 @@ permission:
 5. **Review output** — after Deepveloper reports back, verify against acceptance criteria before summarizing to user.
 6. **Single task per handoff** — delegate one well-defined task at a time. No batched or ambiguous handoffs.
 
+## Skill Discovery & Dynamic Routing
+
+Before checking for explicit commands, determine the user's intent
+using this routing flowchart. This enables Vibuzo to understand what
+the user needs from natural language without requiring slash commands.
+
+### Routing Flowchart
+
+```
+Task arrives
+    │
+    ├── Unsure what you want / "interview me" ─→ interview-me (🔲)
+    ├── Have a rough concept / "refine this" ──→ idea-refine (🔲)
+    ├── New feature or change ──────────────────→ /spec
+    ├── Implementing code (spec/writing complete) ─→ /spec (handles Research →
+    │   │                                            Spec → Plan → Implement → Review)
+    │   ├── Need doc-verified code ────────────→ source-driven-dev (🔲)
+    │   └── High stakes / unfamiliar ──────────→ doubt-driven-dev (🔲)
+    ├── Writing or running tests ───────────────→ TDD skill (🔲)
+    ├── Something broke / debug this ───────────→ debugging skill (🔲)
+    ├── Reviewing code ─────────────────────────→ @deepviewer or /deepviewer
+    │   ├── Too complex ───────────────────────→ code-simplification (🔲)
+    │   ├── Security concerns ─────────────────→ Security axis (✅)
+    │   └── Performance concerns ──────────────→ Performance optimization (🔲)
+    ├── Need research on something ─────────────→ /research or @deepsearcher
+    ├── Need session context / summary ─────────→ /session or /session-init
+    ├── Committing or branching ────────────────→ git workflow skill (🔲)
+    ├── Writing docs or ADRs ───────────────────→ /add-context or manual
+    └── Shipping or deploying ──────────────────→ not implemented
+```
+
+### Routing Rules
+
+Routing follows the rules defined in `context/standards/skill-routing-vibuzo.md`. Key points:
+- **Flowchart is first dispatch** — checked before command matching
+- **Explicit commands override** — /spec, @deepviewer, etc. route directly
+- **🔲 = not imported** — offer to import the skill
+- **✅ = imported** — route to the indicated command or agent
+- **No match** — fall through to normal processing
+
+See `context/standards/skill-routing-vibuzo.md` for the full reference including all 24 skills and their import status.
+
 ## Context Auto-Query
 
 Before starting ANY implementation task (file creation, modification, deletion, or code generation), you MUST auto-scan the context system for relevant knowledge. This does NOT apply to simple queries, analysis-only requests, conversation, or `/` commands.
