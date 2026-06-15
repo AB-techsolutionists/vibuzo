@@ -62,6 +62,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/imperative-command-style.md` — All command files must use imperative "Do these steps NOW:" instructions
 - `standards/naming.md` — Use camelCase for variables, functions, and methods
 - `standards/arguments-usage-in-command-templates.md` — $ARGUMENTS must only appear in first description line, never in section bodies
+- `standards/code-review-framework.md` — Code review framework for evaluating implementation quality across five axes with severity labels
 - `standards/command-parameter-notation.md` — All command parameters use `[descriptive prompts]` in square brackets; consistent across all surfaces
 - `standards/agent-report-summary-next-steps.md` — Agents must always report a summary and next steps after completing any work
 - `standards/terminology-change-process.md` — Repeatable process for renaming terms across the codebase: audit, classify, execute, verify
@@ -74,6 +75,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `standards/vibuzo-main-session-only.md` — Vibuzo must never be spawned as a subtask; only Deepsearcher and Deepveloper use subtask: true
 - `standards/opencode-mirror-files-integrity.md` — Standard: never modify `.opencode/` files directly (installer-managed only)
 - `standards/versioning.md` — Standard for Vibuzo version format (0.x.x semver), bump rules, and canonical source
+- `standards/security-review-checklist.md` — Deep security review reference for Deepviewer: OWASP patterns, code examples, dependency audit triage, AI/LLM security
 - `standards/session-summary-forward-template.md` — Standard for the dual-layer session summary template: forward-looking sections above and auto-generated Session Compaction box below; section rules, naming convention, and forward vs compaction distinction
 - `standards/context-auto-query.md` — Standard for when and how the agent auto-scans context before implementation tasks
 - `standards/semantic-context-search.md` — Standard for the 3-factor TF-IDF + Levenshtein + keyword scoring formula used for context relevance scoring

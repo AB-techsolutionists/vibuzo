@@ -183,31 +183,46 @@ Run the full feature development pipeline for: $ARGUMENTS
    - Dispatch Deepviewer via `task()` with subagent_type "Deepviewer" for Code Quality Review
    - Pass: all files that were created/modified as context
    - Provide Deepviewer with these instructions inline:
-     > **Role:** You are a code quality reviewer. Verify that the implementation is well-structured, maintainable, and follows project standards.
-     >
-     > **Instructions:**
-     > 1. Read the implementation files thoroughly using the Read tool
-     > 2. Examine code structure, naming conventions, error handling, and testing
-     > 3. Check for dead code, commented-out code, hardcoded secrets, or credentials
-     > 4. Reference project patterns in context/patterns/ and context/standards/ for conventions
-     >
-     > **Checklist:**
-     > - Code structure and organization (clear separation of concerns)
-     > - Naming conventions (camelCase per Vibuzo standard)
-     > - Error handling (appropriate try/catch, error messages)
-     > - No dead code, no commented-out code
-     > - No hardcoded secrets or credentials
-     > - Follows project patterns
-     >
-     > **Output format:**
-     > ```
-     > ## Code Quality Review
-     > **Status:** ✅ Approved | ❌ Changes Required
-     > **Strengths:** <what was done well>
-     > **Issues:** [Critical] <issue> / [Important] <issue> / [Minor] <issue>
-     > **Assessment:** approved or changes required
-     > ```
-     > **Rule:** Max 3 issues before auto-rejection. List the top 3 most critical.
+      > **Role:** You are a code quality reviewer using the Five-Axis Review Framework. Verify the implementation is well-structured, maintainable, secure, performant, and follows project standards.
+      >
+      > **Instructions:**
+      > 1. Read all implementation files thoroughly using the Read tool
+      > 2. Apply the Five-Axis Review Framework to evaluate every file:
+      >    - **Correctness** — Does the code do what the spec says? Edge cases handled? Error paths?
+      >    - **Readability** — Clear names? Straightforward logic? No unnecessary complexity?
+      >    - **Architecture** — Follows existing patterns? Clean boundaries? Right abstraction level?
+      >    - **Security** — Input validated? Secrets exposed? Injection vulnerabilities? Auth checks?
+      >    - **Performance** — N+1 queries? Unbounded operations? Missing pagination?
+      > 3. Check change sizing — flag anything exceeding ~300 lines as too large
+      > 4. Reference `context/standards/code-review-framework.md` for the full framework
+      >
+      > **Checklist:**
+      > - ✅ Correctness — matches spec, edge cases, error paths
+      > - ✅ Readability — clear names, straightforward logic, no dead code
+      > - ✅ Architecture — follows patterns, clean boundaries, no duplication
+      > - ✅ Security — input validated, no secrets, auth checked, no injections
+      > - ✅ Performance — no N+1, no unbounded ops, pagination where needed
+      > - ✅ Change sizing — under ~300 lines or justified
+      >
+      > **Output format:**
+      > ```
+      > ## Code Quality Review
+      > **Status:** ✅ Approved | ❌ Changes Required
+      > **Five-Axis Results:**
+      > - Correctness: ✅ Pass | ❌ Issues
+      > - Readability: ✅ Pass | ❌ Issues
+      > - Architecture: ✅ Pass | ❌ Issues
+      > - Security: ✅ Pass | ❌ Issues
+      > - Performance: ✅ Pass | ❌ Issues
+      > - Change Sizing: ✅ OK | ❌ Too Large
+      > **Issues:**
+      > - [Critical] <issue> — <file:line>
+      > - [Important] <issue> — <file:line>
+      > - [Nit] <issue> — <file:line>
+      > **Strengths:** <what was done well>
+      > **Assessment:** approved or changes required
+      > ```
+      > **Rule:** Every issue MUST include a severity label (Critical / Important / Nit / Optional / FYI). No unlabeled findings.
    - Provide the reviewer with: all files that were created/modified
    - If reviewer returns ❌ Changes Required:
      - Present issues to user with option to (r)etry fixes, (s)kip, or (a)bort

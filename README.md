@@ -155,6 +155,8 @@ Vibuzo doesn't learn on its own — you teach it as you work. The more context y
 
 | Version | Highlights |
 |---------|------------|
+| **0.0.17** | **Five-axis code review framework and OWASP-informed security depth for Deepviewer — 6 files changed, 151 insertions, 42 deletions** |
+| | Upgraded Deepviewer Review phase with Correctness, Readability, Architecture, Security, and Performance axes with Critical/Nit/Optional/FYI severity labels, deepened the Security axis with OWASP injection patterns, SSRF prevention, AI/LLM security checks, dependency supply chain analysis, and a three-tier boundary system, created a security-review-checklist.md reference with code examples and dependency audit triage flow, and updated all agent files, spec command, and context standards. |
 | **0.0.16** | **README mechanism table cleanup and reorder — 2 files changed, 3 insertions, 3 deletions** |
 | | Removed structured commit messages row from the mechanism table and moved Karpathy behavioral principles to the top of the table. |
 | **0.3.9** | **Integration installer bug fix and installer sync — 1 file changed, 6 insertions, 6 deletions** |

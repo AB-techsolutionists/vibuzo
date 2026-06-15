@@ -5,25 +5,18 @@ agent: Vibuzo
 
 Do these steps NOW:
 
-1. **Read `AGENTS.md`** — load the universal entry point. Parse the file to understand agent roles (Vibuzo, Deepveloper, Deepsearcher), available commands (listed in the commands table), project conventions (Karpathy Principles, approval gates, custom rules), and file structure overview. Note any custom rules below the `─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───` marker. Do NOT print parsing details to chat.
+1. **Read `AGENTS.md`** — load the universal entry point. Parse the file to understand agent roles (Vibuzo, Deepveloper, Deepsearcher, Deepviewer), available commands (listed in the commands table), project conventions (Karpathy Principles, approval gates, custom rules), and file structure overview. Note any custom rules below the `─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───` marker. Do NOT print parsing details to chat.
 
 2. **Read `context/index.md`** — parse the `## Files` section to discover all available context files. Count how many files exist under architecture/, standards/, patterns/, and sessions/. Do NOT print the file list to chat.
 
-3. **Verify context directories** — use `Test-Path` to check each directory exists:
-   - `context/architecture/`
-   - `context/standards/`
-   - `context/patterns/`
-   - `context/sessions/`
-   Do NOT print verification results to chat.
-
-4. **Scan recent sessions** — read `context/sessions/index.md` and parse the timeline table:
+3. **Scan recent sessions** — read `context/sessions/index.md` and parse the timeline table:
    a. Determine today's date dynamically using `Get-Date -Format "yyyy-MM-dd"`
    b. Find all timeline rows matching today's date
    c. If today has entries → collect their file names → read ALL matching session files
    d. If no entries for today → compute yesterday's date using `(Get-Date).AddDays(-1).ToString("yyyy-MM-dd")` → find all rows matching yesterday → read ALL matching session files
    e. For each file read, check whether a `## Session Compaction` section with real content (not placeholder) exists
 
-5. **Print the full init output** — output this entire block to chat in a single codeblock, replacing `<N>`, `<M>`, `<date>` with actual values:
+4. **Print the full init output** — output this entire block to chat in a single codeblock, replacing `<N>`, `<M>`, `<date>` with actual values:
    ```
    ── Session Initialized ──────────────
    Context files:  <N> total across all directories
@@ -44,6 +37,8 @@ Do these steps NOW:
    ```
    For the narrative: extract session slug, key activity, and pending items from each loaded session with real Compaction content. Wrap descriptions at ~56 characters. Do NOT print any other output from steps 1-4.
 
-6. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.
+5. **Do NOT generate a session report file** — init is read-only. No file is created in `context/sessions/`.
 
-7. **Do NOT print the step verbatim or explain what you're doing** — the entire output (init box + narrative + pending items) comes from step 5. Just execute and output the codeblock.
+6. **Do NOT print the step verbatim or explain what you're doing** — the entire output (init box + narrative + pending items) comes from step 4. Just execute and output the codeblock.
+
+7. **Provide summary of all the work done in sessions you read,**
