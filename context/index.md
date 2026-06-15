@@ -52,6 +52,7 @@ See the master timeline at `sessions/index.md` for a chronological list of all s
 - `patterns/session-workflow-discipline.md` — Pattern for session workflow discipline: trigger points, anti-patterns, rules for preventing information loss and session file overlap, and the auto-generated compaction section
 - `patterns/large-document-size-gate.md` — Pattern for gating large generated documents with size preview and user approval before writing
 - `patterns/commit-workflow-pattern.md` — Pattern for the 3-gate commit workflow (action preview → execute → commit preview → git commit → report with no push)
+- `patterns/external-skill-integration.md` — Pattern for importing external skill repository workflows (e.g., agent-skills) as context standards rather than replacing Vibuzo's explicit pipeline
 - `patterns/installer-content-preservation-dedup.md` — Pattern for checking fresh download content before appending preserved user content to prevent duplication on re-install
 - `patterns/internal-commands-convention.md` — Pattern for commands that live only in .opencode/commands/ (excluded from installer and user-facing docs, Vibuzo dev-only)
 - `patterns/session-init-pattern.md` — Pattern for /session-init: read-only agent context initialization (discover, verify, scaffold, report, no file created)
