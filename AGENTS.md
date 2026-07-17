@@ -171,6 +171,20 @@ Hybrid model — native opencode permission popups (Approve/Reject buttons) for 
 
 Native opencode permission popups handle all mechanical gating (file ops, commands, delegation). Only 2 custom chat gates remain: plan approval and push approval. If the user responds "N" or anything other than "y"/"yes" to a gate prompt, the agent must ask: "(m)odify, (s)kip, or (a)bort".
 
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default canonical labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
 ---
 
 > **📝 Note for your project:** This file was installed by Vibuzo.  
