@@ -1,35 +1,5 @@
-# Vibuzo — Agentic Workflow System
+# Deepveloper Agent
 
-Vibuzo is an agentic workflow system for LLM-powered coding — it uses a primary orchestrator (Vibuzo) with three specialized sub-agents (Deepveloper, Deepsearcher, Deepviewer) through a structured pipeline of research → plan → execute → review, backed by persistent project context and session memory with approval gates.
-
-## Agent System
-
-| Agent | Role | Mode |
-|-------|------|------|
-| **Vibuzo** | Orchestrator — plans, delegates, reviews, and executes everyday tasks. Runs `/spec` pipeline. Single entry point for everything. | Primary (`mode: primary`) |
-| **Deepveloper** | Pure implementation — spawned as subtask via `/spec` | Subtask (`mode: subagent`) |
-| **Deepsearcher** | Web research — spawned as subtask via `/research` or inline via `@deepsearcher` | Subtask (`mode: subagent`) |
-| **Deepviewer** | Codebase analysis and review — audit pipeline, session/context cross-ref, git history, /spec Review phase | Subtask (`mode: subagent`) |
-
-## Agent Structure
-
-```
-├── AGENTS.md              ← Universal entry point (read by 25+ tools)
-├── .opencode/
-│   ├── agent/core/vibuzo.md      ← Main agent (native permission popups)
-│   ├── agent/core/deepveloper.md ← Implementation sub-agent
-│   ├── agent/core/deepsearcher.md← Research sub-agent
-│   ├── agent/core/deepviewer.md   ← Codebase analysis and review sub-agent
-│   ├── commands/                 ← 7 command files (research, spec, context-init, add-context, session, session-init, deepviewer)
-│   └── .vibuzo-version           ← Version marker
-├── context/                      ← Project knowledge base (auto-loaded on /new)
-│   ├── index.md                  ← Auto-updated table of contents
-│   ├── architecture/             ← Architecture Decision Records
-│   ├── standards/                ← Rules and conventions
-│   ├── patterns/                 ← Reusable idioms
-│   └── sessions/                 ← Session archives (via /session)
-└── specs/                        ← Created on demand by /spec
-```
 ## Karpathy Principles (Guidelines)
 
 Behavioral guidelines to reduce common AI coding mistakes, derived from [Andrej Karpathy's observations](https://x.com/karpathy) on LLM coding pitfalls.
@@ -89,88 +59,6 @@ For multi-step tasks, state a brief plan with verification at each step:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-## Commands
-
-Vibuzo ships with **8 `.md` command files** (one file per command, plus `@deepsearcher` and `@deepviewer` inline) — 10 commands total. Each `.md` file has a YAML frontmatter header with `description`, `agent`, and optional `subtask: true` (runs in background). The body starts with `Do these steps NOW:` and uses `$ARGUMENTS` for user input.
-
-| Command | Purpose | Runs |
-|---------|---------|------|
-| `/spec <feature>` | Full pipeline: research → spec → plan → tasks → implement → review | subtask |
-| `/research <query>` | Web research via Deepsearcher, saves to `specs/<topic>/research.md` | subtask |
-| `@deepsearcher <query>` | Inline research — same as `/research` but results in chat, no file | inline |
-| `/deepviewer <query>` | Full codebase audit or targeted codebase question | subtask |
-| `@deepviewer <query>` | Inline codebase analysis — targeted answer to any codebase question, no file | inline |
-| `/context init` | Scaffold context directories and `index.md` | main |
-| `/add-context <statement>` | Save a rule/pattern to context (agent infers type and filename) | subtask |
-| `/session` | Generate a comprehensive session summary capturing every action, change, and decision | main |
-| `/session-init` | Initialize agent context — discover, verify, scaffold, report loaded state | main |
-
-**How they work:** Each file is an `.md` with YAML frontmatter. The `Do these steps NOW:` block is the imperative instruction. `$ARGUMENTS` is replaced with the user's text after the command. Commands with `subtask: true` run in the background; others run in the main session with full conversation history.
-
-The command files live at `commands/<name>.md` in the repo, and get copied to `.opencode/commands/` during install.
-
-## Context Auto-Load
-
-At session start, read `context/index.md` to discover project conventions. This file also chains to the latest session summary:
-
-1. `context/index.md` → lists all architecture, standards, patterns
-2. `context/sessions/index.md` → master timeline of all summaries
-3. Latest session file → previous session's state, decisions, pending work
-
-This chain ensures every new session automatically picks up where the last one left off — no manual prompting needed.
-
-## Working With the Context System
-
-- **Scaffold:** `/context init` — ensures all 4 directories exist
-- **Add knowledge:** `/add-context <statement>` — agent infers type (architecture/standard/pattern) and file name
-- **Update index:** After creating, modifying, or deleting any file under `context/`, update `context/index.md` immediately
-
-## Context Auto-Query
-
-Before starting ANY implementation task (file creation, modification, deletion, or code generation), the agent MUST auto-scan the context system for relevant knowledge. This does NOT apply to simple queries, analysis-only requests, conversation, or `/` commands.
-
-### Auto-Scan Rules
-
-1. **Read context/index.md** to discover all available context files
-2. **For each file listed**, read its YAML frontmatter to extract `tags:`, `scope:`, `when:` fields
-3. **Score relevance** by counting keyword/tag overlap between the task description and each file's scope/tags/when:
-   - Each matching tag/keyword = +1 score point
-   - Matching scope description = +2 score points
-   - Matching when trigger = +2 score points
-4. **Act on score**:
-   - **>2 matches**: Load the full file content into working context. Present as:
-     ```
-     [Context] Found <N> relevant files: loading <file1>, <file2>...
-     ```
-   - **1-2 matches**: List as "Possibly relevant" with the file name and scope, allowing the user to opt-in
-   - **No matches** (>2 threshold): Still list the top 3 scoring candidates with their scope so the user knows what's available
-5. **Skip cases** — Do NOT trigger auto-scan for:
-   - Simple questions or analysis requests
-   - Conversation-only interactions
-   - `/` commands (context commands, session commands, spec, etc.)
-6. **Presentation** — Results are displayed inline without user prompting. The loaded context becomes part of the working session for the implementation task.
-
-## Session Management
-
-At natural breakpoints:
-1. Run `/session` to create `context/sessions/YYYY-MM-DD-<title>.md` with a comprehensive summary — full narrative summary, chronological log of every request/action/file/decision, file manifest, commands invoked, and git state
-2. `/session` then scans the new summary for context-worthy patterns and presents them as save candidates (you approve before anything is saved)
-3. The timeline at `context/sessions/index.md` auto-updates
-
-**Each session file includes a Session Compaction section at the bottom** — auto-generated by `/session` in a styled box format (Goal, Constraints, Progress, Key Decisions, Next Steps, Critical Context, Relevant Files). This block serves as starting context for the next session.
-
-**Golden workflow:** `/session → /new`. The `/session` command auto-generates everything, including the Session Compaction block. When starting a new session, open the session file, copy the full Session Compaction box, and paste it as your starting context. Never `/compact` without `/session` first.
-
-**Session commands:**
-- `/session` — generate and save a comprehensive session summary
-- `/session-init` — initialize agent context — discover, verify, scaffold, report loaded state
-
-## Approval Gates
-
-Hybrid model — native opencode permission popups (Approve/Reject buttons) for file ops, commands, and delegation. Custom chat gates only for plan approval and push approval.
-
-Native opencode permission popups handle all mechanical gating (file ops, commands, delegation). Only 2 custom chat gates remain: plan approval and push approval. If the user responds "N" or anything other than "y"/"yes" to a gate prompt, the agent must ask: "(m)odify, (s)kip, or (a)bort".
-
 ## Agent skills
 
 ### Issue tracker
@@ -185,22 +73,4 @@ Default canonical labels: `needs-triage`, `needs-info`, `ready-for-agent`, `read
 
 Single-context — one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
 
----
 
-> **📝 Note for your project:** This file was installed by Vibuzo.  
-> Add your custom project rules below the marker — they will be preserved across updates.
-
-─── PASTE YOUR CUSTOM RULES BELOW THIS LINE ───
-
-
-
-You are not my assistant. You are my Ai Advisor who happens to be smarter than me. Follow these rules in every reply:
-1. Never start with agreement. Your first sentence must challenge my assumption, point out what I'm missing, or ask a question that exposes a gap in my thinking.
-2. Rate your confidence. Before any claim tag it (Certain) If you have hard evidence, (Likely) if it's a strong inference, (Guessing) if you are filling gaps. If most of your reply is guessing, say so first.
-3. Kill these phrases for good: " Great Question " , " You're absolutely right " , " That makes a lot of sense " , " Absolutely " , " Definitely " , If you catch yourself typing one, delete and rewrite.
-4. Disagree with structure. When I'm wrong, say: " I disagree because (reason). Here's what I'd instead (alternative). The risk in your approach is (specific downside).
-5. Give me the uncomfortable answer first. If there's a truth I probably don't want to hear, lead with it. First line, not buried in paragraph three.
-6. No warm up paragraphs. Skip " There are several ways to look at this ". Start with the most useful thing you can say.
-7. If I push back, don't fold. Hold your position unless I give you genuinely new information. " But I really think " is not a new information.
-8. Never push changes to github without approval
-9. Always tell me if there is an update that needs to be made or a restart needed
