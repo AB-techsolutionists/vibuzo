@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
 import type { ChildProcess, SpawnOptions } from "node:child_process";
-import { writeFileAtomic } from "./utils/fs.js";
+import { writeFileSafe } from "./utils/fs.js";
 import { SYSTEM_PROMPT } from "./prompt.js";
 import type { DetectedTool, InstallSummary } from "./types.js";
 
@@ -10,6 +10,7 @@ export interface InstallOptions {
   projectDir: string;
   detectedTools: DetectedTool[];
   yes?: boolean;
+  confirmOverwrite?: (filePath: string) => Promise<boolean>;
 }
 
 const OPENCODE_AGENT_FRONTMATTER = `---
@@ -19,12 +20,7 @@ color: emerald
 ---
 `;
 
-const AGENTS_SKELETON = `# ===========================================
-# Project Context
-# ===========================================
-`;
-
-const CLAUDE_MD_SKELETON = `# ===========================================
+const PROJECT_CONTEXT_SKELETON = `# ===========================================
 # Project Context
 # ===========================================
 `;
@@ -49,66 +45,67 @@ async function writeWithOverwriteCheck(
   filePath: string,
   content: string,
   yes: boolean,
-  written: string[],
-  skipped: string[],
+  summary: { written: string[]; skipped: string[] },
+  confirmOverwrite?: (filePath: string) => Promise<boolean>,
 ): Promise<void> {
   if (existsSync(filePath)) {
     if (yes) {
-      skipped.push(filePath);
+      summary.skipped.push(filePath);
       return;
+    }
+    if (confirmOverwrite) {
+      const ok = await confirmOverwrite(filePath);
+      if (!ok) {
+        summary.skipped.push(filePath);
+        return;
+      }
     }
     console.warn(`Warning: ${filePath} already exists — overwriting.`);
   }
-  await writeFileAtomic(filePath, content);
-  written.push(filePath);
+  await writeFileSafe(filePath, content);
+  summary.written.push(filePath);
+}
+
+type ToolFiles = {
+  agentPath: string;
+  agentContent: string;
+  skeletonPath: string;
+};
+
+async function installToolFiles(
+  files: ToolFiles,
+  yes: boolean,
+  summary: { written: string[]; skipped: string[] },
+  confirmOverwrite?: (filePath: string) => Promise<boolean>,
+): Promise<void> {
+  await writeWithOverwriteCheck(files.agentPath, files.agentContent, yes, summary, confirmOverwrite);
+  await writeWithOverwriteCheck(files.skeletonPath, PROJECT_CONTEXT_SKELETON, yes, summary, confirmOverwrite);
 }
 
 export async function installDeepveloper(
   options: InstallOptions,
 ): Promise<InstallSummary> {
-  const { projectDir, detectedTools, yes = false } = options;
+  const { projectDir, detectedTools, yes = false, confirmOverwrite } = options;
   const written: string[] = [];
   const skipped: string[] = [];
+  const summary = { written, skipped };
   const hasOpenCode = detectedTools.includes("opencode");
   const hasClaudeCode = detectedTools.includes("claude-code");
 
   if (hasOpenCode) {
-    const agentContent = OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT;
-    await writeWithOverwriteCheck(
-      openCodeAgentPath(projectDir),
-      agentContent,
-      yes,
-      written,
-      skipped,
-    );
-
-    const agents = agentsPath(projectDir);
-    await writeWithOverwriteCheck(
-      agents,
-      AGENTS_SKELETON,
-      yes,
-      written,
-      skipped,
-    );
+    await installToolFiles({
+      agentPath: openCodeAgentPath(projectDir),
+      agentContent: OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT,
+      skeletonPath: agentsPath(projectDir),
+    }, yes, summary, confirmOverwrite);
   }
 
   if (hasClaudeCode) {
-    await writeWithOverwriteCheck(
-      claudeCodeAgentPath(projectDir),
-      SYSTEM_PROMPT,
-      yes,
-      written,
-      skipped,
-    );
-
-    const claudeMd = claudeMdPath(projectDir);
-    await writeWithOverwriteCheck(
-      claudeMd,
-      CLAUDE_MD_SKELETON,
-      yes,
-      written,
-      skipped,
-    );
+    await installToolFiles({
+      agentPath: claudeCodeAgentPath(projectDir),
+      agentContent: SYSTEM_PROMPT,
+      skeletonPath: claudeMdPath(projectDir),
+    }, yes, summary, confirmOverwrite);
   }
 
   return { written, skipped, toolDetected: detectedTools };

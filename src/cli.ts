@@ -6,6 +6,8 @@ import { dirname, resolve } from "node:path";
 import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 import ora from "ora";
+import chalk from "chalk";
+import gradient from "gradient-string";
 import type { CliOptions, DetectedTool } from "./types.js";
 import { detectOpenCode, detectClaudeCode } from "./detect.js";
 import { installDeepveloper, installSkills } from "./install.js";
@@ -13,7 +15,7 @@ import { installDeepveloper, installSkills } from "./install.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const BANNER = `
+const BANNER_ASCII = `
   ____                     _                  _
  |  _ \\  ___  ___ ___  __| | ___ _ __ ___   | |_   ___  _ __
  | | | |/ _ \\/ __/ _ \\/ _\` |/ _ \\ '__/ _ \\  | | | / _ \\| '_ \\
@@ -22,7 +24,9 @@ const BANNER = `
                                                            |_|
 `;
 
-const POST_INSTALL_GUIDANCE = `
+const BANNER = gradient(["#636363", "#d4d4d4", "#ffffff"])(BANNER_ASCII);
+
+const POST_INSTALL_GUIDANCE = chalk.dim(`
 ┌──────────────────────────────────────────────────────────────┐
 │  Next steps:                                                 │
 │                                                              │
@@ -33,7 +37,7 @@ const POST_INSTALL_GUIDANCE = `
 │  labels, and domain documentation for the engineering        │
 │  skills.                                                     │
 └──────────────────────────────────────────────────────────────┘
-`;
+`);
 
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {};
@@ -86,7 +90,8 @@ async function confirmInstall(): Promise<boolean> {
 }
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
-  console.log(BANNER);
+  console.log(chalk.bold(BANNER));
+  console.log(chalk.bold.cyan("\n═══ Deepveloper Installer ═══\n"));
   console.log("This tool will install the Deepveloper senior engineer AI agent");
   console.log("for your project. It will create agent definition files and");
   console.log("install Matt Pocock's engineering skills.\n");
@@ -100,14 +105,14 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   detectSpinner.stop();
 
   if (detected.length === 0) {
-    console.log("No supported AI coding tools detected.");
+    console.log(chalk.yellow("No supported AI coding tools detected."));
     console.log("Deepveloper supports opencode and Claude Code.");
     console.log("Install one of these tools and run deepveloper again.");
     return;
   }
 
-  console.log(`Detected: ${detected.join(", ")}\n`);
-  console.log("The following files will be written:");
+  console.log(chalk.green(`✓ Detected: ${detected.join(", ")}\n`));
+  console.log(chalk.bold("The following files will be written:"));
   if (isOpenCode) {
     console.log("  - .opencode/agent/deepveloper.md");
     console.log("  - AGENTS.md");
@@ -116,13 +121,13 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     console.log("  - .claude/deepveloper.md");
     console.log("  - CLAUDE.md");
   }
-  console.log("\nMatt Pocock's engineering skills will also be installed");
-  console.log("(code-review, domain-modeling, TDD, grilling, and more).\n");
+  console.log(chalk.dim("\nMatt Pocock's engineering skills will also be installed"));
+  console.log(chalk.dim("(code-review, domain-modeling, TDD, grilling, and more).\n"));
 
   if (!yes) {
     const ok = await confirmInstall();
     if (!ok) {
-      console.log("Installation cancelled.");
+      console.log(chalk.yellow("Installation cancelled."));
       return;
     }
   }
@@ -130,17 +135,29 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   const writeSpinner = ora("Writing agent definition files...").start();
   let result;
   try {
-    result = await installDeepveloper({ projectDir, detectedTools: detected, yes });
+    result = await installDeepveloper({
+      projectDir,
+      detectedTools: detected,
+      yes,
+      confirmOverwrite: async (filePath) => {
+        writeSpinner.stop();
+        const rl = createInterface({ input, output });
+        const answer = await rl.question(chalk.yellow(`? ${filePath} already exists. Overwrite? (y/n) `));
+        rl.close();
+        writeSpinner.start();
+        return answer.trim().toLowerCase() === "y";
+      },
+    });
   } catch (err: unknown) {
     writeSpinner.fail("Failed to write files");
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(`  Error: ${msg}`);
+    console.error(chalk.red(`  Error: ${msg}`));
     if (err instanceof Error && "code" in err) {
       const code = (err as NodeJS.ErrnoException).code;
       if (code === "EACCES" || code === "EPERM") {
-        console.error("  Permission denied. Try running with elevated permissions.");
+        console.error(chalk.red("  Permission denied. Try running with elevated permissions."));
       } else if (code === "ENOSPC") {
-        console.error("  No space left on device. Free up disk space and try again.");
+        console.error(chalk.red("  No space left on device. Free up disk space and try again."));
       }
     }
     return;
@@ -149,12 +166,12 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
 
   if (result.written.length > 0) {
     for (const f of result.written) {
-      console.log(`  ✓ ${f}`);
+      console.log(chalk.green(`  ✓ ${f}`));
     }
   }
   if (result.skipped.length > 0) {
     for (const f of result.skipped) {
-      console.log(`  - ${f} (skipped, already exists)`);
+      console.log(chalk.dim(`  - ${f} (skipped, already exists)`));
     }
   }
 
@@ -165,21 +182,21 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   } catch (err: unknown) {
     skillsSpinner.fail("Skills installation failed");
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(`  Error: ${msg}`);
+    console.error(chalk.red(`  Error: ${msg}`));
     if (err instanceof Error && "code" in err) {
       const code = (err as NodeJS.ErrnoException).code;
       if (code === "ENOENT") {
-        console.error("  npx not found. Ensure Node.js is installed and in your PATH.");
+        console.error(chalk.red("  npx not found. Ensure Node.js is installed and in your PATH."));
       }
     }
-    console.log("\nFiles were written successfully but skills installation failed.");
-    console.log("You can install skills manually by running:");
-    console.log("  npx skills@latest add mattpocock/skills");
+    console.log(chalk.yellow("\nFiles were written successfully but skills installation failed."));
+    console.log(chalk.yellow("You can install skills manually by running:"));
+    console.log(chalk.yellow("  npx skills@latest add mattpocock/skills"));
     return;
   }
 
   console.log(POST_INSTALL_GUIDANCE);
-  console.log("Done. Your project is ready for the Deepveloper agent.");
+  console.log(chalk.bold.green("\n✓ Done. Your project is ready for the Deepveloper agent."));
 }
 
 async function main(): Promise<void> {
