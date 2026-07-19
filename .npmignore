@@ -1,0 +1,9 @@
+tests/
+src/
+docs/
+.agents/
+.agignore
+.gitignore
+.npmignore
+tsconfig.json
+vitest.config.ts

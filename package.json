@@ -5,7 +5,7 @@
   "description": "Interactive CLI for installing the Deepveloper senior engineer AI agent",
   "type": "module",
   "bin": {
-    "deepveloper": "./dist/cli.js"
+    "deepveloper": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
