@@ -3,7 +3,9 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import type { CliOptions } from "./types.js";
+import type { CliOptions, DetectedTool } from "./types.js";
+import { detectOpenCode } from "./detect.js";
+import { installDeepveloper } from "./install.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -51,7 +53,56 @@ FLAGS
 `);
 }
 
-function main(): void {
+function printSummary(
+  written: string[],
+  skipped: string[],
+): void {
+  if (written.length > 0) {
+    console.log("\nWritten:");
+    for (const f of written) {
+      console.log(`  ✓ ${f}`);
+    }
+  }
+  if (skipped.length > 0) {
+    console.log("\nSkipped (already exist):");
+    for (const f of skipped) {
+      console.log(`  - ${f}`);
+    }
+  }
+}
+
+async function runInstall(projectDir: string, yes: boolean): Promise<void> {
+  const isOpenCode = detectOpenCode(projectDir);
+  const detected: DetectedTool[] = [];
+  if (isOpenCode) detected.push("opencode");
+
+  if (detected.length === 0) {
+    console.log("No supported AI coding tools detected.");
+    return;
+  }
+
+  console.log(`Detected tools: ${detected.join(", ")}`);
+
+  if (!yes) {
+    console.log("\nThe following files will be created:");
+    if (isOpenCode) {
+      console.log("  - .opencode/agent/deepveloper.md");
+      console.log("  - AGENTS.md");
+    }
+    console.log("");
+  }
+
+  const result = await installDeepveloper({
+    projectDir,
+    detectedTools: detected,
+    yes,
+  });
+
+  printSummary(result.written, result.skipped);
+  console.log("\nDone.");
+}
+
+async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
 
   if (options.help) {
@@ -64,13 +115,8 @@ function main(): void {
     return;
   }
 
-  if (options.yes) {
-    console.log("Non-interactive mode (--yes). Install logic coming in future tickets.");
-    return;
-  }
-
-  console.log("deepveloper — interactive installer (coming soon)");
-  console.log(`Run "npx deepveloper --help" for usage.`);
+  const projectDir = process.cwd();
+  await runInstall(projectDir, options.yes ?? false);
 }
 
 main();
