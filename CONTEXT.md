@@ -1,38 +1,56 @@
 # Deepveloper
 
-A framework for installing and configuring an opencode agent that behaves as a senior AI engineer / software developer, following Matt Pocock's engineering skills patterns.
+**Deepveloper** is an interactive CLI tool that installs a senior engineer AI agent into a project. It detects the developer's AI coding tools (opencode, Claude Code), writes agent definition files with a Karpathy-principled system prompt, and installs Matt Pocock's engineering skills — all from `npx deepveloper@latest`.
 
-## Language
+---
 
-**Deepveloper**:
-An opencode agent definition installed via `npx deepveloper@latest`.
-_Avoid_: deepveloper agent, deepveloper framework
+## Glossary
 
-**Karpathy Principles**:
+### Deepveloper
+The npm CLI tool (`deepveloper`) that detects AI coding tools, writes agent definitions, and installs skills. It is run interactively with `npx deepveloper@latest`.
+_Avoid_: "the deepveloper agent" (the agent within the tool is the senior engineer, not Deepveloper)
+
+### Senior Engineer Agent
+The AI agent persona installed by Deepveloper. Combines Karpathy's four principles with a senior software engineer identity. Lives in agent definition files that the CLI writes.
+_Avoid_: "deepveloper agent"
+
+### System Prompt
+The 6-section prompt template (`Identity, Core Principles, Communication, Workflow, Code Standards, Tool Usage`) that defines the Senior Engineer Agent's behavior. Packaged in `src/prompt.ts`.
+
+### Karpathy Principles
 Behavioral guidelines for AI coding agents: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution.
 _Avoid_: karpathy rules, guidelines
 
-**Matt Pocock skills**:
-A collection of engineering workflow skills (code-review, domain-modeling, grilling, TDD, etc.) distributed as `npx skills@latest add mattpocock/skills`.
-_Avoid_: matt skills, pocock skills, engineering skills
+### AI Coding Tool
+A supported editor/terminal agent that Deepveloper can configure. Currently: **opencode** and **Claude Code**.
+_Avoid_: AI tool, coding agent (ambiguous without context)
 
-**Skills CLI**:
-The interactive installer tool at `npx skills@latest` that discovers installed AI coding agents, lets the user select skills by fuzzy-search, and installs them per-agent or globally. deepveloper's CLI mirrors this user experience.
-_Avoid_: skills installer, npx skills
+### Agent Definition File
+A file in the project that configures an AI Coding Tool to use the Senior Engineer Agent. Format differs by tool:
+- **opencode**: `.opencode/agent/deepveloper.md` — YAML frontmatter (`mode: primary`, `hidden: false`, `color: emerald`) + System Prompt body
+- **Claude Code**: `.claude/deepveloper.md` — raw System Prompt body (no frontmatter)
 
-**Agent definition**:
-An entry in `.opencode/agent/*.md` containing YAML frontmatter and a system prompt body. For deepveloper: mode=primary, no model lock, emerald green color.
-_Avoid_: agent config, agent setup
+### Project Context File
+A skeleton file at the project root that gives the AI Coding Tool basic project-level instructions:
+- **AGENTS.md** — for opencode
+- **CLAUDE.md** — for Claude Code
 
-**CLAUDE.md**:
-Project-level context file at the repo root. deepveloper writes a skeleton; `/setup-matt-pocock-skills` fills in the `## Agent skills` section.
-_Avoid_: claude instructions, project instructions
+Deepveloper writes the skeleton; the skills setup step (`/setup-matt-pocock-skills`) fills in the skills section.
+_Avoid_: project instructions
 
-**AGENTS.md**:
-Project-level context file for opencode. Same pattern as CLAUDE.md — skeleton by deepveloper, skills section by setup skill.
-_Avoid_: agent instructions
+### Matt Pocock Skills
+A collection of engineering workflow skills (code-review, domain-modeling, TDD, grilling, implement, etc.) distributed via `npx skills@latest add mattpocock/skills`. Installed by Deepveloper as part of its flow.
+_Avoid_: matt skills, pocock skills
 
-**Installation flow**:
-1. `npx deepveloper@latest` — detects tools (opencode, Claude Code), writes agent definitions to `.opencode/agent/deepveloper.md` and `.claude/deepveloper.md`, writes `CLAUDE.md` and `AGENTS.md` skeletons
-2. Calls `npx skills@latest add mattpocock/skills` — user selects which skills
-3. Guides user to run `/setup-matt-pocock-skills` inside their agent
+### Skills CLI
+The interactive installer at `npx skills@latest`. Discovers AI Coding Tools, lets the user select skills by fuzzy-search, and installs them per-tool or globally. Deepveloper's UI mirrors this UX.
+_Avoid_: skills installer
+
+### Installation Flow
+The sequence of operations Deepveloper performs:
+1. Detect AI Coding Tools (opencode, Claude Code)
+2. Show plan: files to write, skills to install
+3. Confirm with user (or `--yes` to skip)
+4. Write Agent Definition Files and Project Context Files
+5. Run `npx skills@latest add mattpocock/skills`
+6. Show post-install guidance (run `/setup-matt-pocock-skills`)
