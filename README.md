@@ -22,7 +22,7 @@ Interactive CLI for installing the Deepveloper senior engineer AI agent into you
 ## Quickstart (30-second setup)
 
 ```bash
-npx deepveloper
+npx deepveloper@latest
 ```
 
 The CLI will:
@@ -35,7 +35,7 @@ The CLI will:
 7. Guide you to run `/setup-matt-pocock-skills` in your agent
 
 > [!TIP]
-> Run `npx deepveloper --yes` to skip all confirmation prompts and accept defaults.
+> Run `npx deepveloper@latest --yes` to skip all confirmation prompts and accept defaults.
 
 ## What Gets Created
 
@@ -78,9 +78,9 @@ Matt Pocock's skills (code-review, TDD, domain-modeling, grilling, and more) are
 deepveloper — Install the Deepveloper senior engineer AI agent
 
 USAGE
-  npx deepveloper         Run the interactive installer
-  npx deepveloper --help  Show this help
-  npx deepveloper --yes   Skip confirmation prompts
+  npx deepveloper@latest         Run the interactive installer
+  npx deepveloper@latest --help  Show this help
+  npx deepveloper@latest --yes   Skip confirmation prompts
 
 FLAGS
   --yes, -y   Skip all confirmation prompts and auto-overwrite

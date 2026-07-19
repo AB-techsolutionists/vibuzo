@@ -71,9 +71,9 @@ function printHelp(): void {
 deepveloper — Install the Deepveloper senior engineer AI agent
 
 USAGE
-  npx deepveloper         Run the interactive installer
-  npx deepveloper --help  Show this help
-  npx deepveloper --yes   Skip confirmation prompts
+  npx deepveloper@latest         Run the interactive installer
+  npx deepveloper@latest --help  Show this help
+  npx deepveloper@latest --yes   Skip confirmation prompts
 
 FLAGS
   --yes, -y   Skip all confirmation prompts
