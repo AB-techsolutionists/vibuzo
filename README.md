@@ -11,8 +11,9 @@
 
 # Deepveloper
 
-[![npm version](https://img.shields.io/npm/v/deepveloper)](https://www.npmjs.com/package/deepveloper)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
+![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
+![TypeScript](https://img.shields.io/badge/typescript-5.8-blue)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
 Interactive CLI for installing the Deepveloper senior engineer AI agent into your repo — with a Karpathy-principled system prompt and Matt Pocock's engineering skills.
 
