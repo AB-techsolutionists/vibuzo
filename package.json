@@ -1,0 +1,23 @@
+{
+  "name": "deepveloper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive CLI for installing the Deepveloper senior engineer AI agent",
+  "type": "module",
+  "bin": {
+    "deepveloper": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}
