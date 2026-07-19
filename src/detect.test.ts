@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { detectOpenCode } from "./detect.js";
+import { detectOpenCode, detectClaudeCode } from "./detect.js";
 
 let tmpDir: string;
 
@@ -42,5 +42,29 @@ describe("detectOpenCode", () => {
     mkdirSync(join(tmpDir, ".opencode"));
     mkdirSync(join(tmpDir, ".config", "opencode"), { recursive: true });
     expect(detectOpenCode(tmpDir, tmpDir)).toBe(true);
+  });
+});
+
+describe("detectClaudeCode", () => {
+  it("returns true when .claude/ exists in project dir", () => {
+    mkdirSync(join(tmpDir, ".claude"));
+    expect(detectClaudeCode(tmpDir)).toBe(true);
+  });
+
+  it("returns true when .claude/ exists in a separate home dir", () => {
+    const homeDir = join(tmpDir, "homeDir");
+    mkdirSync(join(homeDir, ".claude"), { recursive: true });
+    expect(detectClaudeCode(tmpDir, homeDir)).toBe(true);
+  });
+
+  it("returns false when no claude config exists", () => {
+    expect(detectClaudeCode(tmpDir, tmpDir)).toBe(false);
+  });
+
+  it("returns true when both project and home have claude config", () => {
+    const homeDir = join(tmpDir, "homeDir");
+    mkdirSync(join(tmpDir, ".claude"));
+    mkdirSync(join(homeDir, ".claude"), { recursive: true });
+    expect(detectClaudeCode(tmpDir, homeDir)).toBe(true);
   });
 });

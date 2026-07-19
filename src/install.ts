@@ -22,8 +22,21 @@ const AGENTS_SKELETON = `# ===========================================
 # ===========================================
 `;
 
+const CLAUDE_MD_SKELETON = `# ===========================================
+# Project Context
+# ===========================================
+`;
+
 function openCodeAgentPath(projectDir: string): string {
   return join(projectDir, ".opencode", "agent", "deepveloper.md");
+}
+
+function claudeCodeAgentPath(projectDir: string): string {
+  return join(projectDir, ".claude", "deepveloper.md");
+}
+
+function claudeMdPath(projectDir: string): string {
+  return join(projectDir, "CLAUDE.md");
 }
 
 function agentsPath(projectDir: string): string {
@@ -55,6 +68,7 @@ export async function installDeepveloper(
   const written: string[] = [];
   const skipped: string[] = [];
   const hasOpenCode = detectedTools.includes("opencode");
+  const hasClaudeCode = detectedTools.includes("claude-code");
 
   if (hasOpenCode) {
     const agentContent = OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT;
@@ -70,6 +84,25 @@ export async function installDeepveloper(
     await writeWithOverwriteCheck(
       agents,
       AGENTS_SKELETON,
+      yes,
+      written,
+      skipped,
+    );
+  }
+
+  if (hasClaudeCode) {
+    await writeWithOverwriteCheck(
+      claudeCodeAgentPath(projectDir),
+      SYSTEM_PROMPT,
+      yes,
+      written,
+      skipped,
+    );
+
+    const claudeMd = claudeMdPath(projectDir);
+    await writeWithOverwriteCheck(
+      claudeMd,
+      CLAUDE_MD_SKELETON,
       yes,
       written,
       skipped,

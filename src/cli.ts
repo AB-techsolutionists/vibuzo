@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import type { CliOptions, DetectedTool } from "./types.js";
-import { detectOpenCode } from "./detect.js";
+import { detectOpenCode, detectClaudeCode } from "./detect.js";
 import { installDeepveloper } from "./install.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -73,8 +73,10 @@ function printSummary(
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   const isOpenCode = detectOpenCode(projectDir);
+  const isClaudeCode = detectClaudeCode(projectDir);
   const detected: DetectedTool[] = [];
   if (isOpenCode) detected.push("opencode");
+  if (isClaudeCode) detected.push("claude-code");
 
   if (detected.length === 0) {
     console.log("No supported AI coding tools detected.");
@@ -88,6 +90,10 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     if (isOpenCode) {
       console.log("  - .opencode/agent/deepveloper.md");
       console.log("  - AGENTS.md");
+    }
+    if (isClaudeCode) {
+      console.log("  - .claude/deepveloper.md");
+      console.log("  - CLAUDE.md");
     }
     console.log("");
   }

@@ -7,3 +7,9 @@ export function detectOpenCode(projectDir: string, home?: string): boolean {
   const homeConfig = join(home ?? homedir(), ".config", "opencode");
   return existsSync(projectConfig) || existsSync(homeConfig);
 }
+
+export function detectClaudeCode(projectDir: string, home?: string): boolean {
+  const projectConfig = join(projectDir, ".claude");
+  const homeConfig = join(home ?? homedir(), ".claude");
+  return existsSync(projectConfig) || existsSync(homeConfig);
+}
