@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { detectOpenCode, detectClaudeCode } from "./detect.js";
+import { detectOpenCode, detectClaudeCode } from "../src/detect.js";
 
 let tmpDir: string;
 

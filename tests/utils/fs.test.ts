@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { ensureDir, writeFileSafe } from "./fs.js";
+import { ensureDir, writeFileSafe } from "../../src/utils/fs.js";
 
 let tmpDir: string;
 

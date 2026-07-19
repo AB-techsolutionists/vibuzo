@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { EventEmitter } from "node:events";
 import type { ChildProcess } from "node:child_process";
-import { installDeepveloper, installSkills } from "./install.js";
+import { installDeepveloper, installSkills } from "../src/install.js";
 
 let tmpDir: string;
 

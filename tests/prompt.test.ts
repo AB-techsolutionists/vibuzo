@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SYSTEM_PROMPT } from "./prompt.js";
+import { SYSTEM_PROMPT } from "../src/prompt.js";
 
 describe("SYSTEM_PROMPT", () => {
   it("exports a non-empty string", () => {
