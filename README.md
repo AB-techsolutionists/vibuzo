@@ -1,92 +1,75 @@
-```
+<p align="center">
+  <pre>
   ____                     _                  _
  |  _ \  ___  ___ ___  __| | ___ _ __ ___   | |_   ___  _ __
  | | | |/ _ \/ __/ _ \/ _` |/ _ \ '__/ _ \  | | | / _ \| '_ \
  | |_| |  __/ (_|  __/ (_| |  __/ | | (_) | | | |_| (_) | |_) |
  |____/ \___|\___\___|\__,_|\___|_|  \___/  |_|\__,_\___/| .__/
                                                            |_|
-```
+  </pre>
+</p>
 
 # Deepveloper
 
 [![npm version](https://img.shields.io/npm/v/deepveloper)](https://www.npmjs.com/package/deepveloper)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 
-**Interactive CLI for installing the Deepveloper senior engineer AI agent into your repo.**
-
-Deepveloper detects which AI coding tools you have installed (opencode, Claude Code), writes agent definition files with a senior engineer system prompt based on [Karpathy's principles](https://x.com/karpathy), and installs [Matt Pocock's engineering skills](https://github.com/mattpocock/skills) — all from a single command.
+Interactive CLI for installing the Deepveloper senior engineer AI agent into your repo — with a Karpathy-principled system prompt and Matt Pocock's engineering skills.
 
 ---
 
-## Quickstart
+## Quickstart (30-second setup)
 
 ```bash
 npx deepveloper
 ```
 
 The CLI will:
-1. Display an ASCII art banner and explain what it will do
-2. Detect your installed AI coding agents
-3. Show you which files will be created
+1. Display the banner and explain what it will do
+2. Detect which AI coding tools you have installed (opencode, Claude Code)
+3. Show which files will be created and which skills will be installed
 4. Prompt you to confirm before making changes
 5. Write agent definition files and project context files
 6. Install Matt Pocock's engineering skills
 7. Guide you to run `/setup-matt-pocock-skills` in your agent
 
-To skip prompts:
+> [!TIP]
+> Run `npx deepveloper --yes` to skip all confirmation prompts.
 
-```bash
-npx deepveloper --yes
-```
+## What It Creates
 
-## What It Does
+| Tool | Agent file | Project file |
+|---|---|---|
+| **opencode** | `.opencode/agent/deepveloper.md` (YAML frontmatter + prompt) | `AGENTS.md` |
+| **Claude Code** | `.claude/deepveloper.md` (raw prompt body) | `CLAUDE.md` |
+| **Both** | Files for both tools | Both project files |
 
-Deepveloper configures a **senior engineer AI agent** with proper guardrails — Karpathy's four principles (Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution) — combined with a pragmatic senior software engineer persona.
-
-**For opencode users:**
-- Creates `.opencode/agent/deepveloper.md` with YAML frontmatter and the full system prompt
-- Creates `AGENTS.md` with a project context skeleton
-
-**For Claude Code users:**
-- Creates `.claude/deepveloper.md` with the system prompt
-- Creates `CLAUDE.md` with a project context skeleton
-
-**For everyone:**
-- Installs Matt Pocock's engineering skills (code-review, TDD, domain-modeling, grilling, and more) via `npx skills@latest add mattpocock/skills`
-- Guides you to run `/setup-matt-pocock-skills` to configure the issue tracker, triage labels, and domain docs
+It also runs `npx skills@latest add mattpocock/skills` to install skills like code-review, TDD, domain-modeling, and grilling.
 
 ## Why Deepveloper Exists
 
-Setting up an AI coding agent with proper engineering practices requires wiring together multiple configuration files, understanding different agent definition formats, and running separate installation commands. There is no unified, guided experience.
+Setting up an AI coding agent with proper engineering practices currently means wiring together multiple configuration files, understanding different agent definition formats, and running separate installation commands. Deepveloper replaces that with a single, interactive command.
 
-Deepveloper solves this by providing a single, interactive command that:
+### Embeds engineering discipline from day one
 
-### Eliminates the setup tax
+The system prompt is not a generic "you are an expert" — it's a carefully designed prompt based on [Karpathy's four principles](https://x.com/karpathy) (Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution) combined with a senior software engineer persona. It covers identity, core principles, communication, workflow, code standards, and tool usage.
 
-Instead of reading docs for opencode, Claude Code, and Matt Pocock's skills individually, you run one command and get everything configured.
+### Detects your tools automatically
 
-### Embeds engineering discipline
+Works with opencode and Claude Code. Only configures what you actually use. Run once per repo.
 
-The system prompt is not a generic "you are an expert" — it's a carefully designed prompt based on Karpathy's principles and years of engineering experience. It covers identity, core principles, communication, workflow, code standards, and tool usage.
+## System Prompt Structure
 
-### Works with your tools
+```
+Identity         → Senior software engineer — pragmatic, precise, responsible
+Core Principles  → Karpathy's four principles verbatim
+Communication    → Concise, honest, don't over-apologize
+Workflow         → Understand → Plan → Implement → Verify → Iterate
+Code Standards   → Follow conventions, no comments unless needed, security first
+Tool Usage       → Precise tools, batch parallel ops, ask before destructive actions
+```
 
-Detects which AI coding agents you actually use and only configures those. Run once per repo.
-
-## System Prompt Design
-
-The agent prompt follows a 6-section structure:
-
-| Section | Purpose |
-|---|---|
-| **Identity** | "Senior software engineer — pragmatic, precise, responsible" |
-| **Core Principles** | The four Karpathy principles verbatim |
-| **Communication** | Concise, honest, don't over-apologize |
-| **Workflow** | Understand → Plan → Implement → Verify → Iterate |
-| **Code Standards** | Follow conventions, no comments unless needed, security first |
-| **Tool Usage** | Precise tools, batch parallel ops, ask before destructive actions |
-
-## CLI
+## CLI Reference
 
 ```
 deepveloper — Install the Deepveloper senior engineer AI agent
@@ -105,17 +88,10 @@ FLAGS
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Build TypeScript
-npm run build
-
-# Run tests
-npm test
-
-# Watch mode
-npm run test:watch
+npm install       # Install dependencies
+npm run build     # Build TypeScript
+npm test          # Run tests
+npm run test:watch  # Watch mode
 ```
 
 ### Project structure
@@ -123,8 +99,8 @@ npm run test:watch
 ```
 ├── src/
 │   ├── cli.ts           CLI entry point
-│   ├── detect.ts        Tool detection module
-│   ├── install.ts       Installation module
+│   ├── detect.ts        Tool detection
+│   ├── install.ts       Installation orchestration
 │   ├── prompt.ts        System prompt template
 │   ├── types.ts         Shared types
 │   └── utils/
@@ -144,12 +120,8 @@ npm run test:watch
 └── vitest.config.ts
 ```
 
-### Requirements
-
-- Node.js 18+
+Requires Node.js 18+.
 
 ## Prior Art
 
 The system prompt draws on research across Claude Code, Cursor, Aider, OpenCode, Cline, and GitHub Copilot — documented in `docs/senior-engineer-prompt-research.md`.
-
-This project is built as an npm package and published as `deepveloper`.
