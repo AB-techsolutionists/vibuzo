@@ -3,12 +3,37 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { stdin as input, stdout as output } from "node:process";
+import { createInterface } from "node:readline/promises";
+import ora from "ora";
 import type { CliOptions, DetectedTool } from "./types.js";
 import { detectOpenCode, detectClaudeCode } from "./detect.js";
-import { installDeepveloper } from "./install.js";
+import { installDeepveloper, installSkills } from "./install.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const BANNER = `
+  ____                     _                  _
+ |  _ \\  ___  ___ ___  __| | ___ _ __ ___   | |_   ___  _ __
+ | | | |/ _ \\/ __/ _ \\/ _\` |/ _ \\ '__/ _ \\  | | | / _ \\| '_ \\
+ | |_| |  __/ (_|  __/ (_| |  __/ | | (_) | | | |_| (_) | |_) |
+ |____/ \\___|\\___\\___|\\__,_|\\___|_|  \\___/  |_|\\__,_\\___/| .__/
+                                                           |_|
+`;
+
+const POST_INSTALL_GUIDANCE = `
+┌──────────────────────────────────────────────────────────────┐
+│  Next steps:                                                 │
+│                                                              │
+│  1. Open your AI coding agent (opencode or Claude Code)      │
+│  2. Run the command:  /setup-matt-pocock-skills              │
+│                                                              │
+│  This will configure the repo's issue tracker, triage        │
+│  labels, and domain documentation for the engineering        │
+│  skills.                                                     │
+└──────────────────────────────────────────────────────────────┘
+`;
 
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {};
@@ -53,59 +78,108 @@ FLAGS
 `);
 }
 
-function printSummary(
-  written: string[],
-  skipped: string[],
-): void {
-  if (written.length > 0) {
-    console.log("\nWritten:");
-    for (const f of written) {
-      console.log(`  ✓ ${f}`);
-    }
-  }
-  if (skipped.length > 0) {
-    console.log("\nSkipped (already exist):");
-    for (const f of skipped) {
-      console.log(`  - ${f}`);
-    }
-  }
+async function confirmInstall(): Promise<boolean> {
+  const rl = createInterface({ input, output });
+  const answer = await rl.question("Proceed with installation? (y/n) ");
+  rl.close();
+  return answer.trim().toLowerCase() === "y";
 }
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
+  console.log(BANNER);
+  console.log("This tool will install the Deepveloper senior engineer AI agent");
+  console.log("for your project. It will create agent definition files and");
+  console.log("install Matt Pocock's engineering skills.\n");
+
+  const detectSpinner = ora("Detecting AI coding tools...").start();
   const isOpenCode = detectOpenCode(projectDir);
   const isClaudeCode = detectClaudeCode(projectDir);
   const detected: DetectedTool[] = [];
   if (isOpenCode) detected.push("opencode");
   if (isClaudeCode) detected.push("claude-code");
+  detectSpinner.stop();
 
   if (detected.length === 0) {
     console.log("No supported AI coding tools detected.");
+    console.log("Deepveloper supports opencode and Claude Code.");
+    console.log("Install one of these tools and run deepveloper again.");
     return;
   }
 
-  console.log(`Detected tools: ${detected.join(", ")}`);
+  console.log(`Detected: ${detected.join(", ")}\n`);
+  console.log("The following files will be written:");
+  if (isOpenCode) {
+    console.log("  - .opencode/agent/deepveloper.md");
+    console.log("  - AGENTS.md");
+  }
+  if (isClaudeCode) {
+    console.log("  - .claude/deepveloper.md");
+    console.log("  - CLAUDE.md");
+  }
+  console.log("\nMatt Pocock's engineering skills will also be installed");
+  console.log("(code-review, domain-modeling, TDD, grilling, and more).\n");
 
   if (!yes) {
-    console.log("\nThe following files will be created:");
-    if (isOpenCode) {
-      console.log("  - .opencode/agent/deepveloper.md");
-      console.log("  - AGENTS.md");
+    const ok = await confirmInstall();
+    if (!ok) {
+      console.log("Installation cancelled.");
+      return;
     }
-    if (isClaudeCode) {
-      console.log("  - .claude/deepveloper.md");
-      console.log("  - CLAUDE.md");
-    }
-    console.log("");
   }
 
-  const result = await installDeepveloper({
-    projectDir,
-    detectedTools: detected,
-    yes,
-  });
+  const writeSpinner = ora("Writing agent definition files...").start();
+  let result;
+  try {
+    result = await installDeepveloper({ projectDir, detectedTools: detected, yes });
+  } catch (err: unknown) {
+    writeSpinner.fail("Failed to write files");
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`  Error: ${msg}`);
+    if (err instanceof Error && "code" in err) {
+      const code = (err as NodeJS.ErrnoException).code;
+      if (code === "EACCES" || code === "EPERM") {
+        console.error("  Permission denied. Try running with elevated permissions.");
+      } else if (code === "ENOSPC") {
+        console.error("  No space left on device. Free up disk space and try again.");
+      }
+    }
+    return;
+  }
+  writeSpinner.succeed("Agent definition files written");
 
-  printSummary(result.written, result.skipped);
-  console.log("\nDone.");
+  if (result.written.length > 0) {
+    for (const f of result.written) {
+      console.log(`  ✓ ${f}`);
+    }
+  }
+  if (result.skipped.length > 0) {
+    for (const f of result.skipped) {
+      console.log(`  - ${f} (skipped, already exists)`);
+    }
+  }
+
+  const skillsSpinner = ora("Installing Matt Pocock's skills...").start();
+  try {
+    await installSkills();
+    skillsSpinner.succeed("Skills installed");
+  } catch (err: unknown) {
+    skillsSpinner.fail("Skills installation failed");
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error(`  Error: ${msg}`);
+    if (err instanceof Error && "code" in err) {
+      const code = (err as NodeJS.ErrnoException).code;
+      if (code === "ENOENT") {
+        console.error("  npx not found. Ensure Node.js is installed and in your PATH.");
+      }
+    }
+    console.log("\nFiles were written successfully but skills installation failed.");
+    console.log("You can install skills manually by running:");
+    console.log("  npx skills@latest add mattpocock/skills");
+    return;
+  }
+
+  console.log(POST_INSTALL_GUIDANCE);
+  console.log("Done. Your project is ready for the Deepveloper agent.");
 }
 
 async function main(): Promise<void> {

@@ -1,5 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { spawn } from "node:child_process";
+import type { ChildProcess, SpawnOptions } from "node:child_process";
 import { writeFileAtomic } from "./utils/fs.js";
 import { SYSTEM_PROMPT } from "./prompt.js";
 import type { DetectedTool, InstallSummary } from "./types.js";
@@ -110,4 +112,28 @@ export async function installDeepveloper(
   }
 
   return { written, skipped, toolDetected: detectedTools };
+}
+
+export type SpawnFunction = (
+  command: string,
+  args: string[],
+  options: SpawnOptions,
+) => ChildProcess;
+
+export async function installSkills(
+  spawnFn: SpawnFunction = spawn,
+): Promise<void> {
+  const options: SpawnOptions = { stdio: "inherit", shell: true };
+  return new Promise<void>((resolve, reject) => {
+    const child = spawnFn(
+      "npx",
+      ["skills@latest", "add", "mattpocock/skills"],
+      options,
+    );
+    child.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`npx skills exited with code ${code}`));
+    });
+    child.on("error", (err) => reject(err));
+  });
 }

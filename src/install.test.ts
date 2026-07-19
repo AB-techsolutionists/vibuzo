@@ -1,8 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { mkdtempSync, existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { installDeepveloper } from "./install.js";
+import { EventEmitter } from "node:events";
+import type { ChildProcess } from "node:child_process";
+import { installDeepveloper, installSkills } from "./install.js";
 
 let tmpDir: string;
 
@@ -217,5 +219,60 @@ describe("installDeepveloper", () => {
     expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(true);
     expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(true);
     expect(result.written.length).toBe(4);
+  });
+});
+
+function mockChildProcess(): ChildProcess {
+  const ee = new EventEmitter() as unknown as ChildProcess;
+  return ee;
+}
+
+describe("installSkills", () => {
+  it("calls npx skills@latest add mattpocock/skills", async () => {
+    const spawn = vi.fn(() => {
+      const cp = mockChildProcess();
+      setTimeout(() => cp.emit("close", 0));
+      return cp;
+    });
+
+    await installSkills(spawn);
+
+    expect(spawn).toHaveBeenCalledWith("npx", [
+      "skills@latest",
+      "add",
+      "mattpocock/skills",
+    ], { stdio: "inherit", shell: true });
+  });
+
+  it("resolves on exit code 0", async () => {
+    const spawn = vi.fn(() => {
+      const cp = mockChildProcess();
+      setTimeout(() => cp.emit("close", 0));
+      return cp;
+    });
+
+    await expect(installSkills(spawn)).resolves.toBeUndefined();
+  });
+
+  it("rejects on non-zero exit code", async () => {
+    const spawn = vi.fn(() => {
+      const cp = mockChildProcess();
+      setTimeout(() => cp.emit("close", 1));
+      return cp;
+    });
+
+    await expect(installSkills(spawn)).rejects.toThrow(
+      "npx skills exited with code 1",
+    );
+  });
+
+  it("rejects on spawn error", async () => {
+    const spawn = vi.fn(() => {
+      const cp = mockChildProcess();
+      setTimeout(() => cp.emit("error", new Error("ENOENT")), 0);
+      return cp;
+    });
+
+    await expect(installSkills(spawn)).rejects.toThrow("ENOENT");
   });
 });
