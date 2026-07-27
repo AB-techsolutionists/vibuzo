@@ -235,13 +235,15 @@ describe("installSkills", () => {
       return cp;
     });
 
+    const isWin = process.platform === "win32";
+    const command = isWin ? "cmd" : "npx";
+    const args = isWin
+      ? ["/c", "npx", "skills@latest", "add", "mattpocock/skills"]
+      : ["skills@latest", "add", "mattpocock/skills"];
+
     await installSkills(spawn);
 
-    expect(spawn).toHaveBeenCalledWith("npx", [
-      "skills@latest",
-      "add",
-      "mattpocock/skills",
-    ], { stdio: "inherit", shell: true });
+    expect(spawn).toHaveBeenCalledWith(command, args, { stdio: "inherit" });
   });
 
   it("resolves on exit code 0", async () => {

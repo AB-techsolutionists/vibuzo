@@ -120,13 +120,13 @@ export type SpawnFunction = (
 export async function installSkills(
   spawnFn: SpawnFunction = spawn,
 ): Promise<void> {
-  const options: SpawnOptions = { stdio: "inherit", shell: true };
+  const isWin = process.platform === "win32";
+  const command = isWin ? "cmd" : "npx";
+  const args = isWin
+    ? ["/c", "npx", "skills@latest", "add", "mattpocock/skills"]
+    : ["skills@latest", "add", "mattpocock/skills"];
   return new Promise<void>((resolve, reject) => {
-    const child = spawnFn(
-      "npx",
-      ["skills@latest", "add", "mattpocock/skills"],
-      options,
-    );
+    const child = spawnFn(command, args, { stdio: "inherit" });
     child.on("close", (code) => {
       if (code === 0) resolve();
       else reject(new Error(`npx skills exited with code ${code}`));
