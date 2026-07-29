@@ -15,7 +15,7 @@
 ![TypeScript](https://img.shields.io/badge/typescript-5.8-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
-Interactive CLI for installing the Deepveloper senior engineer AI agent into your repo — with a Karpathy-principled system prompt and Matt Pocock's engineering skills.
+Interactive CLI for installing the Deepveloper AI agent into your repo — with a Karpathy-principled system prompt and Matt Pocock's engineering skills.
 
 ---
 
@@ -41,7 +41,7 @@ The CLI will:
 
 | If you use… | Agent file | Project file |
 |---|---|---|
-| **opencode** | `.opencode/agent/deepveloper.md` — YAML frontmatter + full prompt | `AGENTS.md` — skeleton |
+| **opencode** | `.opencode/agents/deepveloper.md` — YAML frontmatter + full prompt | `AGENTS.md` — skeleton |
 | **Claude Code** | `.claude/deepveloper.md` — raw prompt body | `CLAUDE.md` — skeleton |
 | **Both** | Both agent files | Both project files |
 

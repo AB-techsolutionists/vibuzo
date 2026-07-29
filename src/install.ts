@@ -14,6 +14,7 @@ export interface InstallOptions {
 }
 
 const OPENCODE_AGENT_FRONTMATTER = `---
+description: Senior software engineer AI agent with Karpathy principles and Matt Pocock's engineering skills
 mode: primary
 hidden: false
 color: emerald
@@ -26,7 +27,7 @@ const PROJECT_CONTEXT_SKELETON = `# ===========================================
 `;
 
 function openCodeAgentPath(projectDir: string): string {
-  return join(projectDir, ".opencode", "agent", "deepveloper.md");
+  return join(projectDir, ".opencode", "agents", "deepveloper.md");
 }
 
 function claudeCodeAgentPath(projectDir: string): string {

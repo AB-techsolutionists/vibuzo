@@ -23,7 +23,7 @@ describe("installDeepveloper", () => {
       detectedTools: ["opencode"],
     });
 
-    const agentPath = join(tmpDir, ".opencode", "agent", "deepveloper.md");
+    const agentPath = join(tmpDir, ".opencode", "agents", "deepveloper.md");
     expect(existsSync(agentPath)).toBe(true);
     expect(result.written).toContain(agentPath);
   });
@@ -34,8 +34,9 @@ describe("installDeepveloper", () => {
       detectedTools: ["opencode"],
     });
 
-    const agentPath = join(tmpDir, ".opencode", "agent", "deepveloper.md");
+    const agentPath = join(tmpDir, ".opencode", "agents", "deepveloper.md");
     const content = readFileSync(agentPath, "utf-8");
+    expect(content).toContain("description:");
     expect(content).toContain("mode: primary");
     expect(content).toContain("hidden: false");
     expect(content).toContain("color: emerald");
@@ -48,7 +49,7 @@ describe("installDeepveloper", () => {
       detectedTools: ["opencode"],
     });
 
-    const agentPath = join(tmpDir, ".opencode", "agent", "deepveloper.md");
+    const agentPath = join(tmpDir, ".opencode", "agents", "deepveloper.md");
     const content = readFileSync(agentPath, "utf-8");
     expect(content).toContain("# Identity");
     expect(content).toContain("senior software engineer");
@@ -85,7 +86,7 @@ describe("installDeepveloper", () => {
       detectedTools: [],
     });
 
-    const agentPath = join(tmpDir, ".opencode", "agent", "deepveloper.md");
+    const agentPath = join(tmpDir, ".opencode", "agents", "deepveloper.md");
     expect(existsSync(agentPath)).toBe(false);
   });
 
@@ -100,7 +101,7 @@ describe("installDeepveloper", () => {
   });
 
   it("skips existing files and reports them as skipped with --yes", async () => {
-    const agentPath = join(tmpDir, ".opencode", "agent", "deepveloper.md");
+    const agentPath = join(tmpDir, ".opencode", "agents", "deepveloper.md");
     const agentsPath = join(tmpDir, "AGENTS.md");
     await installDeepveloper({
       projectDir: tmpDir,
@@ -214,7 +215,7 @@ describe("installDeepveloper", () => {
       detectedTools: ["opencode", "claude-code"],
     });
 
-    expect(existsSync(join(tmpDir, ".opencode", "agent", "deepveloper.md"))).toBe(true);
+    expect(existsSync(join(tmpDir, ".opencode", "agents", "deepveloper.md"))).toBe(true);
     expect(existsSync(join(tmpDir, ".claude", "deepveloper.md"))).toBe(true);
     expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(true);
     expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(true);

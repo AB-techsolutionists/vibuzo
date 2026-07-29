@@ -18,7 +18,7 @@ An interactive CLI tool (`npx deepveloper@latest`) that detects which AI coding 
 
 4. As a developer, I want the CLI to detect which AI coding tools I have installed (opencode, Claude Code), so that it only sets up agents for tools I actually use.
 
-5. As a developer using opencode, I want a deepveloper agent definition created at `.opencode/agent/deepveloper.md` with YAML frontmatter, so that I can select "deepveloper" from the opencode agent selector.
+5. As a developer using opencode, I want a deepveloper agent definition created at `.opencode/agents/deepveloper.md` with YAML frontmatter, so that I can select "deepveloper" from the opencode agent selector.
 
 6. As a developer using Claude Code, I want a deepveloper agent instruction file created at `.claude/deepveloper.md`, so that Claude Code uses the senior engineer persona and Karpathy principles.
 
@@ -55,7 +55,7 @@ The `deepveloper` npm package will contain:
 - **Tool detection module**: Scans the user's environment for AI coding agent configuration directories. Checks for opencode (`~/.config/opencode/` or `.opencode/`), Claude Code (`~/.claude/` or `.claude/`). Returns a list of detected tools plus the project directory path for each.
 
 - **Installation module** (exposed as the programmatic API): Takes detected tools and a project directory, writes:
-  - `.opencode/agent/deepveloper.md` with YAML frontmatter (mode: primary, hidden: false, color: emerald green) and the full system prompt body
+  - `.opencode/agents/deepveloper.md` with YAML frontmatter (mode: primary, hidden: false, color: emerald green) and the full system prompt body
   - `.claude/deepveloper.md` with the system prompt body (no frontmatter)
   - `CLAUDE.md` at the repo root if it doesn't exist, with a skeleton
   - `AGENTS.md` at the repo root if it doesn't exist, with a skeleton

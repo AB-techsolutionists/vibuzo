@@ -27,7 +27,7 @@ _Avoid_: AI tool, coding agent (ambiguous without context)
 
 ### Agent Definition File
 A file in the project that configures an AI Coding Tool to use the Senior Engineer Agent. Format differs by tool:
-- **opencode**: `.opencode/agent/deepveloper.md` — YAML frontmatter (`mode: primary`, `hidden: false`, `color: emerald`) + System Prompt body
+- **opencode**: `.opencode/agents/deepveloper.md` — YAML frontmatter (`mode: primary`, `hidden: false`, `color: emerald`) + System Prompt body
 - **Claude Code**: `.claude/deepveloper.md` — raw System Prompt body (no frontmatter)
 
 ### Project Context File
