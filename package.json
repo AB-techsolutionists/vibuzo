@@ -1,8 +1,8 @@
 {
   "name": "deepveloper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
-  "description": "Interactive CLI for installing the Deepveloper senior engineer AI agent",
+  "description": "Interactive CLI for installing the Deepveloper AI agent",
   "type": "module",
   "bin": {
     "deepveloper": "dist/cli.js"
