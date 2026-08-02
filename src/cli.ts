@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative } from "node:path";
-import { intro, outro, log, spinner, confirm, note, isCancel, select } from "@clack/prompts";
+import { intro, outro, log, spinner, confirm, note, isCancel, multiselect } from "@clack/prompts";
 import type { SpinnerResult } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
@@ -140,26 +140,22 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   if (yes) {
     setupTools = detected;
   } else {
-    type SetupChoice = DetectedTool | "both";
-    const options: { value: SetupChoice; label: string; hint?: string }[] = [];
-    if (detected.length > 1) {
-      options.push({ value: "both", label: "Both tools", hint: "opencode + Claude Code" });
-    }
-    for (const tool of detected) {
-      options.push({ value: tool, label: TOOL_LABELS[tool], hint: AGENT_FILES[tool] });
-    }
-
-    const chosen = await select<SetupChoice>({
-      message: "Set up Deepveloper for which tools?",
-      options,
-      initialValue: detected.length > 1 ? "both" : detected[0],
+    const selection = await multiselect({
+      message: "Select which tools to set up",
+      options: detected.map((tool) => ({
+        value: tool,
+        label: TOOL_LABELS[tool],
+        hint: AGENT_FILES[tool],
+      })),
+      required: true,
+      initialValues: detected,
     });
-    if (isCancel(chosen)) {
+    if (isCancel(selection)) {
       log.warn("Setup cancelled.");
       outro(chalk.red("Cancelled"));
       return;
     }
-    setupTools = chosen === "both" ? detected : [chosen];
+    setupTools = selection;
   }
 
   log.info(chalk.bold("Writing agent definition files:"));
