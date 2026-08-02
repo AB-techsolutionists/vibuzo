@@ -83,7 +83,7 @@ async function showSpinner(message: string, durationMs: number): Promise<void> {
   let frame = 0;
   const end = Date.now() + durationMs;
   while (Date.now() < end) {
-    process.stdout.write(`\r${chalk.cyan(SPINNER_FRAMES[frame % SPINNER_FRAMES.length])}${message ? `  ${message}` : ""}`);
+    process.stdout.write(`\r${chalk.gray(SPINNER_FRAMES[frame % SPINNER_FRAMES.length])}${message ? `  ${message}` : ""}`);
     frame += 1;
     await sleep(delay);
   }
@@ -110,7 +110,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
 
   await showSpinner("", 1500);
 
-  intro(chalk.bold("Deepveloper"));
+  intro(chalk.bold("Deepveloper Installer"));
 
   await showSpinner("Detecting AI coding tools...", 700);
   const isOpenCode = detectOpenCode(projectDir);
