@@ -90,6 +90,12 @@ async function animateProgress(bar: ProgressResult, label: string): Promise<void
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.clear();
   console.log(chalk.bold(BANNER));
+
+  const bootSpinner = spinner();
+  bootSpinner.start("Starting Deepveloper...");
+  await sleep(1500);
+  bootSpinner.stop("Ready");
+
   intro(chalk.bold("Deepveloper"));
 
   if (!yes) {
