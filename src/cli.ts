@@ -81,10 +81,10 @@ async function animateProgress(bar: ProgressResult, label: string): Promise<void
   const steps = 10;
   bar.start(`${label} 0%`);
   for (let i = 1; i <= steps; i++) {
-    await sleep(50);
+    await sleep(40);
     bar.advance(10, `${label} ${i * 10}%`);
   }
-  bar.stop(`${label} written`);
+  bar.clear();
 }
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
@@ -111,10 +111,10 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   const detected: DetectedTool[] = [];
   if (isOpenCode) detected.push("opencode");
   if (isClaudeCode) detected.push("claude-code");
-  detectSpinner.stop(detected.length > 0 ? "Tools detected" : "No tools found");
+  detectSpinner.stop(detected.length === 0 ? "No AI coding tools found" : "Detection complete");
 
   if (detected.length === 0) {
-    log.warn("No supported AI coding tools detected. Deepveloper supports opencode and Claude Code.");
+    log.warn("Deepveloper supports opencode and Claude Code, but neither was detected.");
     log.info("Install one of these tools and run deepveloper again.");
     outro(chalk.red("Installation cancelled"));
     return;
@@ -122,9 +122,10 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
 
   log.info(chalk.bold("Detected AI coding tools:"));
   for (const tool of detected) {
-    log.step(`${chalk.bold(TOOL_LABELS[tool])} → ${AGENT_FILES[tool]}`);
+    log.success(`${chalk.bold(TOOL_LABELS[tool])} → ${AGENT_FILES[tool]}`, { symbol: chalk.green("✓") });
   }
 
+  log.info(chalk.bold("Writing agent definition files:"));
   const writeBar = progress({ style: "block" });
   let result;
   try {
@@ -160,7 +161,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
 
   if (result.written.length > 0) {
     for (const f of result.written) {
-      log.success(relative(projectDir, f));
+      log.success(relative(projectDir, f), { symbol: chalk.green("✓") });
     }
   }
   if (result.skipped.length > 0) {
