@@ -1,0 +1,4 @@
+# Agent artifact files are pinned byte-exact by tests (tests/install.test.ts),
+# so they must always be checked out with LF line endings on every platform.
+.claude/deepveloper.md text eol=lf
+.opencode/agents/deepveloper.md text eol=lf
