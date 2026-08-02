@@ -26,26 +26,24 @@ npx deepveloper@latest
 ```
 
 The CLI will:
-1. Display the banner and explain what it will do
-2. Detect which AI coding tools you have installed (opencode, Claude Code)
-3. Show which files will be created and which skills will be installed
-4. Prompt you to confirm before making changes
-5. Write agent definition files and project context files
-6. Install Matt Pocock's engineering skills
-7. Guide you to run `/setup-matt-pocock-skills` in your agent
+1. Display the banner and explain what it is and what will happen
+2. Prompt you to confirm before making changes
+3. Detect which AI coding tools you have installed (opencode, Claude Code)
+4. Write the deepveloper agent definition for each tool you use
+5. Guide you to install Matt Pocock's engineering skills yourself
 
 > [!TIP]
 > Run `npx deepveloper@latest --yes` to skip all confirmation prompts and accept defaults.
 
 ## What Gets Created
 
-| If you use… | Agent file | Project file |
-|---|---|---|
-| **opencode** | `.opencode/agents/deepveloper.md` — YAML frontmatter + full prompt | `AGENTS.md` — skeleton |
-| **Claude Code** | `.claude/deepveloper.md` — raw prompt body | `CLAUDE.md` — skeleton |
-| **Both** | Both agent files | Both project files |
+| If you use… | Agent file |
+|---|---|
+| **opencode** | `.opencode/agents/deepveloper.md` — YAML frontmatter + full prompt |
+| **Claude Code** | `.claude/deepveloper.md` — raw prompt body |
+| **Both** | Both agent files |
 
-The CLI also runs `npx skills@latest add mattpocock/skills` to install engineering skills (code-review, TDD, domain-modeling, grilling, and more).
+The CLI does not install skills or write `AGENTS.md` / `CLAUDE.md` — it guides you through it at the end, and you run the skills setup yourself.
 
 ## Why Deepveloper Exists
 
@@ -68,9 +66,9 @@ The agent prompt isn't a generic "you are an expert." It's a 6-section prompt co
 
 Instead of managing separate configs for opencode and Claude Code, Deepveloper detects what you have and writes the right files for each — with the same prompt, same persona, same principles across all your tools.
 
-### Engineering skills included
+### Engineering skills, installed by you
 
-Matt Pocock's skills (code-review, TDD, domain-modeling, grilling, and more) are installed automatically. After installation, run `/setup-matt-pocock-skills` in your agent to configure your issue tracker, triage labels, and domain docs.
+Matt Pocock's skills (code-review, TDD, domain-modeling, grilling, and more) are installed with one command the CLI prints at the end: `npx skills@latest add mattpocock/skills`. After that, run `/setup-matt-pocock-skills` in your agent to configure your issue tracker, triage labels, and domain docs.
 
 ## CLI Reference
 
@@ -93,7 +91,7 @@ FLAGS
 ```bash
 npm install       # Install dependencies
 npm run build     # Build TypeScript
-npm test          # Run tests (42 tests, 5 files)
+npm test          # Run tests (40 tests, 5 files)
 ```
 
 ### Project structure
@@ -102,7 +100,7 @@ npm test          # Run tests (42 tests, 5 files)
 src/
 ├── cli.ts        Entry point — arguments, prompts, orchestration
 ├── detect.ts     Tool detection (opencode, Claude Code)
-├── install.ts    File writing, skills installation
+├── install.ts    Agent definition writing, skills guide
 ├── prompt.ts     6-section system prompt template
 ├── types.ts      Shared types
 └── utils/
@@ -115,12 +113,10 @@ tests/
 └── utils/
     └── fs.test.ts
 docs/
-├── deepveloper-spec.md
-└── senior-engineer-prompt-research.md
+├── specs/
+│   └── deepveloper-spec.md
+└── research/
+    └── senior-engineer-prompt-research.md
 ```
 
 Requires Node.js 18+.
-
-## Prior Art
-
-The system prompt draws on research across Claude Code, Cursor, Aider, OpenCode, Cline, and GitHub Copilot — documented in `docs/senior-engineer-prompt-research.md`.

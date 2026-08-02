@@ -1,10 +1,12 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import { EventEmitter } from "node:events";
-import type { ChildProcess } from "node:child_process";
-import { installDeepveloper, installSkills } from "../src/install.js";
+import { installDeepveloper, buildSkillsGuide, OPENCODE_AGENT_FRONTMATTER } from "../src/install.js";
+import { SYSTEM_PROMPT } from "../src/prompt.js";
+
+const repoRoot = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 
 let tmpDir: string;
 
@@ -39,7 +41,7 @@ describe("installDeepveloper", () => {
     expect(content).toContain("description:");
     expect(content).toContain("mode: primary");
     expect(content).toContain("hidden: false");
-    expect(content).toContain("color: emerald");
+    expect(content).not.toContain("color:");
     expect(content).toContain("---");
   });
 
@@ -57,27 +59,14 @@ describe("installDeepveloper", () => {
     expect(content).toContain("Goal-Driven Execution");
   });
 
-  it("creates AGENTS.md skeleton at project root", async () => {
-    const result = await installDeepveloper({
-      projectDir: tmpDir,
-      detectedTools: ["opencode"],
-    });
-
-    const agentsPath = join(tmpDir, "AGENTS.md");
-    expect(existsSync(agentsPath)).toBe(true);
-    expect(result.written).toContain(agentsPath);
-  });
-
-  it("writes AGENTS.md with project context skeleton", async () => {
+  it("does not create project context files", async () => {
     await installDeepveloper({
       projectDir: tmpDir,
       detectedTools: ["opencode"],
     });
 
-    const agentsPath = join(tmpDir, "AGENTS.md");
-    const content = readFileSync(agentsPath, "utf-8");
-    expect(content).toContain("Project");
-    expect(content.length).toBeGreaterThan(0);
+    expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(false);
+    expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
   });
 
   it("does not create opencode files when opencode is not detected", async () => {
@@ -90,26 +79,14 @@ describe("installDeepveloper", () => {
     expect(existsSync(agentPath)).toBe(false);
   });
 
-  it("does not create AGENTS.md when no tools are detected", async () => {
-    await installDeepveloper({
-      projectDir: tmpDir,
-      detectedTools: [],
-    });
-
-    const agentsPath = join(tmpDir, "AGENTS.md");
-    expect(existsSync(agentsPath)).toBe(false);
-  });
-
   it("skips existing files and reports them as skipped with --yes", async () => {
     const agentPath = join(tmpDir, ".opencode", "agents", "deepveloper.md");
-    const agentsPath = join(tmpDir, "AGENTS.md");
     await installDeepveloper({
       projectDir: tmpDir,
       detectedTools: ["opencode"],
       yes: true,
     });
 
-    // Run again with --yes
     const result = await installDeepveloper({
       projectDir: tmpDir,
       detectedTools: ["opencode"],
@@ -117,7 +94,6 @@ describe("installDeepveloper", () => {
     });
 
     expect(result.skipped).toContain(agentPath);
-    expect(result.skipped).toContain(agentsPath);
   });
 
   it("returns correct summary of written files", async () => {
@@ -156,29 +132,6 @@ describe("installDeepveloper", () => {
     expect(content).not.toContain("---");
   });
 
-  it("creates CLAUDE.md skeleton at project root for claude-code detection", async () => {
-    const result = await installDeepveloper({
-      projectDir: tmpDir,
-      detectedTools: ["claude-code"],
-    });
-
-    const claudePath = join(tmpDir, "CLAUDE.md");
-    expect(existsSync(claudePath)).toBe(true);
-    expect(result.written).toContain(claudePath);
-  });
-
-  it("writes CLAUDE.md with project context skeleton", async () => {
-    await installDeepveloper({
-      projectDir: tmpDir,
-      detectedTools: ["claude-code"],
-    });
-
-    const claudePath = join(tmpDir, "CLAUDE.md");
-    const content = readFileSync(claudePath, "utf-8");
-    expect(content).toContain("Project Context");
-    expect(content.length).toBeGreaterThan(0);
-  });
-
   it("does not create claude-code files when claude-code is not detected", async () => {
     await installDeepveloper({
       projectDir: tmpDir,
@@ -187,12 +140,10 @@ describe("installDeepveloper", () => {
 
     const agentPath = join(tmpDir, ".claude", "deepveloper.md");
     expect(existsSync(agentPath)).toBe(false);
-    expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
   });
 
   it("skips existing claude-code files with --yes", async () => {
     const agentPath = join(tmpDir, ".claude", "deepveloper.md");
-    const claudePath = join(tmpDir, "CLAUDE.md");
     await installDeepveloper({
       projectDir: tmpDir,
       detectedTools: ["claude-code"],
@@ -206,10 +157,9 @@ describe("installDeepveloper", () => {
     });
 
     expect(result.skipped).toContain(agentPath);
-    expect(result.skipped).toContain(claudePath);
   });
 
-  it("creates files for both opencode and claude-code when both detected", async () => {
+  it("creates agent files for both opencode and claude-code when both detected", async () => {
     const result = await installDeepveloper({
       projectDir: tmpDir,
       detectedTools: ["opencode", "claude-code"],
@@ -217,65 +167,42 @@ describe("installDeepveloper", () => {
 
     expect(existsSync(join(tmpDir, ".opencode", "agents", "deepveloper.md"))).toBe(true);
     expect(existsSync(join(tmpDir, ".claude", "deepveloper.md"))).toBe(true);
-    expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(true);
-    expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(true);
-    expect(result.written.length).toBe(4);
+    expect(existsSync(join(tmpDir, "AGENTS.md"))).toBe(false);
+    expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
+    expect(result.written.length).toBe(2);
+  });
+
+  it("committed opencode artifact matches frontmatter + SYSTEM_PROMPT", () => {
+    const content = readFileSync(join(repoRoot, ".opencode", "agents", "deepveloper.md"), "utf-8");
+    expect(content).toBe(OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT);
+  });
+
+  it("committed claude-code artifact matches SYSTEM_PROMPT", () => {
+    const content = readFileSync(join(repoRoot, ".claude", "deepveloper.md"), "utf-8");
+    expect(content).toBe(SYSTEM_PROMPT);
   });
 });
 
-function mockChildProcess(): ChildProcess {
-  const ee = new EventEmitter() as unknown as ChildProcess;
-  return ee;
-}
-
-describe("installSkills", () => {
-  it("calls npx skills@latest add mattpocock/skills", async () => {
-    const spawn = vi.fn(() => {
-      const cp = mockChildProcess();
-      setTimeout(() => cp.emit("close", 0));
-      return cp;
-    });
-
-    const isWin = process.platform === "win32";
-    const command = isWin ? "cmd" : "npx";
-    const args = isWin
-      ? ["/c", "npx", "skills@latest", "add", "mattpocock/skills"]
-      : ["skills@latest", "add", "mattpocock/skills"];
-
-    await installSkills(spawn);
-
-    expect(spawn).toHaveBeenCalledWith(command, args, { stdio: "inherit" });
+describe("buildSkillsGuide", () => {
+  it("includes the skills install command", () => {
+    const guide = buildSkillsGuide(["opencode"]);
+    expect(guide).toContain("npx skills@latest add mattpocock/skills");
   });
 
-  it("resolves on exit code 0", async () => {
-    const spawn = vi.fn(() => {
-      const cp = mockChildProcess();
-      setTimeout(() => cp.emit("close", 0));
-      return cp;
-    });
-
-    await expect(installSkills(spawn)).resolves.toBeUndefined();
+  it("gives opencode instructions when opencode detected", () => {
+    const guide = buildSkillsGuide(["opencode"]);
+    expect(guide).toContain("In opencode");
+    expect(guide).toContain("/setup-matt-pocock-skills");
   });
 
-  it("rejects on non-zero exit code", async () => {
-    const spawn = vi.fn(() => {
-      const cp = mockChildProcess();
-      setTimeout(() => cp.emit("close", 1));
-      return cp;
-    });
-
-    await expect(installSkills(spawn)).rejects.toThrow(
-      "npx skills exited with code 1",
-    );
+  it("gives claude-code instructions when claude-code detected", () => {
+    const guide = buildSkillsGuide(["claude-code"]);
+    expect(guide).toContain("In Claude Code");
+    expect(guide).toContain("/setup-matt-pocock-skills");
   });
 
-  it("rejects on spawn error", async () => {
-    const spawn = vi.fn(() => {
-      const cp = mockChildProcess();
-      setTimeout(() => cp.emit("error", new Error("ENOENT")), 0);
-      return cp;
-    });
-
-    await expect(installSkills(spawn)).rejects.toThrow("ENOENT");
+  it("omits opencode instructions when only claude-code detected", () => {
+    const guide = buildSkillsGuide(["claude-code"]);
+    expect(guide).not.toContain("Cycle to the deepveloper agent with Tab");
   });
 });

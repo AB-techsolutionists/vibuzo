@@ -1,6 +1,6 @@
 {
   "name": "deepveloper",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": false,
   "description": "Interactive CLI for installing the Deepveloper AI agent",
   "type": "module",
@@ -25,7 +25,6 @@
   "dependencies": {
     "@clack/prompts": "^1.7.0",
     "chalk": "^5.6.2",
-    "gradient-string": "^3.0.0",
-    "ora": "^9.4.1"
+    "gradient-string": "^3.0.0"
   }
 }

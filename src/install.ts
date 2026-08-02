@@ -1,7 +1,5 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { spawn } from "node:child_process";
-import type { ChildProcess, SpawnOptions } from "node:child_process";
 import { writeFileSafe } from "./utils/fs.js";
 import { SYSTEM_PROMPT } from "./prompt.js";
 import type { DetectedTool, InstallSummary } from "./types.js";
@@ -13,17 +11,11 @@ export interface InstallOptions {
   confirmOverwrite?: (filePath: string) => Promise<boolean>;
 }
 
-const OPENCODE_AGENT_FRONTMATTER = `---
+export const OPENCODE_AGENT_FRONTMATTER = `---
 description: Senior software engineer AI agent with Karpathy principles and Matt Pocock's engineering skills
 mode: primary
 hidden: false
-color: emerald
 ---
-`;
-
-const PROJECT_CONTEXT_SKELETON = `# ===========================================
-# Project Context
-# ===========================================
 `;
 
 function openCodeAgentPath(projectDir: string): string {
@@ -32,14 +24,6 @@ function openCodeAgentPath(projectDir: string): string {
 
 function claudeCodeAgentPath(projectDir: string): string {
   return join(projectDir, ".claude", "deepveloper.md");
-}
-
-function claudeMdPath(projectDir: string): string {
-  return join(projectDir, "CLAUDE.md");
-}
-
-function agentsPath(projectDir: string): string {
-  return join(projectDir, "AGENTS.md");
 }
 
 async function writeWithOverwriteCheck(
@@ -67,22 +51,6 @@ async function writeWithOverwriteCheck(
   summary.written.push(filePath);
 }
 
-type ToolFiles = {
-  agentPath: string;
-  agentContent: string;
-  skeletonPath: string;
-};
-
-async function installToolFiles(
-  files: ToolFiles,
-  yes: boolean,
-  summary: { written: string[]; skipped: string[] },
-  confirmOverwrite?: (filePath: string) => Promise<boolean>,
-): Promise<void> {
-  await writeWithOverwriteCheck(files.agentPath, files.agentContent, yes, summary, confirmOverwrite);
-  await writeWithOverwriteCheck(files.skeletonPath, PROJECT_CONTEXT_SKELETON, yes, summary, confirmOverwrite);
-}
-
 export async function installDeepveloper(
   options: InstallOptions,
 ): Promise<InstallSummary> {
@@ -94,44 +62,51 @@ export async function installDeepveloper(
   const hasClaudeCode = detectedTools.includes("claude-code");
 
   if (hasOpenCode) {
-    await installToolFiles({
-      agentPath: openCodeAgentPath(projectDir),
-      agentContent: OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT,
-      skeletonPath: agentsPath(projectDir),
-    }, yes, summary, confirmOverwrite);
+    await writeWithOverwriteCheck(
+      openCodeAgentPath(projectDir),
+      OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT,
+      yes,
+      summary,
+      confirmOverwrite,
+    );
   }
 
   if (hasClaudeCode) {
-    await installToolFiles({
-      agentPath: claudeCodeAgentPath(projectDir),
-      agentContent: SYSTEM_PROMPT,
-      skeletonPath: claudeMdPath(projectDir),
-    }, yes, summary, confirmOverwrite);
+    await writeWithOverwriteCheck(
+      claudeCodeAgentPath(projectDir),
+      SYSTEM_PROMPT,
+      yes,
+      summary,
+      confirmOverwrite,
+    );
   }
 
   return { written, skipped, toolDetected: detectedTools };
 }
 
-export type SpawnFunction = (
-  command: string,
-  args: string[],
-  options: SpawnOptions,
-) => ChildProcess;
-
-export async function installSkills(
-  spawnFn: SpawnFunction = spawn,
-): Promise<void> {
-  const isWin = process.platform === "win32";
-  const command = isWin ? "cmd" : "npx";
-  const args = isWin
-    ? ["/c", "npx", "skills@latest", "add", "mattpocock/skills"]
-    : ["skills@latest", "add", "mattpocock/skills"];
-  return new Promise<void>((resolve, reject) => {
-    const child = spawnFn(command, args, { stdio: "inherit" });
-    child.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`npx skills exited with code ${code}`));
-    });
-    child.on("error", (err) => reject(err));
-  });
+export function buildSkillsGuide(detectedTools: DetectedTool[]): string {
+  const lines = [
+    "Install Matt Pocock's engineering skills (code-review, TDD,",
+    "domain-modeling, grilling, and more) with one command:",
+    "",
+    "  npx skills@latest add mattpocock/skills",
+  ];
+  if (detectedTools.includes("opencode")) {
+    lines.push(
+      "",
+      "In opencode:",
+      "  • Open this project in opencode",
+      "  • Cycle to the deepveloper agent with Tab (agent selector)",
+      "  • Run /setup-matt-pocock-skills to configure the repo",
+    );
+  }
+  if (detectedTools.includes("claude-code")) {
+    lines.push(
+      "",
+      "In Claude Code:",
+      "  • Open this project in Claude Code",
+      "  • Run /setup-matt-pocock-skills to configure the repo",
+    );
+  }
+  return lines.join("\n");
 }

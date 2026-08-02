@@ -3,14 +3,12 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { stdin as input, stdout as output } from "node:process";
-import { createInterface } from "node:readline/promises";
 import { intro, outro, log, spinner, confirm, note, isCancel } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
 import type { CliOptions, DetectedTool } from "./types.js";
 import { detectOpenCode, detectClaudeCode } from "./detect.js";
-import { installDeepveloper, installSkills } from "./install.js";
+import { installDeepveloper, buildSkillsGuide } from "./install.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -71,7 +69,32 @@ FLAGS
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.log(chalk.bold(BANNER));
-  intro(chalk.bold("Deepveloper Installer"));
+  intro(chalk.bold("Deepveloper"));
+
+  log.info(chalk.bold("What is Deepveloper?"));
+  log.message(
+    "Deepveloper installs the Senior Engineer AI agent into this project — a\n" +
+    "system prompt built on Karpathy's four principles (Think Before Coding,\n" +
+    "Simplicity First, Surgical Changes, Goal-Driven Execution).",
+  );
+
+  log.info(chalk.bold("What will happen:"));
+  log.message([
+    "• Detect your AI coding tools (opencode, Claude Code)",
+    "• Write the deepveloper agent definition for each tool you use",
+    "• Show you how to install Matt Pocock's engineering skills yourself",
+  ]);
+
+  if (!yes) {
+    const proceed = await confirm({
+      message: "Set up Deepveloper in this project?",
+    });
+    if (isCancel(proceed) || !proceed) {
+      log.warn("Setup cancelled.");
+      outro(chalk.red("Cancelled"));
+      return;
+    }
+  }
 
   const detectSpinner = spinner();
   detectSpinner.start("Detecting AI coding tools...");
@@ -90,29 +113,6 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   }
 
   log.success(`Detected: ${detected.join(", ")}`);
-
-  const filesToWrite: string[] = [];
-  if (isOpenCode) {
-    filesToWrite.push(".opencode/agents/deepveloper.md");
-    filesToWrite.push("AGENTS.md");
-  }
-  if (isClaudeCode) {
-    filesToWrite.push(".claude/deepveloper.md");
-    filesToWrite.push("CLAUDE.md");
-  }
-
-  const fileList = filesToWrite.map(f => `  • ${f}`).join("\n");
-  log.info(chalk.bold("Files to write:\n") + fileList);
-  log.info(chalk.dim("Matt Pocock's skills (code-review, TDD, domain-modeling, grilling, and more) will also be installed.\n"));
-
-  if (!yes) {
-    const proceed = await confirm({ message: "Proceed with installation?" });
-    if (isCancel(proceed) || !proceed) {
-      log.warn("Installation cancelled.");
-      outro(chalk.red("Cancelled"));
-      return;
-    }
-  }
 
   const writeSpinner = spinner();
   writeSpinner.start("Writing agent definition files...");
@@ -158,31 +158,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     }
   }
 
-  const skillsSpinner = spinner();
-  skillsSpinner.start("Installing Matt Pocock's skills...");
-  try {
-    await installSkills();
-    skillsSpinner.stop("Skills installed");
-  } catch (err: unknown) {
-    skillsSpinner.stop("Skills installation failed");
-    const msg = err instanceof Error ? err.message : String(err);
-    log.error(`  Error: ${msg}`);
-    if (err instanceof Error && "code" in err) {
-      const code = (err as NodeJS.ErrnoException).code;
-      if (code === "ENOENT") {
-        log.error("  npx not found. Ensure Node.js is installed and in your PATH.");
-      }
-    }
-    log.warn("Files were written successfully but skills installation failed.");
-    log.info("You can install skills manually by running:\n  npx skills@latest add mattpocock/skills");
-    outro(chalk.yellow("Partial installation"));
-    return;
-  }
-
-  note(
-    "Next steps:\n\n1. Open your AI coding agent (opencode or Claude Code)\n2. Run the command:  /setup-matt-pocock-skills\n\nThis will configure the repo's issue tracker, triage labels, and domain documentation.",
-    "Next steps",
-  );
+  note(buildSkillsGuide(detected), "Next steps");
   outro(chalk.bold.green("Done. Your project is ready for the Deepveloper agent."));
 }
 

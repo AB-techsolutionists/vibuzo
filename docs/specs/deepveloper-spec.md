@@ -6,7 +6,7 @@ Setting up an AI coding agent with proper guardrails (Karpathy principles) and a
 
 ## Solution
 
-An interactive CLI tool (`npx deepveloper@latest`) that detects which AI coding agents the developer has installed, writes agent definition files with a senior engineer system prompt (Karpathy principles + synthesized senior engineer persona), installs Matt Pocock's engineering skills, and guides the developer to complete the setup. The CLI's user experience matches the interactive style of the Skills CLI (`npx skills@latest`), with an ASCII art banner, clear explanations of what will happen, and step-by-step prompts.
+An interactive CLI tool (`npx deepveloper@latest`) that detects which AI coding agents the developer has installed, writes agent definition files with a senior engineer system prompt (Karpathy principles + synthesized senior engineer persona), and guides the developer to complete the setup — including installing Matt Pocock's engineering skills themselves. The CLI's user experience matches the interactive style of the Skills CLI (`npx skills@latest`), with an ASCII art banner, clear explanations of what will happen, and step-by-step prompts.
 
 ## User Stories
 
@@ -22,13 +22,13 @@ An interactive CLI tool (`npx deepveloper@latest`) that detects which AI coding 
 
 6. As a developer using Claude Code, I want a deepveloper agent instruction file created at `.claude/deepveloper.md`, so that Claude Code uses the senior engineer persona and Karpathy principles.
 
-7. As a developer, I want a `CLAUDE.md` skeleton created at the repo root with project-level context, so that Claude Code has basic project instructions.
+7. As a developer, I want the CLI to leave `CLAUDE.md` and `AGENTS.md` untouched, so that project context files are owned by the skills setup step (`/setup-matt-pocock-skills`), not by the installer.
 
-8. As a developer using opencode, I want an `AGENTS.md` skeleton created at the repo root, so that opencode has basic project instructions.
+8. As a developer, I want the CLI to guide me to install Matt Pocock's skills with `npx skills@latest add mattpocock/skills` instead of running it for me, so that I stay in control of what gets installed in my repo.
 
 9. As a developer, I want the deepveloper agent's system prompt to combine Karpathy's four principles (Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution) with a senior software engineer persona, so that the agent behaves as a pragmatic, experienced engineer.
 
-10. As a developer, I want the CLI to run `npx skills@latest add mattpocock/skills` as part of the installation flow, so that Matt Pocock's engineering skills (code-review, domain-modeling, TDD, grilling, etc.) are available to the deepveloper agent.
+10. As a developer, I want a boxed "Next steps" checklist at the end of the CLI, with per-tool instructions (opencode vs Claude Code), so that finishing the setup is obvious.
 
 11. As a developer, I want the CLI to guide me to run `/setup-matt-pocock-skills` inside my AI agent after installation, so that the repo's issue tracker, triage labels, and domain docs configuration are completed.
 
@@ -55,42 +55,36 @@ The `deepveloper` npm package will contain:
 - **Tool detection module**: Scans the user's environment for AI coding agent configuration directories. Checks for opencode (`~/.config/opencode/` or `.opencode/`), Claude Code (`~/.claude/` or `.claude/`). Returns a list of detected tools plus the project directory path for each.
 
 - **Installation module** (exposed as the programmatic API): Takes detected tools and a project directory, writes:
-  - `.opencode/agents/deepveloper.md` with YAML frontmatter (mode: primary, hidden: false, color: emerald green) and the full system prompt body
+  - `.opencode/agents/deepveloper.md` with YAML frontmatter (mode: primary, hidden: false) and the full system prompt body
   - `.claude/deepveloper.md` with the system prompt body (no frontmatter)
-  - `CLAUDE.md` at the repo root if it doesn't exist, with a skeleton
-  - `AGENTS.md` at the repo root if it doesn't exist, with a skeleton
 
-  Handles overwriting existing files with user confirmation. Returns a summary of what was written.
+  Does not write project context files (`CLAUDE.md`, `AGENTS.md`) — those are owned by the skills setup step. Handles overwriting existing files with user confirmation. Returns a summary of what was written. Also exposes `buildSkillsGuide`, which renders the post-install "Next steps" checklist per detected tool.
 
-- **Orchestration module**: Runs the phases in order — detect tools, show plan, confirm with user, run installation, delegate to skills CLI, show post-install guidance.
+- **Orchestration module**: Runs the phases in order — banner/intro, confirm with user, detect tools, write agent definitions, show post-install guidance.
 
 ### CLI interaction flow
 
 ```
 Phase 1: Banner + Intro
   - Display ASCII art "deepveloper" banner
-  - Brief intro text
+  - Explain what Deepveloper is and what will happen
+  - List the steps: detect tools, write agent definitions, show skills guide
 
-Phase 2: Tool Detection
-  - Scan for opencode, Claude Code
-  - Display detected tools to user
-
-Phase 3: Plan Display
-  - Show what will be installed (agent definitions, project files)
-  - Show which skills will be installed
-  - Show which files will be created/modified
-
-Phase 4: Confirmation
+Phase 2: Confirmation
   - Ask user to confirm before proceeding
   - Support a --yes flag to skip confirmation
 
-Phase 5: Installation
-  - Write agent definition files
-  - Write project context files (CLAUDE.md, AGENTS.md)
-  - Run `npx skills@latest add mattpocock/skills`
-  
-Phase 6: Post-Install Guidance
-  - Show next steps: run `/setup-matt-pocock-skills` in your agent
+Phase 3: Tool Detection
+  - Scan for opencode, Claude Code (spinner)
+  - Display detected tools to user
+
+Phase 4: Installation
+  - Write agent definition files (spinner)
+  - Handle existing files: skip with --yes, or ask per file
+
+Phase 5: Post-Install Guidance
+  - Show boxed "Next steps" checklist with per-tool instructions
+  - Skills install command: npx skills@latest add mattpocock/skills
   - Show success summary
 ```
 
@@ -104,7 +98,7 @@ The system prompt follows a 6-section structure:
 5. **Code Standards** — follow conventions, no comments unless needed, security first
 6. **Tool Usage** — precise tools, batch parallel ops, ask before destructive actions
 
-The full prompt content is documented in `docs/senior-engineer-prompt-research.md`.
+The full prompt content is documented in `docs/research/senior-engineer-prompt-research.md`.
 
 ### CLI style
 
@@ -122,14 +116,14 @@ The installer uses the same interactive UX patterns as the Skills CLI:
 
 - Tests should exercise the programmatic `installDeepveloper` API, not the interactive CLI wrapper
 - Tests should verify file creation and content in a temp directory, not against the real filesystem
-- Mocks should only be used for external calls (detecting tools by checking directories, shelling out to `npx skills`)
-- Tests should cover: correct file names, correct file locations, correct frontmatter, correct prompt body, error handling for missing permissions, existing file overwrite behavior
+- Mocks should only be used for external calls (detecting tools by checking directories)
+- Tests should cover: correct file names, correct file locations, correct frontmatter, correct prompt body, error handling for missing permissions, existing file overwrite behavior, and the per-tool content of `buildSkillsGuide`
 
 ### Modules to test
 
 - **Installation module** (`installDeepveloper`): The primary testing target. Test that each file is written with correct content for each combination of detected tools.
 - **Tool detection module**: Test that it correctly identifies which config directories exist and returns the right tool list.
-- **Orchestration module**: Test that the correct sequence of calls is made — detection before installation, skills installation after file writing.
+- **Orchestration module**: Test that the correct sequence of calls is made — detection before installation, post-install guidance after file writing.
 
 ### Prior art
 
@@ -142,8 +136,8 @@ The programmatic API is the single testing seam. The CLI entry point is intentio
 ## Out of Scope
 
 - Deepveloper agent definitions for AI tools other than opencode and Claude Code (Cursor, Cline, Copilot, etc.) — future work
-- Modifying existing CLAUDE.md or AGENTS.md content beyond the skeleton — the skills setup step handles the agent skills section
-- Installing Matt Pocock's skills directly (delegated to `npx skills@latest add mattpocock/skills`)
+- Writing or modifying `CLAUDE.md` / `AGENTS.md` project context files — the skills setup step (`/setup-matt-pocock-skills`) owns those
+- Installing Matt Pocock's skills directly — the CLI only prints the command (`npx skills@latest add mattpocock/skills`) and lets the user run it
 - Running `/setup-matt-pocock-skills` automatically — the user must run it inside their agent
 - Uninstallation or rollback of deepveloper files
 - Customizing the system prompt during installation — future work
@@ -153,4 +147,4 @@ The programmatic API is the single testing seam. The CLI entry point is intentio
 - The target package name on npm is `deepveloper`
 - The package should support Node.js 18+ (matching the Skills CLI's minimum requirements)
 - The repository for this package is `AB-techsolutionists/vibuzo`
-- The system prompt research document at `docs/senior-engineer-prompt-research.md` contains the full synthesized prompt with citations from Claude Code, Cursor, Aider, OpenCode, Cline, and GitHub Copilot
+- The system prompt research document at `docs/research/senior-engineer-prompt-research.md` contains the full synthesized prompt with citations from Claude Code, Cursor, Aider, OpenCode, Cline, and GitHub Copilot
