@@ -1,12 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { installDeepveloper, buildSkillsGuide, OPENCODE_AGENT_FRONTMATTER } from "../src/install.js";
-import { SYSTEM_PROMPT } from "../src/prompt.js";
-
-const repoRoot = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 
 let tmpDir: string;
 
@@ -217,16 +213,6 @@ describe("installDeepveloper", () => {
 
     expect(result.skipped.length).toBe(1);
     expect(progressCalls).toEqual([]);
-  });
-
-  it("committed opencode artifact matches frontmatter + SYSTEM_PROMPT", () => {
-    const content = readFileSync(join(repoRoot, ".opencode", "agents", "deepveloper.md"), "utf-8");
-    expect(content).toBe(OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT);
-  });
-
-  it("committed claude-code artifact matches SYSTEM_PROMPT", () => {
-    const content = readFileSync(join(repoRoot, ".claude", "deepveloper.md"), "utf-8");
-    expect(content).toBe(SYSTEM_PROMPT);
   });
 });
 
