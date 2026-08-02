@@ -1,6 +1,6 @@
 {
   "name": "deepveloper",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "description": "Interactive CLI for installing the Deepveloper AI agent",
   "type": "module",

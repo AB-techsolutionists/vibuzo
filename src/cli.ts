@@ -22,7 +22,16 @@ const BANNER_ASCII = `
 ╚═════╝ ╚══════╝╚══════╝╚═╝       ╚═══╝  ╚══════╝╚══════╝ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═╝
 `;
 
-const BANNER = gradient(["#636363", "#d4d4d4", "#ffffff"])(BANNER_ASCII);
+function renderBanner(): string {
+  if ((process.stdout.rows ?? 24) >= 20) {
+    return gradient(["#636363", "#d4d4d4", "#ffffff"])(BANNER_ASCII);
+  }
+  return (
+    gradient(["#636363", "#d4d4d4", "#ffffff"])("Deepveloper") +
+    "\n" +
+    chalk.dim("Senior Engineer AI agent installer")
+  );
+}
 
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {};
@@ -68,22 +77,9 @@ FLAGS
 }
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
-  console.log(chalk.bold(BANNER));
+  console.clear();
+  console.log(chalk.bold(renderBanner()));
   intro(chalk.bold("Deepveloper"));
-
-  log.info(chalk.bold("What is Deepveloper?"));
-  log.message(
-    "Deepveloper installs the Senior Engineer AI agent into this project — a\n" +
-    "system prompt built on Karpathy's four principles (Think Before Coding,\n" +
-    "Simplicity First, Surgical Changes, Goal-Driven Execution).",
-  );
-
-  log.info(chalk.bold("What will happen:"));
-  log.message([
-    "• Detect your AI coding tools (opencode, Claude Code)",
-    "• Write the deepveloper agent definition for each tool you use",
-    "• Show you how to install Matt Pocock's engineering skills yourself",
-  ]);
 
   if (!yes) {
     const proceed = await confirm({

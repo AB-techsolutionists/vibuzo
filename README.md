@@ -26,7 +26,7 @@ npx deepveloper@latest
 ```
 
 The CLI will:
-1. Display the banner and explain what it is and what will happen
+1. Display the banner
 2. Prompt you to confirm before making changes
 3. Detect which AI coding tools you have installed (opencode, Claude Code)
 4. Write the deepveloper agent definition for each tool you use
