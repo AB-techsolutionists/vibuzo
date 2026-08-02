@@ -109,6 +109,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   bootSpinner.start();
   await sleep(1500);
   bootSpinner.stop();
+  process.stdout.write("\r\x1b[K");
 
   intro(chalk.bold("Deepveloper"));
 
