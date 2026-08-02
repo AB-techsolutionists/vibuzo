@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative } from "node:path";
-import { intro, outro, log, spinner, confirm, note, isCancel, progress } from "@clack/prompts";
+import { intro, outro, log, spinner, confirm, note, isCancel, progress, multiselect } from "@clack/prompts";
 import type { ProgressResult } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
@@ -92,22 +92,11 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.log(chalk.bold(BANNER));
 
   const bootSpinner = spinner();
-  bootSpinner.start("Starting Deepveloper...");
+  bootSpinner.start();
   await sleep(1500);
-  bootSpinner.stop("Ready");
+  bootSpinner.stop();
 
   intro(chalk.bold("Deepveloper"));
-
-  if (!yes) {
-    const proceed = await confirm({
-      message: "Set up Deepveloper in this project?",
-    });
-    if (isCancel(proceed) || !proceed) {
-      log.warn("Setup cancelled.");
-      outro(chalk.red("Cancelled"));
-      return;
-    }
-  }
 
   const detectSpinner = spinner();
   detectSpinner.start("Detecting AI coding tools...");
@@ -117,7 +106,11 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   const detected: DetectedTool[] = [];
   if (isOpenCode) detected.push("opencode");
   if (isClaudeCode) detected.push("claude-code");
-  detectSpinner.stop(detected.length === 0 ? "No AI coding tools found" : "Detection complete");
+  detectSpinner.stop(
+    detected.length === 0
+      ? "No AI coding tools found"
+      : `Found ${detected.length} AI coding tool${detected.length > 1 ? "s" : ""}`,
+  );
 
   if (detected.length === 0) {
     log.warn("Deepveloper supports opencode and Claude Code, but neither was detected.");
@@ -126,9 +119,36 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     return;
   }
 
-  log.info(chalk.bold("Detected AI coding tools:"));
-  for (const tool of detected) {
-    log.success(`${chalk.bold(TOOL_LABELS[tool])} → ${AGENT_FILES[tool]}`, { symbol: chalk.green("✓") });
+  const selection = await multiselect({
+    message: "Select which tools to set up",
+    options: detected.map((tool) => ({
+      value: tool,
+      label: TOOL_LABELS[tool],
+      hint: AGENT_FILES[tool],
+    })),
+    required: true,
+    initialValues: detected,
+  });
+  if (isCancel(selection)) {
+    log.warn("Setup cancelled.");
+    outro(chalk.red("Cancelled"));
+    return;
+  }
+
+  log.info(chalk.bold("Files to be written:"));
+  for (const tool of selection) {
+    log.success(AGENT_FILES[tool], { symbol: chalk.green("✓") });
+  }
+
+  if (!yes) {
+    const proceed = await confirm({
+      message: "Write these files?",
+    });
+    if (isCancel(proceed) || !proceed) {
+      log.warn("Setup cancelled.");
+      outro(chalk.red("Cancelled"));
+      return;
+    }
   }
 
   log.info(chalk.bold("Writing agent definition files:"));
@@ -137,7 +157,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   try {
     result = await installDeepveloper({
       projectDir,
-      detectedTools: detected,
+      detectedTools: selection,
       yes,
       onProgress: async (filePath) => {
         await animateProgress(writeBar, relative(projectDir, filePath));
