@@ -48,7 +48,7 @@ _Avoid_: skills installer
 
 ### Installation Flow
 The sequence of operations Deepveloper performs:
-1. Show banner (compact variant on small terminals)
+1. Clear the screen and show banner
 2. Confirm with user (or `--yes` to skip)
 3. Detect AI Coding Tools (opencode, Claude Code)
 4. Write Agent Definition Files only (no Project Context Files)

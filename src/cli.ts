@@ -22,16 +22,7 @@ const BANNER_ASCII = `
 ╚═════╝ ╚══════╝╚══════╝╚═╝       ╚═══╝  ╚══════╝╚══════╝ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═╝
 `;
 
-function renderBanner(): string {
-  if ((process.stdout.rows ?? 24) >= 20) {
-    return gradient(["#636363", "#d4d4d4", "#ffffff"])(BANNER_ASCII);
-  }
-  return (
-    gradient(["#636363", "#d4d4d4", "#ffffff"])("Deepveloper") +
-    "\n" +
-    chalk.dim("Senior Engineer AI agent installer")
-  );
-}
+const BANNER = gradient(["#636363", "#d4d4d4", "#ffffff"])(BANNER_ASCII);
 
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {};
@@ -78,8 +69,8 @@ FLAGS
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.clear();
-  console.log(chalk.bold(renderBanner()));
-  intro(chalk.bold("Deepveloper"));
+  console.log(chalk.bold(BANNER));
+  intro(chalk.bold("Deepveloper Agent Installer"));
 
   if (!yes) {
     const proceed = await confirm({

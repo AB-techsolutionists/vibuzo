@@ -66,8 +66,7 @@ The `deepveloper` npm package will contain:
 
 ```
 Phase 1: Banner + Intro
-  - Display ASCII art "deepveloper" banner (compact variant when terminal is short)
-  - Clear the screen first so the banner stays visible
+  - Clear the screen, display ASCII art "deepveloper" banner
 
 Phase 2: Confirmation
   - Ask user to confirm before proceeding
