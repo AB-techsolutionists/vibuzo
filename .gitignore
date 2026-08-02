@@ -3,5 +3,5 @@ dist
 *.tsbuildinfo
 
 # Agent files written by the installer itself (kept out of the repo)
-.claude/deepveloper.md
-.opencode/agents/deepveloper.md
+.claude/
+.opencode/
