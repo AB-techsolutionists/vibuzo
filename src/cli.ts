@@ -3,8 +3,8 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative } from "node:path";
-import { intro, outro, log, spinner, confirm, note, isCancel, progress, multiselect } from "@clack/prompts";
-import type { ProgressResult } from "@clack/prompts";
+import { intro, outro, log, spinner, confirm, note, isCancel, multiselect } from "@clack/prompts";
+import type { SpinnerResult } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
 import type { CliOptions, DetectedTool } from "./types.js";
@@ -77,28 +77,45 @@ FLAGS
 `);
 }
 
-async function animateProgress(bar: ProgressResult, label: string): Promise<void> {
+const SPINNER_FRAMES = ["-", "\\", "|", "/"];
+
+function makeSpinner(): SpinnerResult {
+  return spinner({
+    frames: SPINNER_FRAMES,
+    delay: 80,
+    styleFrame: (frame) => chalk.cyan(frame),
+  });
+}
+
+async function animateProgress(label: string): Promise<void> {
+  const width = 18;
   const steps = 10;
-  bar.start(`${label} 0%`);
-  for (let i = 1; i <= steps; i++) {
-    await sleep(40);
-    bar.advance(10, `${label} ${i * 10}%`);
+  const maxLabel = Math.max(0, (process.stdout.columns ?? 80) - 34);
+  const shortLabel = label.length > maxLabel ? `${label.slice(0, maxLabel - 1)}…` : label;
+  for (let i = 0; i <= steps; i++) {
+    const filled = Math.round((i / steps) * width);
+    const bar =
+      filled >= width
+        ? "=".repeat(width)
+        : `${"=".repeat(Math.max(0, filled - 1))}>${"-".repeat(width - filled)}`;
+    process.stdout.write(`\r${chalk.cyan(`[${bar}]`)} ${chalk.bold(`${i * 10}%`)} ${shortLabel}`);
+    await sleep(50);
   }
-  bar.clear();
+  process.stdout.write("\r\x1b[K");
 }
 
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.clear();
   console.log(chalk.bold(BANNER));
 
-  const bootSpinner = spinner();
+  const bootSpinner = makeSpinner();
   bootSpinner.start();
   await sleep(1500);
   bootSpinner.stop();
 
   intro(chalk.bold("Deepveloper"));
 
-  const detectSpinner = spinner();
+  const detectSpinner = makeSpinner();
   detectSpinner.start("Detecting AI coding tools...");
   await sleep(700);
   const isOpenCode = detectOpenCode(projectDir);
@@ -152,7 +169,6 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   }
 
   log.info(chalk.bold("Writing agent definition files:"));
-  const writeBar = progress({ style: "block" });
   let result;
   try {
     result = await installDeepveloper({
@@ -160,7 +176,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
       detectedTools: selection,
       yes,
       onProgress: async (filePath) => {
-        await animateProgress(writeBar, relative(projectDir, filePath));
+        await animateProgress(relative(projectDir, filePath));
       },
       confirmOverwrite: async (filePath) => {
         const display = relative(projectDir, filePath);
@@ -170,7 +186,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
       },
     });
   } catch (err: unknown) {
-    writeBar.stop("Failed to write files");
+    process.stdout.write("\r\x1b[K");
     const msg = err instanceof Error ? err.message : String(err);
     log.error(`  Error: ${msg}`);
     if (err instanceof Error && "code" in err) {
