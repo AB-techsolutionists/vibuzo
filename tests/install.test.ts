@@ -198,6 +198,27 @@ describe("installDeepveloper", () => {
     expect(totals).toEqual([1]);
   });
 
+  it("does not report progress for skipped files", async () => {
+    const progressCalls: string[] = [];
+    await installDeepveloper({
+      projectDir: tmpDir,
+      detectedTools: ["opencode"],
+      yes: true,
+    });
+
+    const result = await installDeepveloper({
+      projectDir: tmpDir,
+      detectedTools: ["opencode"],
+      yes: true,
+      onProgress: (filePath) => {
+        progressCalls.push(filePath);
+      },
+    });
+
+    expect(result.skipped.length).toBe(1);
+    expect(progressCalls).toEqual([]);
+  });
+
   it("committed opencode artifact matches frontmatter + SYSTEM_PROMPT", () => {
     const content = readFileSync(join(repoRoot, ".opencode", "agents", "deepveloper.md"), "utf-8");
     expect(content).toBe(OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT);

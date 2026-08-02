@@ -19,72 +19,71 @@ hidden: false
 ---
 `;
 
-function openCodeAgentPath(projectDir: string): string {
-  return join(projectDir, ".opencode", "agents", "deepveloper.md");
-}
+export const AGENT_FILES: Record<DetectedTool, string> = {
+  opencode: join(".opencode", "agents", "deepveloper.md"),
+  "claude-code": join(".claude", "deepveloper.md"),
+};
 
-function claudeCodeAgentPath(projectDir: string): string {
-  return join(projectDir, ".claude", "deepveloper.md");
+const AGENT_CONTENTS: Record<DetectedTool, string> = {
+  opencode: OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT,
+  "claude-code": SYSTEM_PROMPT,
+};
+
+interface WriteContext {
+  yes: boolean;
+  summary: { written: string[]; skipped: string[] };
+  confirmOverwrite?: (filePath: string) => Promise<boolean>;
+  onProgress?: (filePath: string, index: number, total: number) => void | Promise<void>;
 }
 
 async function writeWithOverwriteCheck(
   filePath: string,
   content: string,
-  yes: boolean,
-  summary: { written: string[]; skipped: string[] },
-  confirmOverwrite?: (filePath: string) => Promise<boolean>,
+  ctx: WriteContext,
+  index: number,
+  total: number,
 ): Promise<void> {
   if (existsSync(filePath)) {
-    if (yes) {
-      summary.skipped.push(filePath);
+    if (ctx.yes) {
+      ctx.summary.skipped.push(filePath);
       return;
     }
-    if (confirmOverwrite) {
-      const ok = await confirmOverwrite(filePath);
+    if (ctx.confirmOverwrite) {
+      const ok = await ctx.confirmOverwrite(filePath);
       if (!ok) {
-        summary.skipped.push(filePath);
+        ctx.summary.skipped.push(filePath);
         return;
       }
     }
-    console.warn(`Warning: ${filePath} already exists — overwriting.`);
   }
+  if (ctx.onProgress) await ctx.onProgress(filePath, index, total);
   await writeFileSafe(filePath, content);
-  summary.written.push(filePath);
+  ctx.summary.written.push(filePath);
 }
 
 export async function installDeepveloper(
   options: InstallOptions,
 ): Promise<InstallSummary> {
-  const { projectDir, detectedTools, yes = false, confirmOverwrite, onProgress } = options;
+  const { projectDir, detectedTools } = options;
   const written: string[] = [];
   const skipped: string[] = [];
-  const summary = { written, skipped };
-  const hasOpenCode = detectedTools.includes("opencode");
-  const hasClaudeCode = detectedTools.includes("claude-code");
+  const ctx: WriteContext = {
+    yes: options.yes ?? false,
+    summary: { written, skipped },
+    confirmOverwrite: options.confirmOverwrite,
+    onProgress: options.onProgress,
+  };
   const total = detectedTools.length;
   let index = 0;
 
-  if (hasOpenCode) {
+  for (const tool of detectedTools) {
     index += 1;
-    if (onProgress) await onProgress(openCodeAgentPath(projectDir), index, total);
     await writeWithOverwriteCheck(
-      openCodeAgentPath(projectDir),
-      OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT,
-      yes,
-      summary,
-      confirmOverwrite,
-    );
-  }
-
-  if (hasClaudeCode) {
-    index += 1;
-    if (onProgress) await onProgress(claudeCodeAgentPath(projectDir), index, total);
-    await writeWithOverwriteCheck(
-      claudeCodeAgentPath(projectDir),
-      SYSTEM_PROMPT,
-      yes,
-      summary,
-      confirmOverwrite,
+      join(projectDir, AGENT_FILES[tool]),
+      AGENT_CONTENTS[tool],
+      ctx,
+      index,
+      total,
     );
   }
 

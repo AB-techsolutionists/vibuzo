@@ -2,16 +2,22 @@
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve, basename } from "node:path";
-import { intro, outro, log, spinner, confirm, note, isCancel } from "@clack/prompts";
+import { dirname, resolve, relative } from "node:path";
+import { intro, outro, log, spinner, confirm, note, isCancel, progress } from "@clack/prompts";
+import type { ProgressResult } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
 import type { CliOptions, DetectedTool } from "./types.js";
 import { detectOpenCode, detectClaudeCode } from "./detect.js";
-import { installDeepveloper, buildSkillsGuide } from "./install.js";
+import { installDeepveloper, buildSkillsGuide, AGENT_FILES } from "./install.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const TOOL_LABELS: Record<DetectedTool, string> = {
+  opencode: "opencode",
+  "claude-code": "Claude Code",
+};
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -71,10 +77,20 @@ FLAGS
 `);
 }
 
+async function animateProgress(bar: ProgressResult, label: string): Promise<void> {
+  const steps = 10;
+  bar.start(`${label} 0%`);
+  for (let i = 1; i <= steps; i++) {
+    await sleep(50);
+    bar.advance(10, `${label} ${i * 10}%`);
+  }
+  bar.stop(`${label} written`);
+}
+
 async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.clear();
   console.log(chalk.bold(BANNER));
-  intro(chalk.bold("Deepveloper Agent Installer"));
+  intro(chalk.bold("Deepveloper"));
 
   if (!yes) {
     const proceed = await confirm({
@@ -104,12 +120,12 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     return;
   }
 
-  log.success(`Detected: ${detected.join(", ")}`);
+  log.info(chalk.bold("Detected AI coding tools:"));
+  for (const tool of detected) {
+    log.step(`${chalk.bold(TOOL_LABELS[tool])} → ${AGENT_FILES[tool]}`);
+  }
 
-  const writeSpinner = spinner();
-  writeSpinner.start("Writing agent definition files...");
-  const totalFiles = detected.length;
-  let filesDone = 0;
+  const writeBar = progress({ style: "block" });
   let result;
   try {
     result = await installDeepveloper({
@@ -117,20 +133,17 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
       detectedTools: detected,
       yes,
       onProgress: async (filePath) => {
-        filesDone += 1;
-        writeSpinner.message(`Installing ${basename(filePath)} (${filesDone}/${totalFiles})...`);
-        await sleep(450);
+        await animateProgress(writeBar, relative(projectDir, filePath));
       },
       confirmOverwrite: async (filePath) => {
-        writeSpinner.stop(`File exists: ${basename(filePath)}`);
-        const overwrite = await confirm({ message: chalk.yellow(`${basename(filePath)} already exists. Overwrite?`) });
-        writeSpinner.start("Writing agent definition files...");
+        const display = relative(projectDir, filePath);
+        const overwrite = await confirm({ message: chalk.yellow(`${display} already exists. Overwrite?`) });
         if (isCancel(overwrite)) return false;
         return overwrite;
       },
     });
   } catch (err: unknown) {
-    writeSpinner.stop("Failed to write files");
+    writeBar.stop("Failed to write files");
     const msg = err instanceof Error ? err.message : String(err);
     log.error(`  Error: ${msg}`);
     if (err instanceof Error && "code" in err) {
@@ -144,16 +157,15 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     outro(chalk.red("Installation failed"));
     return;
   }
-  writeSpinner.stop("Agent definition files written");
 
   if (result.written.length > 0) {
     for (const f of result.written) {
-      log.success(f);
+      log.success(relative(projectDir, f));
     }
   }
   if (result.skipped.length > 0) {
     for (const f of result.skipped) {
-      log.info(`${chalk.dim(f)} (skipped, already exists)`);
+      log.info(`${chalk.dim(relative(projectDir, f))} (skipped, already exists)`);
     }
   }
 
