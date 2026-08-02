@@ -77,7 +77,7 @@ FLAGS
 `);
 }
 
-const SPINNER_FRAMES = ["-", "\\", "|", "/"];
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 function makeSpinner(): SpinnerResult {
   return spinner({
@@ -94,11 +94,8 @@ async function animateProgress(label: string): Promise<void> {
   const shortLabel = label.length > maxLabel ? `${label.slice(0, maxLabel - 1)}…` : label;
   for (let i = 0; i <= steps; i++) {
     const filled = Math.round((i / steps) * width);
-    const bar =
-      filled >= width
-        ? "=".repeat(width)
-        : `${"=".repeat(Math.max(0, filled - 1))}>${"-".repeat(width - filled)}`;
-    process.stdout.write(`\r${chalk.cyan(`[${bar}]`)} ${chalk.bold(`${i * 10}%`)} ${shortLabel}`);
+    const bar = chalk.whiteBright("█".repeat(filled)) + chalk.dim("░".repeat(width - filled));
+    process.stdout.write(`\r${bar} ${chalk.bold(`${i * 10}%`)} ${shortLabel}`);
     await sleep(50);
   }
   process.stdout.write("\r\x1b[K");
