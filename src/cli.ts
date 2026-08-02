@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve, relative } from "node:path";
+import { dirname, resolve, relative, join } from "node:path";
 import { intro, outro, log, spinner, confirm, note, isCancel, multiselect } from "@clack/prompts";
 import type { SpinnerResult } from "@clack/prompts";
 import chalk from "chalk";
@@ -158,6 +158,32 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     setupTools = selection;
   }
 
+  const existingFiles = setupTools
+    .map((tool) => join(projectDir, AGENT_FILES[tool]))
+    .filter((filePath) => existsSync(filePath));
+
+  let overwriteExisting = false;
+  if (existingFiles.length > 0) {
+    log.warn(chalk.bold("Previous installation found"));
+    for (const f of existingFiles) {
+      log.message(`  ${chalk.dim(relative(projectDir, f))}`);
+    }
+    if (!yes) {
+      const overwrite = await confirm({
+        message:
+          existingFiles.length === 1
+            ? `${relative(projectDir, existingFiles[0])} — overwrite it?`
+            : `Overwrite these ${existingFiles.length} existing files?`,
+      });
+      if (isCancel(overwrite)) {
+        log.warn("Setup cancelled.");
+        outro(chalk.red("Cancelled"));
+        return;
+      }
+      overwriteExisting = overwrite === true;
+    }
+  }
+
   log.info(chalk.bold("Writing agent definition files:"));
   let result;
   try {
@@ -168,12 +194,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
       onProgress: async (filePath) => {
         await animateProgress(relative(projectDir, filePath));
       },
-      confirmOverwrite: async (filePath) => {
-        const display = relative(projectDir, filePath);
-        const overwrite = await confirm({ message: chalk.yellow(`${display} already exists. Overwrite?`) });
-        if (isCancel(overwrite)) return false;
-        return overwrite;
-      },
+      confirmOverwrite: existingFiles.length > 0 && !yes ? async () => overwriteExisting : undefined,
     });
   } catch (err: unknown) {
     process.stdout.write("\r\x1b[K");
