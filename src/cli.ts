@@ -3,8 +3,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, join } from "node:path";
-import { intro, outro, log, spinner, confirm, note, isCancel, multiselect } from "@clack/prompts";
-import type { SpinnerResult } from "@clack/prompts";
+import { intro, outro, log, confirm, note, isCancel, multiselect } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
 import type { CliOptions, DetectedTool } from "./types.js";
@@ -79,12 +78,16 @@ FLAGS
 
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
-function makeSpinner(): SpinnerResult {
-  return spinner({
-    frames: SPINNER_FRAMES,
-    delay: 80,
-    styleFrame: (frame) => chalk.cyan(frame),
-  });
+async function showSpinner(message: string, durationMs: number): Promise<void> {
+  const delay = 80;
+  let frame = 0;
+  const end = Date.now() + durationMs;
+  while (Date.now() < end) {
+    process.stdout.write(`\r${chalk.cyan(SPINNER_FRAMES[frame % SPINNER_FRAMES.length])}${message ? `  ${message}` : ""}`);
+    frame += 1;
+    await sleep(delay);
+  }
+  process.stdout.write("\r\x1b[K");
 }
 
 async function animateProgress(label: string): Promise<void> {
@@ -105,27 +108,16 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
   console.clear();
   console.log(chalk.bold(BANNER));
 
-  const bootSpinner = makeSpinner();
-  bootSpinner.start();
-  await sleep(1500);
-  bootSpinner.stop();
-  process.stdout.write("\r\x1b[K");
+  await showSpinner("", 1500);
 
   intro(chalk.bold("Deepveloper"));
 
-  const detectSpinner = makeSpinner();
-  detectSpinner.start("Detecting AI coding tools...");
-  await sleep(700);
+  await showSpinner("Detecting AI coding tools...", 700);
   const isOpenCode = detectOpenCode(projectDir);
   const isClaudeCode = detectClaudeCode(projectDir);
   const detected: DetectedTool[] = [];
   if (isOpenCode) detected.push("opencode");
   if (isClaudeCode) detected.push("claude-code");
-  detectSpinner.stop(
-    detected.length === 0
-      ? "No AI coding tools found"
-      : `Found ${detected.length} AI coding tool${detected.length > 1 ? "s" : ""}`,
-  );
 
   if (detected.length === 0) {
     log.warn("Deepveloper supports opencode and Claude Code, but neither was detected.");
@@ -133,6 +125,8 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
     outro(chalk.red("Installation cancelled"));
     return;
   }
+
+  log.success(`Found ${detected.length} AI coding tool${detected.length > 1 ? "s" : ""}`);
 
   let setupTools: DetectedTool[];
   if (yes) {
