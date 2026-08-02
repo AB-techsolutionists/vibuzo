@@ -2,7 +2,7 @@
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import { dirname, resolve, basename } from "node:path";
 import { intro, outro, log, spinner, confirm, note, isCancel } from "@clack/prompts";
 import chalk from "chalk";
 import gradient from "gradient-string";
@@ -12,6 +12,10 @@ import { installDeepveloper, buildSkillsGuide } from "./install.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const BANNER_ASCII = `
 ██████╗ ███████╗███████╗██████╗ ██╗   ██╗███████╗██╗      ██████╗ ██████╗ ███████╗██████╗
@@ -85,6 +89,7 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
 
   const detectSpinner = spinner();
   detectSpinner.start("Detecting AI coding tools...");
+  await sleep(700);
   const isOpenCode = detectOpenCode(projectDir);
   const isClaudeCode = detectClaudeCode(projectDir);
   const detected: DetectedTool[] = [];
@@ -103,15 +108,22 @@ async function runInstall(projectDir: string, yes: boolean): Promise<void> {
 
   const writeSpinner = spinner();
   writeSpinner.start("Writing agent definition files...");
+  const totalFiles = detected.length;
+  let filesDone = 0;
   let result;
   try {
     result = await installDeepveloper({
       projectDir,
       detectedTools: detected,
       yes,
+      onProgress: async (filePath) => {
+        filesDone += 1;
+        writeSpinner.message(`Installing ${basename(filePath)} (${filesDone}/${totalFiles})...`);
+        await sleep(450);
+      },
       confirmOverwrite: async (filePath) => {
-        writeSpinner.stop("File exists");
-        const overwrite = await confirm({ message: chalk.yellow(`${filePath} already exists. Overwrite?`) });
+        writeSpinner.stop(`File exists: ${basename(filePath)}`);
+        const overwrite = await confirm({ message: chalk.yellow(`${basename(filePath)} already exists. Overwrite?`) });
         writeSpinner.start("Writing agent definition files...");
         if (isCancel(overwrite)) return false;
         return overwrite;

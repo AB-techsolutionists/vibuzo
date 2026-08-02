@@ -9,6 +9,7 @@ export interface InstallOptions {
   detectedTools: DetectedTool[];
   yes?: boolean;
   confirmOverwrite?: (filePath: string) => Promise<boolean>;
+  onProgress?: (filePath: string, index: number, total: number) => void | Promise<void>;
 }
 
 export const OPENCODE_AGENT_FRONTMATTER = `---
@@ -54,14 +55,18 @@ async function writeWithOverwriteCheck(
 export async function installDeepveloper(
   options: InstallOptions,
 ): Promise<InstallSummary> {
-  const { projectDir, detectedTools, yes = false, confirmOverwrite } = options;
+  const { projectDir, detectedTools, yes = false, confirmOverwrite, onProgress } = options;
   const written: string[] = [];
   const skipped: string[] = [];
   const summary = { written, skipped };
   const hasOpenCode = detectedTools.includes("opencode");
   const hasClaudeCode = detectedTools.includes("claude-code");
+  const total = detectedTools.length;
+  let index = 0;
 
   if (hasOpenCode) {
+    index += 1;
+    if (onProgress) await onProgress(openCodeAgentPath(projectDir), index, total);
     await writeWithOverwriteCheck(
       openCodeAgentPath(projectDir),
       OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT,
@@ -72,6 +77,8 @@ export async function installDeepveloper(
   }
 
   if (hasClaudeCode) {
+    index += 1;
+    if (onProgress) await onProgress(claudeCodeAgentPath(projectDir), index, total);
     await writeWithOverwriteCheck(
       claudeCodeAgentPath(projectDir),
       SYSTEM_PROMPT,

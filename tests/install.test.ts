@@ -172,6 +172,32 @@ describe("installDeepveloper", () => {
     expect(result.written.length).toBe(2);
   });
 
+  it("reports progress per file with correct index and total", async () => {
+    const progress: string[] = [];
+    await installDeepveloper({
+      projectDir: tmpDir,
+      detectedTools: ["opencode", "claude-code"],
+      onProgress: (_filePath, index, total) => {
+        progress.push(`${index}/${total}`);
+      },
+    });
+
+    expect(progress).toEqual(["1/2", "2/2"]);
+  });
+
+  it("reports total matching detected tool count", async () => {
+    const totals: number[] = [];
+    await installDeepveloper({
+      projectDir: tmpDir,
+      detectedTools: ["claude-code"],
+      onProgress: (_filePath, _index, total) => {
+        totals.push(total);
+      },
+    });
+
+    expect(totals).toEqual([1]);
+  });
+
   it("committed opencode artifact matches frontmatter + SYSTEM_PROMPT", () => {
     const content = readFileSync(join(repoRoot, ".opencode", "agents", "deepveloper.md"), "utf-8");
     expect(content).toBe(OPENCODE_AGENT_FRONTMATTER + SYSTEM_PROMPT);
